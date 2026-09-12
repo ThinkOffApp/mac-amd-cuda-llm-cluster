@@ -11,6 +11,10 @@ the M5² benchmark card.
 
 ![The pair on the desk: Bosgame M5 (Strix Halo) and the MacBook, Thunderbolt-joined](images/m5-macbook-desk.webp)
 
+**Companion repo:** [StrixLink](https://github.com/ThinkOffApp/StrixLink) is the cable underneath
+this one — what a Thunderbolt link between a Mac and a Strix Halo box can actually carry, measured
+layer by layer, plus the raw logs behind every table here.
+
 
 ## The measured result (GLM-5.3-Flash 321B MoE, pp512 / tg128 tok/s)
 
