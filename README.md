@@ -107,14 +107,19 @@ path being less mature than its Metal one. The separator is the same model on a 
 stack (TensorRT-LLM or a modelopt-aware vLLM). Until then the sparse table says
 "llama.cpp on this hardware", not "this hardware".
 
-**Derived memory bandwidth**, from tg64 on the dense model (a dense decode reads every
-weight once per token): ≈440 GB/s on the M5 Max, ≈225 GB/s on the GB10.
+**Approximate effective weight-read rate** (weight bytes × tg64 on the dense model):
+≈440 GB/s on the M5 Max, ≈225 GB/s on the GB10. This is not measured DRAM bandwidth. It
+assumes a decode reads each weight exactly once per token and counts nothing else — no
+activations, no KV traffic, no cache hits or repeated reads — so treat it as a floor on
+achieved bandwidth and a rough way to compare the two machines, not as a hardware figure.
 
 **Cache sizes, read from llama.cpp's own allocator rather than computed** (Qwen3.8-27B,
 `-c 4096`): KV cache 256.00 MiB over 16 full-attention layers = exactly 64 KiB/token, plus a
 `llama_memory_recurrent` block of 149.62 MiB that is **fixed in sequence length** (R f32 5.62,
 S f32 144.00) across all 64 blocks. The model is 16 full-attention + 48 linear-attention
-layers, so most of its state is a constant, not a per-token cost.
+layers: the 48 linear layers use a fixed-size recurrent state, while total state still grows
+with the 16 KV layers. At the `-c 4096` shown, the variable part is already the larger of the
+two (256.00 MiB KV against 149.62 MiB recurrent); they cross at roughly 2,400 tokens.
 
 **Link**: a 17,559,178,144-byte model file copied Mac → GB10 over 10 GbE in 15 s =
 1.171 GB/s (1116 MiB/s) = **9.36 Gbit/s**; a 15.36 GB file measured 8.77 Gbit/s. Plain
