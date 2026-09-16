@@ -110,8 +110,9 @@ stack (TensorRT-LLM or a modelopt-aware vLLM). Until then the sparse table says
 **Approximate effective weight-read rate** (weight bytes × tg64 on the dense model):
 ≈440 GB/s on the M5 Max, ≈225 GB/s on the GB10. This is not measured DRAM bandwidth. It
 assumes a decode reads each weight exactly once per token and counts nothing else — no
-activations, no KV traffic, no cache hits or repeated reads — so treat it as a floor on
-achieved bandwidth and a rough way to compare the two machines, not as a hardware figure.
+activations, no KV traffic, no cache hits or repeated reads — so treat it as a rough
+workload-normalized proxy for comparing the two machines, not as a bound on DRAM bandwidth
+in either direction.
 
 **Cache sizes, read from llama.cpp's own allocator rather than computed** (Qwen3.8-27B,
 `-c 4096`): KV cache 256.00 MiB over 16 full-attention layers = exactly 64 KiB/token, plus a
