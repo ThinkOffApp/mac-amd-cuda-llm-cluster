@@ -63,9 +63,11 @@ The August card, for the record: [benchmarks/m5squared-card.png](benchmarks/m5sq
 ## A third backend: NVIDIA GB10 vs Apple Metal (16-17 Sep 2026)
 
 An ASUS Ascent GX10 (**NVIDIA GB10**, compute capability 12.1, 124,544 MiB, CUDA 13)
-joined the bench over 10 GbE. The point of this table is that **the same GGUF file was
-copied to both machines and run with the same `llama-bench` flags**, so the only variables
-are the silicon and the backend. No quant differences, no engine differences.
+joined the bench over 10 GbE. The same GGUF file was copied to both machines and run with the same `llama-bench` flags,
+so there are no quant or model differences between the columns. Two things do still differ
+besides the silicon: the backend (Metal vs CUDA) and the llama.cpp build, which is six days
+apart (Mac `1d0c76f3c`, GB10 `434ddbbc0`, same ggml 0.23.0). Read the columns as
+"this file on this machine's stack", not as a pure silicon comparison.
 
 **Dense — Qwen3.8-27B UD-Q4_K_XL, 16.34 GiB, 27.32 B params**
 
@@ -83,22 +85,27 @@ are the silicon and the backend. No quant differences, no engine differences.
 | pp2048 | **3080.27** | 2455.70 | Mac ×1.25 |
 | tg64 | **97.67** | 68.37 | Mac ×1.43 |
 
-**The GB10's prefill advantage is a dense-model property, and it reverses on MoE.**
-On the dense 27B the GB10 prefills 1.32× faster while the Mac generates nearly twice as
-fast — the familiar compute-versus-bandwidth split, and the reason a prefill-there /
-generate-here arrangement looks attractive. Swap in a sparse model of *larger* total size
-and the Mac wins both halves. With 3 B of 34.66 B parameters active, prefill stops being a
-dense matmul problem and becomes routing and gather work, which is bandwidth and latency,
-which is where unified memory wins and the GB10's FLOPs have nothing to bite on.
+**On these two models, the GB10's prefill lead appears on the dense one and reverses on the
+sparse one.** On the dense 27B the GB10 prefills 1.32× faster while the Mac generates nearly
+twice as fast — the familiar compute-versus-bandwidth split, and the reason a prefill-there /
+generate-here arrangement looks attractive. On the sparse 35B-A3B, a *larger* model by total
+parameters, the Mac wins both halves.
 
-This matters because **everything in the 100 GB class is sparse** — GLM-5.3-Flash,
-DeepSeek V4.1, Qwen3.8-Flash-Next (512 experts, 10 active). If the inversion holds at that
-size, then for the models this repo exists to run, the GB10 is the slower box at both halves.
+Two configurations are not a law. What we have is one dense pair and one sparse pair, on one
+quant each, on two llama.cpp builds. The obvious *hypothesis* is that with 3 B of 34.66 B
+parameters active, prefill stops being dominated by dense matmul and becomes routing and
+gather work, which would favour unified memory — but nothing here measures that mechanism,
+and we have not varied sparsity, quant or build independently.
 
-*What we have not separated yet:* whether this is the silicon or llama.cpp's CUDA MoE path
-being less mature than its Metal one. That is a kernel question, and the control for it is
-the same model on a native NVIDIA stack (TensorRT-LLM or a modelopt-aware vLLM). Until that
-run exists, read the sparse table as "llama.cpp on this hardware", not "this hardware".
+Why it still matters for this repo: the models we are aiming at in the 100 GB class are all
+MoE — GLM-5.3-Flash, DeepSeek V4.1, Qwen3.8-Flash-Next (512 experts, 10 active). If the
+reversal holds for them, the GB10 is the slower box at both halves for exactly the workloads
+this repo exists to run. That is the next measurement, not a conclusion.
+
+*The control we have not run:* whether the reversal is the silicon or llama.cpp's CUDA MoE
+path being less mature than its Metal one. The separator is the same model on a native NVIDIA
+stack (TensorRT-LLM or a modelopt-aware vLLM). Until then the sparse table says
+"llama.cpp on this hardware", not "this hardware".
 
 **Derived memory bandwidth**, from tg64 on the dense model (a dense decode reads every
 weight once per token): ≈440 GB/s on the M5 Max, ≈225 GB/s on the GB10.
@@ -109,11 +116,10 @@ weight once per token): ≈440 GB/s on the M5 Max, ≈225 GB/s on the GB10.
 S f32 144.00) across all 64 blocks. The model is 16 full-attention + 48 linear-attention
 layers, so most of its state is a constant, not a per-token cost.
 
-**Link**: the 17.56 GB model file copied Mac → GB10 over 10 GbE in 15 s = 1116 MB/s =
-**9.36 Gbit/s**; a second file measured 8.77 Gbit/s. Plain `cat | ssh`, no compression.
-
-*Qualification:* the two llama.cpp builds are six days apart (Mac `1d0c76f3c`, GB10
-`434ddbbc0`), same ggml 0.23.0. Same file, same flags, different commit.
+**Link**: a 17,559,178,144-byte model file copied Mac → GB10 over 10 GbE in 15 s =
+1.171 GB/s (1116 MiB/s) = **9.36 Gbit/s**; a 15.36 GB file measured 8.77 Gbit/s. Plain
+`cat | ssh`, no compression. Decimal GB and binary MiB throughout, which is worth stating
+because mixing them turns the same measurement into 8.93 Gbit/s.
 
 
 ## The non-obvious flags
