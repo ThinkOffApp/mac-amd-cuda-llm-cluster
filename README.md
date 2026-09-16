@@ -1,13 +1,17 @@
-# mac-amd-llm-cluster
+# mac-amd-cuda-llm-cluster
 
 Run a 321-billion-parameter language model across a MacBook and an AMD Strix
 Halo mini-PC with llama.cpp's built-in RPC — one Thunderbolt cable, no cloud,
 every number measured.
 
 Everyone pairs DGX Sparks with DGX Sparks, or Macs with Macs. This repo
-documents the mixed pair: **Apple M5 Max (Metal) + AMD Strix Halo (ROCm)**,
-joined by `ggml-rpc-server` over a Thunderbolt IP link. It is the setup behind
-the M5² benchmark card.
+documents the mixed set: **Apple M5 Max (Metal) + AMD Strix Halo (ROCm) +
+NVIDIA GB10 (CUDA)**, joined by `ggml-rpc-server` over a Thunderbolt IP link
+and 10 GbE. It is the setup behind the M5² benchmark card.
+
+All three backends now appear here, which is why the repo is no longer called
+`mac-amd-llm-cluster`. The GB10 section below is a straight two-way comparison
+on identical files; it is not yet wired into the RPC split.
 
 ![The pair on the desk: Bosgame M5 (Strix Halo) and the MacBook, Thunderbolt-joined](images/m5-macbook-desk.webp)
 
@@ -55,6 +59,62 @@ M5-heavy slip and the Mac-OOM void) are in
 [ThinkOffApp/StrixLink docs/raw-2026-09-11](https://github.com/ThinkOffApp/StrixLink/tree/main/docs/raw-2026-09-11).
 
 The August card, for the record: [benchmarks/m5squared-card.png](benchmarks/m5squared-card.png).
+
+## A third backend: NVIDIA GB10 vs Apple Metal (16-17 Sep 2026)
+
+An ASUS Ascent GX10 (**NVIDIA GB10**, compute capability 12.1, 124,544 MiB, CUDA 13)
+joined the bench over 10 GbE. The point of this table is that **the same GGUF file was
+copied to both machines and run with the same `llama-bench` flags**, so the only variables
+are the silicon and the backend. No quant differences, no engine differences.
+
+**Dense — Qwen3.8-27B UD-Q4_K_XL, 16.34 GiB, 27.32 B params**
+
+| test | Mac M5 Max (Metal) | GB10 (CUDA) | winner |
+|---|---:|---:|---|
+| pp512 | 715.06 | **849.32** | GB10 ×1.19 |
+| pp2048 | 648.40 | **858.37** | GB10 ×1.32 |
+| tg64 | **25.10** | 12.84 | Mac ×1.95 |
+
+**Sparse — Qwen3.6-35B-A3B UD-Q3_K_S, 14.29 GiB, 34.66 B total / 3 B active**
+
+| test | Mac M5 Max (Metal) | GB10 (CUDA) | winner |
+|---|---:|---:|---|
+| pp512 | **3240.20** | 2439.58 | Mac ×1.33 |
+| pp2048 | **3080.27** | 2455.70 | Mac ×1.25 |
+| tg64 | **97.67** | 68.37 | Mac ×1.43 |
+
+**The GB10's prefill advantage is a dense-model property, and it reverses on MoE.**
+On the dense 27B the GB10 prefills 1.32× faster while the Mac generates nearly twice as
+fast — the familiar compute-versus-bandwidth split, and the reason a prefill-there /
+generate-here arrangement looks attractive. Swap in a sparse model of *larger* total size
+and the Mac wins both halves. With 3 B of 34.66 B parameters active, prefill stops being a
+dense matmul problem and becomes routing and gather work, which is bandwidth and latency,
+which is where unified memory wins and the GB10's FLOPs have nothing to bite on.
+
+This matters because **everything in the 100 GB class is sparse** — GLM-5.3-Flash,
+DeepSeek V4.1, Qwen3.8-Flash-Next (512 experts, 10 active). If the inversion holds at that
+size, then for the models this repo exists to run, the GB10 is the slower box at both halves.
+
+*What we have not separated yet:* whether this is the silicon or llama.cpp's CUDA MoE path
+being less mature than its Metal one. That is a kernel question, and the control for it is
+the same model on a native NVIDIA stack (TensorRT-LLM or a modelopt-aware vLLM). Until that
+run exists, read the sparse table as "llama.cpp on this hardware", not "this hardware".
+
+**Derived memory bandwidth**, from tg64 on the dense model (a dense decode reads every
+weight once per token): ≈440 GB/s on the M5 Max, ≈225 GB/s on the GB10.
+
+**Cache sizes, read from llama.cpp's own allocator rather than computed** (Qwen3.8-27B,
+`-c 4096`): KV cache 256.00 MiB over 16 full-attention layers = exactly 64 KiB/token, plus a
+`llama_memory_recurrent` block of 149.62 MiB that is **fixed in sequence length** (R f32 5.62,
+S f32 144.00) across all 64 blocks. The model is 16 full-attention + 48 linear-attention
+layers, so most of its state is a constant, not a per-token cost.
+
+**Link**: the 17.56 GB model file copied Mac → GB10 over 10 GbE in 15 s = 1116 MB/s =
+**9.36 Gbit/s**; a second file measured 8.77 Gbit/s. Plain `cat | ssh`, no compression.
+
+*Qualification:* the two llama.cpp builds are six days apart (Mac `1d0c76f3c`, GB10
+`434ddbbc0`), same ggml 0.23.0. Same file, same flags, different commit.
+
 
 ## The non-obvious flags
 
@@ -109,7 +169,8 @@ The August card, for the record: [benchmarks/m5squared-card.png](benchmarks/m5sq
 - MacBook Pro, Apple M5 Max, 128 GB unified
 - Bosgame M5, AMD Ryzen AI Max+ 395 (Strix Halo), 128 GB (64 GiB VRAM carve in
   August, 1 GB carve with a 120 GB GTT from September)
-- One Thunderbolt 4 cable
+- ASUS Ascent GX10, NVIDIA GB10, 124,544 MiB, CUDA 13 (added 16 Sep 2026)
+- One Thunderbolt 4 cable; 10 GbE to the GX10
 
-Measured on 30-31 Aug 2026 and remeasured on 10-11 Sep 2026. Numbers are honest:
-failures are attempts, not guesses.
+Measured on 30-31 Aug 2026, remeasured on 10-11 Sep 2026, GB10 added 16-17 Sep 2026.
+Numbers are honest: failures are attempts, not guesses.
