@@ -1,5 +1,10 @@
 # mac-amd-cuda-llm-cluster
 
+Run a 321B model across a Mac and an AMD Strix Halo mini PC over one Thunderbolt
+cable, with an NVIDIA GB10 on the same bench. Benchmark results are labelled
+with their configurations. Now building tensor parallelism across Metal, ROCm
+and CUDA, aiming to speed up both prompt processing and output generation.
+
 ### Development update — 17 September 2026
 
 We are now developing **Mac + AMD + CUDA tensor parallelism**, beginning with
@@ -34,10 +39,6 @@ Next gates are a physical mixed-host correctness run, a transformer block,
 a small complete model, then repeatable end-to-end timing. Experimental RDMA
 drivers and hardware compatibility are separate work; they are not prerequisites
 for the first correctness gate.
-
-Run a 321-billion-parameter language model across a MacBook and an AMD Strix
-Halo mini-PC with llama.cpp's built-in RPC — one Thunderbolt cable, no cloud,
-every number measured.
 
 Everyone pairs DGX Sparks with DGX Sparks, or Macs with Macs. This repo
 documents the mixed set: **Apple M5 Max (Metal) + AMD Strix Halo (ROCm) +
