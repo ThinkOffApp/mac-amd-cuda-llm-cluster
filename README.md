@@ -34,18 +34,12 @@ same fleet on a phone-class screen.
 
 ![Berlin: two ASUS Ascent GX10 (NVIDIA GB10) stacked beside the MacBook](images/berlin-two-sparks-desk.jpg)
 
-Three links are visible and they do very different work:
+The two links every number on this page crossed:
 
 | link | what it carries | status |
 |---|---|---|
 | **Thunderbolt** | MacBook ↔ Strix Halo, Helsinki | measured, see the M5² table |
 | **10 GbE** | MacBook ↔ Spark 1, direct cable | measured, **8.7 Gbit/s** by file transfer; every GB10 split number on this page crossed it |
-| **200 GbE** | Spark 1 ↔ Spark 2, one QSFP56 DAC | **link up, not yet configured, nothing measured** |
-
-That last row is the honest state as of 17 Sep 2026. Both ends report `ACTIVE / LINK_UP` at
-200,000 Mb/s and RoCE is registered on both boxes, but the interfaces carry no addresses yet, so no
-traffic has crossed that cable and there is no throughput figure to quote. The two-Spark tensor
-parallel work starts when it does.
 
 **One thing the photo makes easy to misread:** each Spark shows *two* 200 GbE interfaces
 (`enp1s0f0np0` and `enP2p1s0f0np0`), and that is one physical QSFP port presented as two PCIe
