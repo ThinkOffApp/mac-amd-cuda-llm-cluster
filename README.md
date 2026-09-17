@@ -213,10 +213,11 @@ A second, denser sweep located the crossover (four passes, order rotated):
 | split ÷ GB10 | 0.935 | 1.024 | 1.062 | 1.129 | 1.197 |
 | passes the split won | 0/4 | **3/4** | 4/4 | 4/4 | 4/4 |
 
-**768 tokens is near parity, not a crossover** — one pass in four still has the split behind.
-**896 was the first tested length above parity in all four passes.** Both of those are statements
-about these four passes at these five lengths, not a reproducibility guarantee; we did not test
-between 768 and 896, so the true crossing point is somewhere in that interval.
+What the four passes support, stated as sample facts rather than as a crossing point:
+**640 was below parity in all four passes; 768 was near parity; 896 was above parity in all four.**
+**These samples do not resolve an exact crossing.** The mean at 768 is already above 1.0, so the
+single losing pass there does not push the underlying crossing any higher — it only means 768 is
+not far enough above parity for four passes to separate it from a tie.
 
 Sparse **Qwen3.8-Flash-Next UD-IQ4_XS** (87.24 GiB, 177 B total / 3 B active, also fits either
 box). Here the Mac is the machine to beat, and parity arrives much later. Only three lengths were
@@ -231,8 +232,9 @@ sample size, and the nearest tested points either side are 512 and 4096. What we
 the split is clearly behind at 512 and clearly ahead at 4096.
 
 So the "700-2000 tokens" range in the post is a range *across models*, not a window that closes:
-the dense model reaches parity somewhere between 768 and 896, the sparse one around 2048, and past
-parity the advantage kept growing over the lengths we tested rather than peaking.
+the dense model is at parity around 768 and clearly above it by 896, the sparse one is at parity
+around 2048, and past parity the advantage kept growing over the lengths we tested rather than
+peaking.
 
 ### Generation: no split we tested won
 
