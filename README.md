@@ -53,26 +53,31 @@ across both.
 
 ## What we are aiming at
 
-Two milestones, in order. Both are about beating a *single machine*, because that is the only
-comparison that tells you whether combining hardware was worth doing at all.
+Build and measure a heterogeneous **Apple Metal + AMD ROCm + NVIDIA CUDA** execution framework
+that, for a matched model, quantization and workload:
 
-**1. A three-platform run beats the fastest single machine, on prefill AND on generation.**
+1. **beats the fastest single host** in both prefill and generation, then
+2. **beats the fastest-plus-slowest two-host pair** in both.
 
-Prefill is half done. Split across two machines, it already wins past a crossover: from about 896
-prompt tokens on the dense 27B, from about 4096 on the sparse 177B, and the margin keeps growing
-with length rather than peaking. Generation is the open half. **No split we have tested has won
-it** — the best we have measured is a loss of roughly a third against keeping the model on one box.
-So milestone 1 is currently one for two, and the generation side is the real work.
+Neither is achieved. Neither has even been attempted yet, and the distinction that makes that true
+is worth stating plainly: **three hosts is not three platforms.** A MacBook and two GB10 Sparks is
+three machines but only two backends, Metal and CUDA. The AMD Strix Halo sits at the other desk, so
+every result below is a two-platform result.
 
-**2. Once that holds, beat the fastest and the slowest machine working as a pair.**
+Where the two-platform work stands, as context rather than as partial credit:
 
-This is the harder bar and the one that matters for a heterogeneous set. It asks whether a third,
-slower platform still *adds* once you already have the good pair, rather than just being carried.
-If the answer is no, the honest result is that heterogeneous scaling stops at two, and that is worth
-publishing too.
+- **Prefill** already beats the better single machine past a crossover, from about 896 prompt tokens
+  on the dense 27B and about 4096 on the sparse 177B, with the margin still growing at the longest
+  length tested.
+- **Generation** has lost every split we have tried, by roughly a third at best. That is the real
+  work, and adding a third platform does not by itself fix it.
 
-Neither milestone is claimed here. Every table below is what the hardware actually did, including
-the configurations where combining machines made things worse.
+Milestone 2 is the one that matters for a mixed set: it asks whether a slower third platform still
+*adds* once you have the good pair, rather than being carried by it. If it does not, the honest
+result is that heterogeneous scaling stops at two, and that is worth publishing too.
+
+Every table below is what the hardware actually did, including the configurations where combining
+machines made things worse.
 
 ### Two desks, two halves of this repo
 
