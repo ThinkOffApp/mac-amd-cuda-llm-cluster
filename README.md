@@ -102,6 +102,31 @@ MoE — GLM-5.3-Flash, DeepSeek V4.1, Qwen3.8-Flash-Next (512 experts, 10 active
 reversal holds for them, the GB10 is the slower box at both halves for exactly the workloads
 this repo exists to run. That is the next measurement, not a conclusion.
 
+**The reversal does hold at the 100 GB class (measured 17 Sep 02:47).** The open question above is
+now answered for the size this repo actually targets. `Qwen3.8-Flash-Next UD-IQ4_XS`, 87.24 GiB on disk,
+**176.94 B parameters with 3 B active**, four passes with both machines measured back to back and the
+order swapped each pass:
+
+| test | Mac M5 Max (Metal) | GB10 (CUDA) | Mac ÷ GB10 |
+|---|---:|---:|---|
+| pp2048 | **1062.5 ± 1.7** | 859.6 ± 2.3 | **1.236 ± 0.004** |
+| tg64 | **41.68 ± 0.44** | 29.74 ± 0.05 | **1.401 ± 0.015** |
+
+(± is one sample s.d. across the four passes, n=4, not a confidence interval.)
+
+So on a 177 B sparse model the laptop is 24 % faster at prefill and 40 % faster at generation than the
+GB10. Two things fall out of the absolute numbers that are worth more than the ratio:
+
+- **41.7 tok/s of generation on a 177 B model**, on a laptop, because only 3 B parameters are active —
+  faster than the same machine manages on the *dense* 27 B (25 tok/s).
+- **The Mac's prefill is flat here**, 1076 at 512 tokens and 1060 at 2048, where on the dense 27 B it fell
+  from 713 to 552. "The Mac fades with context" is a property of the dense model, not of the machine.
+  This model also showed none of the 10-12 % run-to-run drift the dense one did, on either box.
+
+*Same control still missing.* Both columns are llama.cpp. A native NVIDIA stack on the same model is what
+would separate "the GB10 loses on this workload" from "llama.cpp's CUDA path loses on this workload", and
+that run has not happened. Until it does, read every sparse row here as a statement about this stack.
+
 *The control we have not run:* whether the reversal is the silicon or llama.cpp's CUDA MoE
 path being less mature than its Metal one. The separator is the same model on a native NVIDIA
 stack (TensorRT-LLM or a modelopt-aware vLLM). Until then the sparse table says
