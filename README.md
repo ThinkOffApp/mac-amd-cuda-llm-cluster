@@ -51,6 +51,29 @@ identical files, and then split across the cable with the Mac: when that split i
 doing, when it is not, and the 186 GiB quant that exceeds either device budget and ran split
 across both.
 
+## What we are aiming at
+
+Two milestones, in order. Both are about beating a *single machine*, because that is the only
+comparison that tells you whether combining hardware was worth doing at all.
+
+**1. A three-platform run beats the fastest single machine, on prefill AND on generation.**
+
+Prefill is half done. Split across two machines, it already wins past a crossover: from about 896
+prompt tokens on the dense 27B, from about 4096 on the sparse 177B, and the margin keeps growing
+with length rather than peaking. Generation is the open half. **No split we have tested has won
+it** — the best we have measured is a loss of roughly a third against keeping the model on one box.
+So milestone 1 is currently one for two, and the generation side is the real work.
+
+**2. Once that holds, beat the fastest and the slowest machine working as a pair.**
+
+This is the harder bar and the one that matters for a heterogeneous set. It asks whether a third,
+slower platform still *adds* once you already have the good pair, rather than just being carried.
+If the answer is no, the honest result is that heterogeneous scaling stops at two, and that is worth
+publishing too.
+
+Neither milestone is claimed here. Every table below is what the hardware actually did, including
+the configurations where combining machines made things worse.
+
 ### Two desks, two halves of this repo
 
 **Helsinki — the Thunderbolt pair.** Bosgame M5 (Strix Halo, ROCm) and the MacBook, joined by one
