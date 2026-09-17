@@ -12,7 +12,8 @@ and 10 GbE. It is the setup behind the M5² benchmark card.
 All three backends now appear here, which is why the repo is no longer called
 `mac-amd-llm-cluster`. The GB10 first appears below as a straight two-way comparison on
 identical files, and then split across the cable with the Mac: when that split is worth
-doing, when it is not, and the one 186 GiB model that runs nowhere else.
+doing, when it is not, and the 186 GiB quant that exceeds either device budget and ran split
+across both.
 
 ![The pair on the desk: Bosgame M5 (Strix Halo) and the MacBook, Thunderbolt-joined](images/m5-macbook-desk.webp)
 
@@ -175,14 +176,22 @@ one?**
 
 ![Mac + Spark: when does splitting a model across two machines make it faster?](benchmarks/split-when-useful-2026-09-17.png)
 
-The short answer, and the one we published:
+**The public summary** we posted on 17 Sep 2026
+([@petruspennanen](https://x.com/petruspennanen)), quoted here as the post rather than as this
+section's conclusion:
 
 > Prefill is faster than either machine alone once the prompt reaches roughly 700-2000 tokens,
 > depending on the model. Generation never beats the faster machine alone, because layer split
 > makes the two machines wait for each other. Speeding up generation needs tensor parallelism,
 > which already works between two Sparks; whether it can be made to work Mac-to-Spark is open.
 
-Source post: [@petruspennanen, 17 Sep 2026](https://x.com/petruspennanen).
+**What that compresses, stated precisely.** "Faster than either machine alone" holds above the
+crossover for the two models tested, and the crossover differs between them. "Never beats the
+faster machine" is a statement about the **three split configurations we measured**, not about
+layer split in general. "Because layer split makes the machines wait" is our *explanation* for
+the slowdown, not something these measurements isolate: we measured the slowdown, not its cause.
+And tensor parallelism is **one route** to faster generation, reported by others on two Sparks
+under their own configurations, untested by us on any pair. Each of these is unpacked below.
 
 ### Prefill: the split wins, but only past a crossover
 
@@ -205,21 +214,27 @@ A second, denser sweep located the crossover (four passes, order rotated):
 | passes the split won | 0/4 | **3/4** | 4/4 | 4/4 | 4/4 |
 
 **768 tokens is near parity, not a crossover** — one pass in four still has the split behind.
-**896 is the first length where the split wins in every pass.** If you want a single number to
-quote, 896 survives someone re-running it; 768 does not.
+**896 was the first tested length above parity in all four passes.** Both of those are statements
+about these four passes at these five lengths, not a reproducibility guarantee; we did not test
+between 768 and 896, so the true crossing point is somewhere in that interval.
 
 Sparse **Qwen3.8-Flash-Next UD-IQ4_XS** (87.24 GiB, 177 B total / 3 B active, also fits either
-box). Here the Mac is the machine to beat, and the crossover lands much later:
+box). Here the Mac is the machine to beat, and parity arrives much later. Only three lengths were
+tested, so this is a coarser picture than the dense sweep:
 
 | | 512 | 2048 | 4096 |
 |---|---:|---:|---:|
 | split ÷ Mac | 0.722 | 1.003 | **1.128** |
 
-So the "700-2000 tokens" range in the post is a range *across models*, not a window that closes:
-the dense model crosses at about 900, the sparse one at about 2048, and past the crossover the
-advantage keeps growing rather than peaking.
+**2048 is near parity, not a resolved crossover** — 1.003 is indistinguishable from a tie at this
+sample size, and the nearest tested points either side are 512 and 4096. What we can say is that
+the split is clearly behind at 512 and clearly ahead at 4096.
 
-### Generation: the split never wins
+So the "700-2000 tokens" range in the post is a range *across models*, not a window that closes:
+the dense model reaches parity somewhere between 768 and 896, the sparse one around 2048, and past
+parity the advantage kept growing over the lengths we tested rather than peaking.
+
+### Generation: no split we tested won
 
 Four passes, order rotated four ways, on an idle machine (the prefill numbers above were taken
 with two large downloads running, so absolute rates are not comparable across the two panels;
@@ -237,14 +252,19 @@ Dense 27B, tg64, tok/s:
 Flash-Next, tg32, tok/s: Mac **41.3**, GB10 29.4, split 50/50 **27.1** — here the split is slower
 than *both* machines, not merely slower than the faster one.
 
-**The careful statement is "generation never beats the faster machine alone."** On the dense model
-the split still beats the GB10 (1.78× at 15/85), so "slower than either machine" would be wrong
-there; on Flash-Next it happens to be true. The claim that holds for every configuration we
-measured is the one about the *faster* machine.
+**The careful statement: none of the three splits we measured beat the faster single machine.**
+On the dense model the split still beats the GB10 (1.78× at 15/85), so "slower than either machine"
+would be wrong there; on Flash-Next it happens to be true. Three configurations at one context
+length each is the whole basis for this — we did not sweep the split ratio, the context length or
+the batch size, so read it as "these splits, on these two models" rather than as a property of
+layer split.
 
-Why: a layer split is pipeline-shaped. Each token walks the layers in order, so while one box
-computes the other waits. Prefill hides this because a long prompt gives both boxes a large batch
-of independent work; a single decoded token does not.
+*Our explanation, which these runs do not verify:* a layer split is pipeline-shaped, so each token
+walks the layers in order and one box is idle while the other computes; prefill hides this because
+a long prompt gives both boxes a large batch of independent work. **We measured the slowdown, not
+the idle time.** Nothing here instruments where the wall-clock actually goes, so the waiting
+account remains a hypothesis. Separating it would need per-stage timing or a profile, and that run
+has not happened.
 
 ### Capacity: the case where the ratio does not exist
 
@@ -264,27 +284,46 @@ passes (13.69 → 13.84 → 14.55). Three points cannot separate drift from nois
 shape drift makes, so treat the generation figure as softer than its CV suggests; prefill shows no
 such ordering. `-ts 40/60` fails outright with a Metal OOM.
 
-**For this model the cable does not buy speed. It buys the model running at all.** That is the
-honest case for a split, and it is a different claim from the prefill speedup above.
+**For this file on these two machines the cable does not buy speed, it buys the model running at
+all.** That is a different claim from the prefill speedup above. It is also specific to this pair:
+the quant exceeds both device budgets here, which says nothing about hardware we did not test.
 
 ### What we could not test
 
-Tensor parallel shares each token's computation instead of handing whole layers to one box, so it
-is the one axis that could speed up generation. **We could not test it: llama.cpp refuses tensor
-parallel over RPC** (`-sm row` reports "device RPC0 does not support split buffers").
+Tensor parallel shares each token's computation across devices instead of handing whole layers to
+one box, which is **one route** to faster generation. **We could not test it on this pair: the
+stack we used, llama.cpp over RPC, refuses it** — `-sm row` reports "device RPC0 does not support
+split buffers". That is a statement about llama.cpp's RPC backend, not about every engine.
 
-Between two DGX Sparks it is a solved, measured path — NCCL over RoCE on the ConnectX-7 ports,
-published figures around 3× on DeepSeek V4 Flash, and an independent measurement of the
-*pipeline* side on matched Sparks giving 0.85-1.01× of a single box, which is our generation
-result reproduced on identical hardware. Mac-to-Spark is a different story: no engine does it
-today. [Ash Hart's MCDMA](https://github.com/ashhart/MCDMA) is building the RDMA transport it
-would need and has demonstrated a prefill/decode hand-off over it, but lists tensor parallelism
-among planned experiments, not finished ones.
+**What others report between two DGX Sparks**, given as their configurations rather than as a
+result of ours. We did not run these and cannot vouch for them:
 
-So the ordering of what would actually help, for this pair, is: **engine support first, faster
-interconnect second.** We have not measured inference wire utilisation on the 10 GbE link, so we
-cannot say the link is the bottleneck, and nothing here justifies buying an interconnect to fix a
-limit we have not demonstrated.
+- An [NVIDIA developer-forum study](https://forums.developer.nvidia.com/t/comprehensive-qwen3-8-27b-study-on-dgx-sparks-quantization-speculative-decoding-and-tp-dp-scaling/381102)
+  on Qwen3.8-27B holds one setup fixed and changes only the parallelism: "Moving the same InferAct
+  + MTP setup from TP=1 to TP=2 raises C1 TPS from 18.5 to 23.4." That is **≈1.27× at single
+  concurrency**, with speculative decoding on in both arms so the change is attributable to TP.
+- [Flowtivity](https://flowtivity.ai/blog/deepseek-v4-flash-1m-context-dual-dgx-spark/) report
+  41 tok/s on two Sparks for DeepSeek V4 Flash (284 B MoE) at FP8 dense + MXFP4 experts, vLLM
+  0.21.1rc1.dev339, tensor parallelism 2, MTP with 2 speculative tokens, max 6 concurrent
+  sequences, against "12-15 tok/s" for one Spark. **That pair is not a controlled comparison**:
+  the single-Spark figure is a different quantisation (IQ2_XXS) and the dual-Spark figure adds
+  speculative decoding, so the ~3× gap is not an isolated tensor-parallel gain and should not be
+  quoted as one.
+
+Take the ≈1.27× as the figure with a controlled comparison behind it. An earlier draft of this
+section also cited a 0.85-1.01× pipeline-parallel range on matched Sparks; we could not locate a
+primary source for it on re-checking and have removed it.
+
+Mac-to-Spark is a different matter again: **the stack we tested does not support it**, and we are
+not aware of one that does, which is a weaker claim than saying none exists.
+[Ash Hart's MCDMA](https://github.com/ashhart/MCDMA) is building the RDMA transport such a thing
+would need and has demonstrated a prefill/decode hand-off over it, but its README lists tensor
+parallelism among planned experiments rather than finished ones.
+
+One thing this section does **not** establish: that the 10 GbE link is the bottleneck. We never
+measured inference wire utilisation, only a bulk file-copy rate, so nothing here justifies buying
+a faster interconnect to fix a limit we have not demonstrated. Engine support is the part we can
+point at concretely.
 
 **Figure note:** the CAPACITY panel of the image above quotes the original single GLM run
 (312 / 424 / 13.7) because it was drawn before the repeat. The n=3 table in this section
