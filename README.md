@@ -23,9 +23,14 @@ Thunderbolt cable. This is the rig behind the M5² card and every ROCm row below
 ![Helsinki: Bosgame M5 (Strix Halo) and the MacBook, Thunderbolt-joined](images/m5-macbook-desk.webp)
 
 **Berlin — the CUDA half.** Two ASUS Ascent GX10 (NVIDIA GB10) stacked beside the same MacBook,
-which is where every GB10 number on this page was measured. The 5-inch panel on top is the Sparks'
-own console; in this shot the second box is still running its first-boot update, an hour after it
-came out of its packaging.
+which is where every GB10 number on this page was measured, with the 200 GbE DAC between them and
+the 10 GbE cable to the Mac.
+
+Both boxes are visible in the fleet view on the screen behind, `gx10-6678` and `gx10-e6a8`, each
+reporting CPU, memory and its **own** critical temperature rather than a guessed scale: 49.1 °C and
+46.8 °C against the 104.8 °C every ACPI zone on a GX10 declares, beside the Strix Halo box at 73 °C
+against its 110. The 5-inch panel on top is the Sparks' console, the e-ink tablet on the left is the
+same fleet on a phone-class screen.
 
 ![Berlin: two ASUS Ascent GX10 (NVIDIA GB10) stacked beside the MacBook](images/berlin-two-sparks-desk.jpg)
 
