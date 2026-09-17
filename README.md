@@ -15,7 +15,38 @@ identical files, and then split across the cable with the Mac: when that split i
 doing, when it is not, and the 186 GiB quant that exceeds either device budget and ran split
 across both.
 
-![The pair on the desk: Bosgame M5 (Strix Halo) and the MacBook, Thunderbolt-joined](images/m5-macbook-desk.webp)
+### Two desks, two halves of this repo
+
+**Helsinki — the Thunderbolt pair.** Bosgame M5 (Strix Halo, ROCm) and the MacBook, joined by one
+Thunderbolt cable. This is the rig behind the M5² card and every ROCm row below.
+
+![Helsinki: Bosgame M5 (Strix Halo) and the MacBook, Thunderbolt-joined](images/m5-macbook-desk.webp)
+
+**Berlin — the CUDA half.** Two ASUS Ascent GX10 (NVIDIA GB10) stacked beside the same MacBook,
+which is where every GB10 number on this page was measured. The 5-inch panel on top is the Sparks'
+own console; in this shot the second box is still running its first-boot update, an hour after it
+came out of its packaging.
+
+![Berlin: two ASUS Ascent GX10 (NVIDIA GB10) stacked beside the MacBook](images/berlin-two-sparks-desk.jpg)
+
+Three links are visible and they do very different work:
+
+| link | what it carries | status |
+|---|---|---|
+| **Thunderbolt** | MacBook ↔ Strix Halo, Helsinki | measured, see the M5² table |
+| **10 GbE** | MacBook ↔ Spark 1, direct cable | measured, **8.7 Gbit/s** by file transfer; every GB10 split number on this page crossed it |
+| **200 GbE** | Spark 1 ↔ Spark 2, one QSFP56 DAC | **link up, not yet configured, nothing measured** |
+
+That last row is the honest state as of 17 Sep 2026. Both ends report `ACTIVE / LINK_UP` at
+200,000 Mb/s and RoCE is registered on both boxes, but the interfaces carry no addresses yet, so no
+traffic has crossed that cable and there is no throughput figure to quote. The two-Spark tensor
+parallel work starts when it does.
+
+**One thing the photo makes easy to misread:** each Spark shows *two* 200 GbE interfaces
+(`enp1s0f0np0` and `enP2p1s0f0np0`), and that is one physical QSFP port presented as two PCIe
+functions, not two cables. NVIDIA states it plainly — "Each QSFP port appears as two independent
+Linux Ethernet interfaces". There is exactly one cable between the boxes.
+
 
 **Companion repo:** [StrixLink](https://github.com/ThinkOffApp/StrixLink) is the cable underneath
 this one — what a Thunderbolt link between a Mac and a Strix Halo box can actually carry, measured
