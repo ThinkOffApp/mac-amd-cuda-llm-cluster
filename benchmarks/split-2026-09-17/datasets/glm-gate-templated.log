@@ -1,0 +1,57 @@
+=== CORRECTNESS GATE v2: -no-cnv, stdin from /dev/null  Thu Sep 17 05:17:45 CEST 2026 ===
+0.01.363.783 W model has unused tensor blk.45.nextn.enorm.weight (size = 16384 bytes) -- ignoring
+0.01.363.785 W model has unused tensor blk.45.nextn.hnorm.weight (size = 16384 bytes) -- ignoring
+0.01.363.790 W model has unused tensor blk.45.nextn.shared_head_norm.weight (size = 16384 bytes) -- ignoring
+5.59.069.033 I cmn          init: llama threadpool init, n_threads = 6
+5.59.072.603 I 
+5.59.072.634 I system_info: n_threads = 6 (n_threads_batch = 6) / 18 | MTL : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | SME = 1 | ACCELERATE = 1 | REPACK = 1 | 
+5.59.072.638 I 
+5.59.073.759 I sampler seed: 4002310458
+5.59.073.767 I sampler params: 
+	repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000
+	dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64
+	top_k = 40, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 0.000
+	mirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900
+5.59.073.771 I sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> min-p -> ?xtc -> temp-ext -> dist 
+5.59.073.773 I generate: n_ctx = 512, n_batch = 2048, n_predict = 80, n_keep = 0
+5.59.073.773 I 
+Explain in three sentences why a mixture-of-experts model can be much larger than a dense model while generating tokens at a similar speed. In your answer, mention the role of the router and the fact that only a subset of expert parameters is activated per token.
+
+See answer
+
+Explain in three sentences why a mixture-of-experts model can be much larger in total parameters than a dense model while generating tokens at a similar speed. In your answer, mention the role of the router and the fact that only a subset of expert parameters is
+
+6.24.481.934 I common_perf_print:    sampling time =      22.61 ms
+6.24.481.940 I common_perf_print:    samplers time =      10.60 ms /   108 tokens
+6.24.481.941 I common_perf_print:        load time =   19996.23 ms
+6.24.481.943 I common_perf_print: prompt eval time =   19994.97 ms /    28 tokens (  714.11 ms per token,     1.40 tokens per second)
+6.24.481.945 I common_perf_print:        eval time =    5387.62 ms /    79 runs   (   68.20 ms per token,    14.66 tokens per second)
+6.24.481.946 I common_perf_print:       total time =   25409.34 ms /   107 tokens
+6.24.481.948 I common_perf_print: unaccounted time =       4.14 ms /   0.0 %      (total - sampling - prompt eval - eval) / (total)
+6.24.481.951 I common_perf_print:    graphs reused =         78
+gate exit=0
+
+=== 40/60 WITH -v  Thu Sep 17 05:24:10 CEST 2026 ===
+ggml_metal_synchronize: error: command buffer 0 failed with status 5
+error: Insufficient Memory (00000008:kIOGPUCommandBufferCallbackErrorOutOfMemory)
+ggml_metal_synchronize: error: command buffer 0 failed with status 5
+error: Insufficient Memory (00000008:kIOGPUCommandBufferCallbackErrorOutOfMemory)
+ggml_metal_synchronize: error: command buffer 0 failed with status 5
+error: Insufficient Memory (00000008:kIOGPUCommandBufferCallbackErrorOutOfMemory)
+ggml_metal_synchronize: error: command buffer 0 failed with status 5
+error: Insufficient Memory (00000008:kIOGPUCommandBufferCallbackErrorOutOfMemory)
+ggml_metal_graph_compute: backend is in error state from a previous command buffer failure - recreate the backend to recover
+graph_compute: ggml_backend_sched_graph_compute_async failed with error -1
+process_ubatch: failed to compute graph, compute status: -1
+llama_decode: failed to decode, ret = -3
+test_prompt: failed to decode prompt batch, res = -3
+llama_bench: error: failed to run prompt
+ggml_metal_synchronize: error: command buffer 0 failed with status 5
+error: Insufficient Memory (00000008:kIOGPUCommandBufferCallbackErrorOutOfMemory)
+~llama_context: RPC0[10.10.10.2:50052] compute buffer size is 212.7971 MiB, matches expectation of 212.7971 MiB
+~llama_context:       MTL0 compute buffer size is 374.3223 MiB, matches expectation of 374.3223 MiB
+~llama_context:        CPU compute buffer size is  16.7696 MiB, matches expectation of  16.7696 MiB
+~llama_context:        CPU compute buffer size is   0.0000 MiB, matches expectation of   0.0000 MiB
+ggml_metal_synchronize: error: command buffer 0 failed with status 5
+error: Insufficient Memory (00000008:kIOGPUCommandBufferCallbackErrorOutOfMemory)
+=== DONE Thu Sep 17 05:31:59 CEST 2026 ===

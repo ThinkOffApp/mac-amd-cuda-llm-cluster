@@ -1,0 +1,46 @@
+=== DENSE CROSSOVER SWEEP START Thu Sep 17 02:14:47 CEST 2026 ===
+-- pass 1 order: split gb10 --
+   p640 split: 761.26
+   p640 gb10: 825.62
+   p768 split: 861.10
+   p768 gb10: 819.13
+   p896 split: 907.44
+   p896 gb10: 850.73
+   p1024 split: 948.02
+   p1024 gb10: 845.96
+   p1280 split: 1029.61
+   p1280 gb10: 848.64
+-- pass 2 order: gb10 split --
+   p640 gb10: 826.13
+   p640 split: 776.14
+   p768 gb10: 841.06
+   p768 split: 863.98
+   p896 gb10: 852.05
+   p896 split: 887.33
+   p1024 gb10: 845.73
+   p1024 split: 949.55
+   p1280 gb10: 847.50
+   p1280 split: 1009.45
+-- pass 3 order: split gb10 --
+   p640 split: 775.69
+   p640 gb10: 825.97
+   p768 split: 839.04
+   p768 gb10: 845.77
+   p896 split: 904.20
+   p896 gb10: 844.01
+   p1024 split: 967.85
+   p1024 gb10: 840.61
+   p1280 split: 1006.54
+   p1280 gb10: 843.37
+-- pass 4 order: gb10 split --
+   p640 gb10: 824.60
+   p640 split: 775.27
+   p768 gb10: 842.56
+   p768 split: 863.33
+   p896 gb10: 847.44
+   p896 split: 905.39
+   p1024 gb10: 843.27
+   p1024 split: 945.55
+   p1280 gb10: 845.93
+   p1280 split: 1006.26
+=== DENSE DONE Thu Sep 17 02:24:13 CEST 2026 ===

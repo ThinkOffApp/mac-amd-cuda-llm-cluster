@@ -1,0 +1,29 @@
+=== WAIT for GLM Q6 download Thu Sep 17 03:47:24 CEST 2026 ===
+=== GLM Q4_K_XL 199.7 GB SPLIT Mac+Spark Thu Sep 17 04:17:41 CEST 2026 ===
+     0.0 GB /Volumes/t705/ModelArchive/GLM-Q4_K_XL/GLM-5.3-Flash-UD-Q4_K_XL-00001-of-00006.gguf
+    49.2 GB /Volumes/t705/ModelArchive/GLM-Q4_K_XL/GLM-5.3-Flash-UD-Q4_K_XL-00002-of-00006.gguf
+    50.0 GB /Volumes/t705/ModelArchive/GLM-Q4_K_XL/GLM-5.3-Flash-UD-Q4_K_XL-00003-of-00006.gguf
+    48.7 GB /Volumes/t705/ModelArchive/GLM-Q4_K_XL/GLM-5.3-Flash-UD-Q4_K_XL-00004-of-00006.gguf
+    49.0 GB /Volumes/t705/ModelArchive/GLM-Q4_K_XL/GLM-5.3-Flash-UD-Q4_K_XL-00005-of-00006.gguf
+     2.8 GB /Volumes/t705/ModelArchive/GLM-Q4_K_XL/GLM-5.3-Flash-UD-Q4_K_XL-00006-of-00006.gguf
+--- -ts 50/50 (RPC device first = Spark share) 04:17:41 ---
+ggml_metal_device_init: recommendedMaxWorkingSetSize  = 115448.73 MB
+| model                          |       size |     params | backend    | threads | ts           |            test |                  t/s |
+| ------------------------------ | ---------: | ---------: | ---------- | ------: | ------------ | --------------: | -------------------: |
+| glm5next 312B.A17B Q4_K - Medium | 185.98 GiB |   320.76 B | MTL,BLAS,RPC |       6 | 50.00/50.00  |           pp512 |       312.22 ± 10.04 |
+| glm5next 312B.A17B Q4_K - Medium | 185.98 GiB |   320.76 B | MTL,BLAS,RPC |       6 | 50.00/50.00  |          pp2048 |        424.18 ± 3.12 |
+| glm5next 312B.A17B Q4_K - Medium | 185.98 GiB |   320.76 B | MTL,BLAS,RPC |       6 | 50.00/50.00  |            tg32 |         13.69 ± 0.23 |
+
+build: 1d0c76f3c (753)
+rc=0
+--- -ts 40/60 (RPC device first = Spark share) 04:24:13 ---
+ggml_metal_device_init: has tensor            = true
+ggml_metal_device_init: use residency sets    = true
+ggml_metal_device_init: use shared buffers    = true
+ggml_metal_device_init: recommendedMaxWorkingSetSize  = 115448.73 MB
+test_prompt: failed to decode prompt batch, res = -3
+llama_bench: error: failed to run prompt
+| model                          |       size |     params | backend    | threads | ts           |            test |                  t/s |
+| ------------------------------ | ---------: | ---------: | ---------- | ------: | ------------ | --------------: | -------------------: |
+rc=1
+=== DONE Thu Sep 17 04:31:44 CEST 2026 ===
