@@ -1,0 +1,22 @@
+=== GENERATION INTERLEAVED START Thu Sep 17 08:11:21 CEST 2026 ===
+-- pass 1 order: mac 50/50 15/85 gb10 --
+   mac: 26.77
+   50/50: 16.68
+   15/85: 21.44
+   gb10: 12.25
+-- pass 2 order: gb10 mac 50/50 15/85 --
+   gb10: 12.24
+   mac: 27.20
+   50/50: 16.76
+   15/85: 22.00
+-- pass 3 order: 15/85 gb10 mac 50/50 --
+   15/85: 22.06
+   gb10: 12.25
+   mac: 27.02
+   50/50: 16.72
+-- pass 4 order: 50/50 15/85 gb10 mac --
+   50/50: 16.69
+   15/85: 21.65
+   gb10: 12.25
+   mac: 27.23
+=== DONE Thu Sep 17 08:16:16 CEST 2026 ===

@@ -1,0 +1,9 @@
+{"pass":1,"cfg":"split50/50","date":"2026-09-17","ts":"04:17","test":"pp512","avg":312.22,"sd_within":10.04}
+{"pass":1,"cfg":"split50/50","date":"2026-09-17","ts":"04:17","test":"pp2048","avg":424.18,"sd_within":3.12}
+{"pass":1,"cfg":"split50/50","date":"2026-09-17","ts":"04:17","test":"tg32","avg":13.69,"sd_within":0.23}
+{"pass":2,"cfg":"split50/50","date":"2026-09-17","ts":"09:06Z","test":"pp512","avg":316.03,"sd_within":7.57}
+{"pass":2,"cfg":"split50/50","date":"2026-09-17","ts":"09:06Z","test":"pp2048","avg":419.17,"sd_within":3.28}
+{"pass":2,"cfg":"split50/50","date":"2026-09-17","ts":"09:06Z","test":"tg32","avg":13.84,"sd_within":0.26}
+{"pass":3,"cfg":"split50/50","date":"2026-09-17","ts":"09:13Z","test":"pp512","avg":318.01,"sd_within":6.36}
+{"pass":3,"cfg":"split50/50","date":"2026-09-17","ts":"09:13Z","test":"pp2048","avg":430.21,"sd_within":4.27}
+{"pass":3,"cfg":"split50/50","date":"2026-09-17","ts":"09:13Z","test":"tg32","avg":14.55,"sd_within":0.49}

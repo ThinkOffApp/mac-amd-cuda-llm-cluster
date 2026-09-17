@@ -1,13 +1,19 @@
-# mac-amd-llm-cluster
+# mac-amd-cuda-llm-cluster
 
 Run a 321-billion-parameter language model across a MacBook and an AMD Strix
 Halo mini-PC with llama.cpp's built-in RPC — one Thunderbolt cable, no cloud,
 every number measured.
 
 Everyone pairs DGX Sparks with DGX Sparks, or Macs with Macs. This repo
-documents the mixed pair: **Apple M5 Max (Metal) + AMD Strix Halo (ROCm)**,
-joined by `ggml-rpc-server` over a Thunderbolt IP link. It is the setup behind
-the M5² benchmark card.
+documents the mixed set: **Apple M5 Max (Metal) + AMD Strix Halo (ROCm) +
+NVIDIA GB10 (CUDA)**, joined by `ggml-rpc-server` over a Thunderbolt IP link
+and 10 GbE. It is the setup behind the M5² benchmark card.
+
+All three backends now appear here, which is why the repo is no longer called
+`mac-amd-llm-cluster`. The GB10 first appears below as a straight two-way comparison on
+identical files, and then split across the cable with the Mac: when that split is worth
+doing, when it is not, and the 186 GiB quant that exceeds either device budget and ran split
+across both.
 
 ![The pair on the desk: Bosgame M5 (Strix Halo) and the MacBook, Thunderbolt-joined](images/m5-macbook-desk.webp)
 
@@ -55,6 +61,288 @@ M5-heavy slip and the Mac-OOM void) are in
 [ThinkOffApp/StrixLink docs/raw-2026-09-11](https://github.com/ThinkOffApp/StrixLink/tree/main/docs/raw-2026-09-11).
 
 The August card, for the record: [benchmarks/m5squared-card.png](benchmarks/m5squared-card.png).
+
+## A third backend: NVIDIA GB10 vs Apple Metal (16-17 Sep 2026)
+
+An ASUS Ascent GX10 (**NVIDIA GB10**, compute capability 12.1, 124,544 MiB, CUDA 13)
+joined the bench over 10 GbE. The same GGUF file was copied to both machines and run with the same `llama-bench` flags,
+so there are no quant or model differences between the columns. Two things do still differ
+besides the silicon: the backend (Metal vs CUDA) and the llama.cpp build, which is six days
+apart (Mac `1d0c76f3c`, GB10 `434ddbbc0`, same ggml 0.23.0). Read the columns as
+"this file on this machine's stack", not as a pure silicon comparison.
+
+**Dense — Qwen3.8-27B UD-Q4_K_XL, 16.34 GiB, 27.32 B params**
+
+| test | Mac M5 Max (Metal) | GB10 (CUDA) | winner |
+|---|---:|---:|---|
+| pp512 | 715.06 | **849.32** | GB10 ×1.19 |
+| pp2048 | 648.40 | **858.37** | GB10 ×1.32 |
+| tg64 | **25.10** | 12.84 | Mac ×1.95 |
+
+**Sparse — Qwen3.6-35B-A3B UD-Q3_K_S, 14.29 GiB, 34.66 B total / 3 B active**
+
+| test | Mac M5 Max (Metal) | GB10 (CUDA) | winner |
+|---|---:|---:|---|
+| pp512 | **3240.20** | 2439.58 | Mac ×1.33 |
+| pp2048 | **3080.27** | 2455.70 | Mac ×1.25 |
+| tg64 | **97.67** | 68.37 | Mac ×1.43 |
+
+**On these two models, the GB10's prefill lead appears on the dense one and reverses on the
+sparse one.** On the dense 27B the GB10 prefills 1.32× faster while the Mac generates nearly
+twice as fast — the familiar compute-versus-bandwidth split, and the reason a prefill-there /
+generate-here arrangement looks attractive. On the sparse 35B-A3B, a *larger* model by total
+parameters, the Mac wins both halves.
+
+Two configurations are not a law. What we have is one dense pair and one sparse pair, on one
+quant each, on two llama.cpp builds. The obvious *hypothesis* is that with 3 B of 34.66 B
+parameters active, prefill stops being dominated by dense matmul and becomes routing and
+gather work, which would favour unified memory — but nothing here measures that mechanism,
+and we have not varied sparsity, quant or build independently.
+
+Why it still matters for this repo: the models we are aiming at in the 100 GB class are all
+MoE — GLM-5.3-Flash, DeepSeek V4.1, Qwen3.8-Flash-Next (512 experts, 10 active). If the
+reversal holds for them, the GB10 is the slower box at both halves for exactly the workloads
+this repo exists to run. That is the next measurement, not a conclusion.
+
+**The reversal does hold at the 100 GB class (measured 17 Sep 02:47).** The open question above is
+now answered for the size this repo actually targets. `Qwen3.8-Flash-Next UD-IQ4_XS`, 87.24 GiB on disk,
+**176.94 B parameters with 3 B active**, four passes with both machines measured back to back and the
+order swapped each pass:
+
+| test | Mac M5 Max (Metal) | GB10 (CUDA) | Mac ÷ GB10 |
+|---|---:|---:|---|
+| pp2048 | **1062.5 ± 1.7** | 859.6 ± 2.3 | **1.236 ± 0.004** |
+| tg64 | **41.68 ± 0.44** | 29.74 ± 0.05 | **1.401 ± 0.015** |
+
+(± is one sample s.d. across the four passes, n=4, not a confidence interval.)
+
+So on a 177 B sparse model the laptop is 24 % faster at prefill and 40 % faster at generation than the
+GB10. Two things fall out of the absolute numbers that are worth more than the ratio:
+
+- **41.7 tok/s of generation on a 177 B model**, on a laptop, because only 3 B parameters are active —
+  faster than the same machine manages on the *dense* 27 B (25 tok/s).
+- **Both machines were then measured over the full 512 → 4096 range, and the result reversed an earlier
+  claim of ours.** Means of 3 order-rotated passes:
+
+  | | 512 | 1024 | 2048 | 4096 | change |
+  |---|---:|---:|---:|---:|---:|
+  | Mac, Flash-Next | 1076.1 | 1060.9 | 1025.3 | 971.3 | **−9.7 %** |
+  | GB10, Flash-Next | 828.3 | 847.2 | 840.2 | 826.6 | **−0.2 %** |
+  | Mac, dense 27 B | 713.0 | 654.7 | 610.8 | 552.2 | **−22.6 %** |
+
+  An earlier revision of this section said the Mac's prefill was "flat" on Flash-Next. That was drawn from
+  a single run sampled only to 2048, and it was wrong: extended to 4096 with three passes, the Mac declines
+  about 10 %. What actually holds across both models is the *original* observation — **the Mac's prefill
+  decays with context and the GB10's does not** — with the magnitude depending on the model (−22.6 % dense,
+  −9.7 % sparse) rather than the direction. We also previously said this model showed no run-to-run drift;
+  it shows less, not none (one of the three passes came in ~7 % low at 2048 and 4096).
+
+*Same control still missing.* Both columns are llama.cpp. A native NVIDIA stack on the same model is what
+would separate "the GB10 loses on this workload" from "llama.cpp's CUDA path loses on this workload", and
+that run has not happened. Until it does, read every sparse row here as a statement about this stack.
+
+*The control we have not run:* whether the reversal is the silicon or llama.cpp's CUDA MoE
+path being less mature than its Metal one. The separator is the same model on a native NVIDIA
+stack (TensorRT-LLM or a modelopt-aware vLLM). Until then the sparse table says
+"llama.cpp on this hardware", not "this hardware".
+
+**Approximate effective weight-read rate** (weight bytes × tg64 on the dense model):
+≈440 GB/s on the M5 Max, ≈225 GB/s on the GB10. This is not measured DRAM bandwidth. It
+assumes a decode reads each weight exactly once per token and counts nothing else — no
+activations, no KV traffic, no cache hits or repeated reads — so treat it as a rough
+workload-normalized proxy for comparing the two machines, not as a bound on DRAM bandwidth
+in either direction.
+
+**Cache sizes, read from llama.cpp's own allocator rather than computed** (Qwen3.8-27B,
+`-c 4096`): KV cache 256.00 MiB over 16 full-attention layers = exactly 64 KiB/token, plus a
+`llama_memory_recurrent` block of 149.62 MiB that is **fixed in sequence length** (R f32 5.62,
+S f32 144.00) across all 64 blocks. The model is 16 full-attention + 48 linear-attention
+layers: the 48 linear layers use a fixed-size recurrent state, while total state still grows
+with the 16 KV layers. At the `-c 4096` shown, the variable part is already the larger of the
+two (256.00 MiB KV against 149.62 MiB recurrent); they cross at roughly 2,400 tokens.
+
+**Link**: a 17,559,178,144-byte model file copied Mac → GB10 over 10 GbE in 15 s =
+1.171 GB/s (1116 MiB/s) = **9.36 Gbit/s**; a 15.36 GB file measured 8.77 Gbit/s. Plain
+`cat | ssh`, no compression. Decimal GB and binary MiB throughout, which is worth stating
+because mixing them turns the same measurement into 8.93 Gbit/s.
+
+
+## Splitting Mac + Spark: when it helps, when it does not (17 Sep 2026)
+
+The sections above compare the two machines running *alone*. This one joins them with
+`ggml-rpc-server` over the 10 GbE cable and asks the only question that decides whether the
+cable is worth having: **does splitting a model across both boxes beat just using the better
+one?**
+
+![Mac + Spark: when does splitting a model across two machines make it faster?](benchmarks/split-when-useful-2026-09-17.png)
+
+**The public summary** we posted on 17 Sep 2026
+([@petruspennanen](https://x.com/petruspennanen)), quoted here as the post rather than as this
+section's conclusion:
+
+> Prefill is faster than either machine alone once the prompt reaches roughly 700-2000 tokens,
+> depending on the model. Generation never beats the faster machine alone, because layer split
+> makes the two machines wait for each other. Speeding up generation needs tensor parallelism,
+> which already works between two Sparks; whether it can be made to work Mac-to-Spark is open.
+
+**What that compresses, stated precisely.** "Faster than either machine alone" holds above the
+crossover for the two models tested, and the crossover differs between them. "Never beats the
+faster machine" is a statement about the **three split configurations we measured**, not about
+layer split in general. "Because layer split makes the machines wait" is our *explanation* for
+the slowdown, not something these measurements isolate: we measured the slowdown, not its cause.
+And tensor parallelism is **one route** to faster generation, reported by others on two Sparks
+under their own configurations, untested by us on any pair. Each of these is unpacked below.
+
+### Prefill: the split wins, but only past a crossover
+
+Six passes, every configuration measured back to back, the order rotated three ways so drift
+shows up inside the data rather than between runs. **`-ts` lists the RPC device first**, so
+`50/50` is half the layers on the GB10.
+
+Dense **Qwen3.8-27B UD-Q4_K_XL** (16.34 GiB, fits either box), split ÷ the better single machine:
+
+| prompt tokens | 128 | 512 | 1024 | 2048 | 4096 |
+|---|---:|---:|---:|---:|---:|
+| split ÷ GB10 | 0.807 ± 0.013 | 0.855 ± 0.034 | **1.102 ± 0.044** | **1.324 ± 0.050** | **1.391 ± 0.045** |
+| passes the split won | 0/6 | 0/6 | 6/6 | 6/6 | 6/6 |
+
+A second, denser sweep located the crossover (four passes, order rotated):
+
+| prompt tokens | 640 | 768 | 896 | 1024 | 1280 |
+|---|---:|---:|---:|---:|---:|
+| split ÷ GB10 | 0.935 | 1.024 | 1.062 | 1.129 | 1.197 |
+| passes the split won | 0/4 | **3/4** | 4/4 | 4/4 | 4/4 |
+
+What the four passes support, stated as sample facts rather than as a crossing point:
+**640 was below parity in all four passes; 768 was near parity; 896 was above parity in all four.**
+**These samples do not resolve an exact crossing.** The mean at 768 is already above 1.0, so the
+single losing pass there does not push the underlying crossing any higher — it only means 768 is
+not far enough above parity for four passes to separate it from a tie.
+
+Sparse **Qwen3.8-Flash-Next UD-IQ4_XS** (87.24 GiB, 177 B total / 3 B active, also fits either
+box). Here the Mac is the machine to beat, and parity arrives much later. Only three lengths were
+tested, so this is a coarser picture than the dense sweep:
+
+| | 512 | 2048 | 4096 |
+|---|---:|---:|---:|
+| split ÷ Mac | 0.722 | 1.003 | **1.128** |
+
+**2048 is near parity, not a resolved crossover** — 1.003 is indistinguishable from a tie at this
+sample size, and the nearest tested points either side are 512 and 4096. What we can say is that
+the split is clearly behind at 512 and clearly ahead at 4096.
+
+So the "700-2000 tokens" range in the post is a range *across models*, not a window that closes:
+the dense model is at parity around 768 and clearly above it by 896, the sparse one is at parity
+around 2048, and past parity the advantage kept growing over the lengths we tested rather than
+peaking.
+
+### Generation: no split we tested won
+
+Four passes, order rotated four ways, on an idle machine (the prefill numbers above were taken
+with two large downloads running, so absolute rates are not comparable across the two panels;
+in-pass ratios are).
+
+Dense 27B, tg64, tok/s:
+
+| configuration | tok/s | ÷ Mac | ÷ GB10 |
+|---|---:|---:|---:|
+| Mac alone | **27.05 ± 0.21** | 1.000 | 2.209 |
+| split 15/85 | 21.79 ± 0.29 | 0.805 | 1.779 |
+| split 50/50 | 16.71 ± 0.04 | 0.618 | 1.365 |
+| GB10 alone | 12.25 ± 0.00 | 0.453 | 1.000 |
+
+Flash-Next, tg32, tok/s: Mac **41.3**, GB10 29.4, split 50/50 **27.1** — here the split is slower
+than *both* machines, not merely slower than the faster one.
+
+**The careful statement: none of the three splits we measured beat the faster single machine.**
+On the dense model the split still beats the GB10 (1.78× at 15/85), so "slower than either machine"
+would be wrong there; on Flash-Next it happens to be true. Three configurations at one context
+length each is the whole basis for this — we did not sweep the split ratio, the context length or
+the batch size, so read it as "these splits, on these two models" rather than as a property of
+layer split.
+
+*Our explanation, which these runs do not verify:* a layer split is pipeline-shaped, so each token
+walks the layers in order and one box is idle while the other computes; prefill hides this because
+a long prompt gives both boxes a large batch of independent work. **We measured the slowdown, not
+the idle time.** Nothing here instruments where the wall-clock actually goes, so the waiting
+account remains a hypothesis. Separating it would need per-stage timing or a profile, and that run
+has not happened.
+
+### Capacity: the case where the ratio does not exist
+
+**GLM-5.3-Flash UD-Q4_K_XL, 185.98 GiB, 320.76 B params.** Reported device budgets are 107.5 GiB
+on the Mac and 121.6 GiB on the GB10, so this file **fits neither box alone**. There is no
+single-machine baseline, and therefore no speedup to quote:
+
+| test | mean ± s.d. (n=3) | CV |
+|---|---:|---:|
+| pp512 | 315.42 ± 2.94 | 0.9 % |
+| pp2048 | 424.52 ± 5.53 | 1.3 % |
+| tg32 | 14.03 ± 0.46 | 3.3 % |
+
+Three passes of the identical command, `-ts 50/50`, `-r 2`. The ± is an across-pass sample s.d.,
+matching the other tables here. *Caveat the ± hides:* tg32 rises monotonically across the three
+passes (13.69 → 13.84 → 14.55). Three points cannot separate drift from noise, but that is the
+shape drift makes, so treat the generation figure as softer than its CV suggests; prefill shows no
+such ordering. `-ts 40/60` fails outright with a Metal OOM.
+
+**For this file on these two machines the cable does not buy speed, it buys the model running at
+all.** That is a different claim from the prefill speedup above. It is also specific to this pair:
+the quant exceeds both device budgets here, which says nothing about hardware we did not test.
+
+### What we could not test
+
+Tensor parallel shares each token's computation across devices instead of handing whole layers to
+one box, which is **one route** to faster generation. **We could not test it on this pair: the
+stack we used, llama.cpp over RPC, refuses it** — `-sm row` reports "device RPC0 does not support
+split buffers". That is a statement about llama.cpp's RPC backend, not about every engine.
+
+**What others report between two DGX Sparks**, given as their configurations rather than as a
+result of ours. We did not run these and cannot vouch for them:
+
+- An [NVIDIA developer-forum study](https://forums.developer.nvidia.com/t/comprehensive-qwen3-8-27b-study-on-dgx-sparks-quantization-speculative-decoding-and-tp-dp-scaling/381102)
+  on Qwen3.8-27B holds one setup fixed and changes only the parallelism: "Moving the same InferAct
+  + MTP setup from TP=1 to TP=2 raises C1 TPS from 18.5 to 23.4." That is **≈1.27× at single
+  concurrency**, with speculative decoding on in both arms so the change is attributable to TP.
+- [Flowtivity](https://flowtivity.ai/blog/deepseek-v4-flash-1m-context-dual-dgx-spark/) report
+  41 tok/s on two Sparks for DeepSeek V4 Flash (284 B MoE) at FP8 dense + MXFP4 experts, vLLM
+  0.21.1rc1.dev339, tensor parallelism 2, MTP with 2 speculative tokens, max 6 concurrent
+  sequences, against "12-15 tok/s" for one Spark. **That pair is not a controlled comparison**:
+  the single-Spark figure is a different quantisation (IQ2_XXS) and the dual-Spark figure adds
+  speculative decoding, so the ~3× gap is not an isolated tensor-parallel gain and should not be
+  quoted as one.
+
+Take the ≈1.27× as the figure with a controlled comparison behind it. An earlier draft of this
+section also cited a 0.85-1.01× pipeline-parallel range on matched Sparks; we could not locate a
+primary source for it on re-checking and have removed it.
+
+Mac-to-Spark is a different matter again: **the stack we tested does not support it**, and we are
+not aware of one that does, which is a weaker claim than saying none exists.
+[Ash Hart's MCDMA](https://github.com/ashhart/MCDMA) is building the RDMA transport such a thing
+would need and has demonstrated a prefill/decode hand-off over it, but its README lists tensor
+parallelism among planned experiments rather than finished ones.
+
+One thing this section does **not** establish: that the 10 GbE link is the bottleneck. We never
+measured inference wire utilisation, only a bulk file-copy rate, so nothing here justifies buying
+a faster interconnect to fix a limit we have not demonstrated. Engine support is the part we can
+point at concretely.
+
+**Figure note:** the CAPACITY panel of the image above quotes the original single GLM run
+(312 / 424 / 13.7) because it was drawn before the repeat. The n=3 table in this section
+supersedes it.
+
+Every number in this section is reproducible from
+[`benchmarks/split-2026-09-17/`](benchmarks/split-2026-09-17/): the per-pass datasets
+(`interleaved3.jsonl`, `dense.jsonl`, `gen.jsonl`, `fnsplit.jsonl`, `glm-split.jsonl`), the raw
+llama-bench logs, the runner scripts, and [`DATASETS.md`](benchmarks/split-2026-09-17/DATASETS.md)
+explaining what each file is and which conditions differ between them.
+[`runners/chart_dark.py`](benchmarks/split-2026-09-17/runners/chart_dark.py) draws the figure above
+from those datasets. Two files are kept deliberately even though they are superseded: an aborted
+fixed-order run, and the sweep JSON behind an outlier we could not reproduce (see
+[`PROVENANCE.md`](benchmarks/split-2026-09-17/PROVENANCE.md)).
+
+Builds: Mac `1d0c76f3c` (Metal), GB10 `434ddbbc0` (CUDA 13), ggml 0.23.0 — the two ends are
+different commits, which is stated here because it is a limitation of every cross-machine row.
 
 ## The non-obvious flags
 
@@ -109,7 +397,9 @@ The August card, for the record: [benchmarks/m5squared-card.png](benchmarks/m5sq
 - MacBook Pro, Apple M5 Max, 128 GB unified
 - Bosgame M5, AMD Ryzen AI Max+ 395 (Strix Halo), 128 GB (64 GiB VRAM carve in
   August, 1 GB carve with a 120 GB GTT from September)
-- One Thunderbolt 4 cable
+- ASUS Ascent GX10, NVIDIA GB10, 124,544 MiB, CUDA 13 (added 16 Sep 2026)
+- One Thunderbolt 4 cable; 10 GbE to the GX10
 
-Measured on 30-31 Aug 2026 and remeasured on 10-11 Sep 2026. Numbers are honest:
-failures are attempts, not guesses.
+Measured on 30-31 Aug 2026, remeasured on 10-11 Sep 2026, GB10 added 16 Sep 2026,
+Mac + GB10 split measured 17 Sep 2026.
+Numbers are honest: failures are attempts, not guesses.
