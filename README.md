@@ -79,6 +79,23 @@ result is that heterogeneous scaling stops at two, and that is worth publishing 
 Every table below is what the hardware actually did, including the configurations where combining
 machines made things worse.
 
+### Sub-aims: each platform PAIR first
+
+The triple is the goal, but it is only reachable if the pairs work, so each pair carries the same
+two milestones. Status as of 17 Sep 2026, from the tables further down:
+
+| pair | backends | prefill beats best single host | generation beats best single host |
+|---|---|---|---|
+| **Mac + Strix** | Metal + ROCm | **no** — when the model fits one box, solo wins (491 vs 333 pp on IQ1_S) | **no** — 30.6 solo vs 24.2 split |
+| **Mac + Spark** | Metal + CUDA | **yes, past a crossover** — ~896 prompt tokens dense, ~4096 sparse | **no** — no split we tested won |
+| **Strix + Spark** | ROCm + CUDA | **not tested** | **not tested** |
+| **all three** | Metal + ROCm + CUDA | **not attempted** | **not attempted** |
+
+Two things this table is careful about. The Mac + Strix pair buys **capacity**, not speed: the
+200 GB row runs nowhere else, and a configuration that makes a model possible at all is a different
+kind of win from one that makes it faster. And Strix + Spark is untested for a dull reason rather
+than a technical one, the two machines are currently in different cities.
+
 ### Two desks, two halves of this repo
 
 **Helsinki — the Thunderbolt pair.** Bosgame M5 (Strix Halo, ROCm) and the MacBook, joined by one
