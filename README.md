@@ -119,9 +119,13 @@ GB10. Two things fall out of the absolute numbers that are worth more than the r
 
 - **41.7 tok/s of generation on a 177 B model**, on a laptop, because only 3 B parameters are active —
   faster than the same machine manages on the *dense* 27 B (25 tok/s).
-- **The Mac's prefill is flat here**, 1076 at 512 tokens and 1060 at 2048, where on the dense 27 B it fell
-  from 713 to 552. "The Mac fades with context" is a property of the dense model, not of the machine.
-  This model also showed none of the 10-12 % run-to-run drift the dense one did, on either box.
+- **The Mac's prefill is flat on this model over the range measured**: 1076 t/s at 512 tokens and 1060 at
+  2048, a 1.5 % decline. Over *the same 512 → 2048 interval* the dense 27 B fell 713 → 611, a 14 % decline,
+  and it kept falling to 552 by 4096 (Flash-Next was not measured at 4096). So the "the Mac fades with
+  context" line above describes **what was observed in that dense-model run**, not an established property
+  of the machine or of dense models generally — the two runs also differed in conditions, and the dense one
+  carried 10-12 % run-to-run drift on both boxes where this one carried none. Architecture is a plausible
+  explanation, not a demonstrated one.
 
 *Same control still missing.* Both columns are llama.cpp. A native NVIDIA stack on the same model is what
 would separate "the GB10 loses on this workload" from "llama.cpp's CUDA path loses on this workload", and
