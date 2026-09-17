@@ -34,12 +34,32 @@ same fleet on a phone-class screen.
 
 ![Berlin: two ASUS Ascent GX10 (NVIDIA GB10) stacked beside the MacBook](images/berlin-two-sparks-desk.jpg)
 
-The two links every number on this page crossed:
+Three links, all measured:
 
-| link | what it carries | status |
+| link | what it carries | measured |
 |---|---|---|
-| **Thunderbolt** | MacBook ↔ Strix Halo, Helsinki | measured, see the M5² table |
-| **10 GbE** | MacBook ↔ Spark 1, direct cable | measured, **8.7 Gbit/s** by file transfer; every GB10 split number on this page crossed it |
+| **Thunderbolt** | MacBook ↔ Strix Halo, Helsinki | see the M5² table |
+| **10 GbE** | MacBook ↔ Spark 1, direct cable | **8.7 Gbit/s** by file transfer; every GB10 split number on this page crossed it |
+| **200 GbE** | Spark 1 ↔ Spark 2, one QSFP56 DAC | **185 Gbit/s** RDMA write, 93 % of line rate |
+
+**The 200 GbE figure has a trap in it.** A single RDMA stream reaches 108.33 Gbit/s, about half the
+port, and stays there. The full 185 only appears when **both PCIe functions of that one port are
+driven at once** — 92.56 Gbit/s each, concurrently. Configure one interface, measure it, and you
+will conclude the cable does 108 and move on, which is why NVIDIA's playbook has you address every
+interface of a populated port rather than one.
+
+```
+ib_write_bw -d rocep1s0f0   -F --report_gbits -D 10                      108.33  (x2 passes)
+ib_write_bw -d rocep1s0f0   -p 18515  +  -d roceP2p1s0f0 -p 18516        92.56 + 92.56  (x2 passes)
+```
+
+ConnectX-7, firmware 28.45.4028 both ends, MTU 1500, link_layer Ethernet, boxes otherwise idle.
+`BW peak` reads 0.00 in duration mode, so only the average is a real number. Raw output of every
+pass: [`benchmarks/roce-2026-09-17/`](benchmarks/roce-2026-09-17/).
+
+This is RDMA write bandwidth between two idle machines, **not** what an inference run achieves over
+the same wire. NCCL will be lower, and that is the figure that matters for a model split across both
+Sparks. It has not been measured yet.
 
 **One thing the photo makes easy to misread:** each Spark shows *two* 200 GbE interfaces
 (`enp1s0f0np0` and `enP2p1s0f0np0`), and that is one physical QSFP port presented as two PCIe
