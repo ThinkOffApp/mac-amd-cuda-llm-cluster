@@ -119,13 +119,21 @@ GB10. Two things fall out of the absolute numbers that are worth more than the r
 
 - **41.7 tok/s of generation on a 177 B model**, on a laptop, because only 3 B parameters are active —
   faster than the same machine manages on the *dense* 27 B (25 tok/s).
-- **The Mac's prefill is flat on this model over the range measured**: 1076 t/s at 512 tokens and 1060 at
-  2048, a 1.5 % decline. Over *the same 512 → 2048 interval* the dense 27 B fell 713 → 611, a 14 % decline,
-  and it kept falling to 552 by 4096 (Flash-Next was not measured at 4096). So the "the Mac fades with
-  context" line above describes **what was observed in that dense-model run**, not an established property
-  of the machine or of dense models generally — the two runs also differed in conditions, and the dense one
-  carried 10-12 % run-to-run drift on both boxes where this one carried none. Architecture is a plausible
-  explanation, not a demonstrated one.
+- **Both machines were then measured over the full 512 → 4096 range, and the result reversed an earlier
+  claim of ours.** Means of 3 order-rotated passes:
+
+  | | 512 | 1024 | 2048 | 4096 | change |
+  |---|---:|---:|---:|---:|---:|
+  | Mac, Flash-Next | 1076.1 | 1060.9 | 1025.3 | 971.3 | **−9.7 %** |
+  | GB10, Flash-Next | 828.3 | 847.2 | 840.2 | 826.6 | **−0.2 %** |
+  | Mac, dense 27 B | 713.0 | 654.7 | 610.8 | 552.2 | **−22.6 %** |
+
+  An earlier revision of this section said the Mac's prefill was "flat" on Flash-Next. That was drawn from
+  a single run sampled only to 2048, and it was wrong: extended to 4096 with three passes, the Mac declines
+  about 10 %. What actually holds across both models is the *original* observation — **the Mac's prefill
+  decays with context and the GB10's does not** — with the magnitude depending on the model (−22.6 % dense,
+  −9.7 % sparse) rather than the direction. We also previously said this model showed no run-to-run drift;
+  it shows less, not none (one of the three passes came in ~7 % low at 2048 and 4096).
 
 *Same control still missing.* Both columns are llama.cpp. A native NVIDIA stack on the same model is what
 would separate "the GB10 loses on this workload" from "llama.cpp's CUDA path loses on this workload", and
