@@ -53,9 +53,16 @@ ib_write_bw -d rocep1s0f0   -F --report_gbits -D 10                      108.33 
 ib_write_bw -d rocep1s0f0   -p 18515  +  -d roceP2p1s0f0 -p 18516        92.56 + 92.56  (x2 passes)
 ```
 
-ConnectX-7, firmware 28.45.4028 both ends, MTU 1500, link_layer Ethernet, boxes otherwise idle.
-`BW peak` reads 0.00 in duration mode, so only the average is a real number. Raw output of every
-pass: [`benchmarks/roce-2026-09-17/`](benchmarks/roce-2026-09-17/).
+ConnectX-7, firmware 28.45.4028 both ends, MTU 1500, `Link type: Ethernet`, `GID index: 5` — the
+RoCEv2 entry carrying the IPv4-mapped fabric address on `enp1s0f0np0` at each end, so the device and
+GID selection is checkable rather than asserted. `BW peak` reads 0.00 in duration mode, so only the
+average is a real number.
+
+Complete per-process stdout and stderr, with the exact command and timestamps in every header, and
+the full GID tables from both boxes:
+[`benchmarks/roce-2026-09-17/raw/`](benchmarks/roce-2026-09-17/raw/). The concurrent configuration
+was run twice, independently, and agreed. Failed capture attempts are kept in that directory as
+empty files rather than deleted.
 
 This is RDMA write bandwidth between two idle machines, **not** what an inference run achieves over
 the same wire. NCCL will be lower, and that is the figure that matters for a model split across both

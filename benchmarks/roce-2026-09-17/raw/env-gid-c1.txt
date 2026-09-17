@@ -1,0 +1,23 @@
+### host: 10.10.10.2
+### command: show_gids 2>/dev/null || ibv_devinfo -d rocep1s0f0 -v 2>/dev/null | head -40
+### start:   2026-09-17T12:43:13.3NZ
+DEV	PORT	INDEX	GID					IPv4  		VER	DEV
+---	----	-----	---					------------  	---	---
+rocep1s0f0	1	0	fe80:0000:0000:0000:b282:e2ff:fe52:6679			v1	enp1s0f0np0
+rocep1s0f0	1	1	fe80:0000:0000:0000:b282:e2ff:fe52:6679			v2	enp1s0f0np0
+rocep1s0f0	1	2	fe80:0000:0000:0000:5584:dab7:96e4:dbd5			v1	enp1s0f0np0
+rocep1s0f0	1	3	fe80:0000:0000:0000:5584:dab7:96e4:dbd5			v2	enp1s0f0np0
+rocep1s0f0	1	4	0000:0000:0000:0000:0000:ffff:c0a8:640a	192.168.100.10  	v1	enp1s0f0np0
+rocep1s0f0	1	5	0000:0000:0000:0000:0000:ffff:c0a8:640a	192.168.100.10  	v2	enp1s0f0np0
+rocep1s0f1	1	0	fe80:0000:0000:0000:b282:e2ff:fe52:667a			v1	enp1s0f1np1
+rocep1s0f1	1	1	fe80:0000:0000:0000:b282:e2ff:fe52:667a			v2	enp1s0f1np1
+roceP2p1s0f0	1	0	fe80:0000:0000:0000:b282:e2ff:fe52:667d			v1	enP2p1s0f0np0
+roceP2p1s0f0	1	1	fe80:0000:0000:0000:b282:e2ff:fe52:667d			v2	enP2p1s0f0np0
+roceP2p1s0f0	1	2	fe80:0000:0000:0000:715a:2a4b:3f72:2af8			v1	enP2p1s0f0np0
+roceP2p1s0f0	1	3	fe80:0000:0000:0000:715a:2a4b:3f72:2af8			v2	enP2p1s0f0np0
+roceP2p1s0f0	1	4	0000:0000:0000:0000:0000:ffff:c0a8:650a	192.168.101.10  	v1	enP2p1s0f0np0
+roceP2p1s0f0	1	5	0000:0000:0000:0000:0000:ffff:c0a8:650a	192.168.101.10  	v2	enP2p1s0f0np0
+roceP2p1s0f1	1	0	fe80:0000:0000:0000:b282:e2ff:fe52:667e			v1	enP2p1s0f1np1
+roceP2p1s0f1	1	1	fe80:0000:0000:0000:b282:e2ff:fe52:667e			v2	enP2p1s0f1np1
+n_gids_found=16
+### end:     2026-09-17T12:43:14.3NZ  ssh_rc=0

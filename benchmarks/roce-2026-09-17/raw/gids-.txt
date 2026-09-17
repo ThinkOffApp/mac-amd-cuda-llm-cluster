@@ -1,0 +1,4 @@
+### host: 192.168.0.90 asus2 ()
+### command: per-index dump of /sys/class/infiniband/rocep1s0f0/ports/1/gids + gid_attrs/types
+### captured: 2026-09-17T12:44:06.3NZ
+hostname contains invalid characters

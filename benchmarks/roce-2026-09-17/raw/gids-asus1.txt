@@ -1,0 +1,31 @@
+### host: 10.10.10.2 (asus1)
+### command: per-index dump of rocep1s0f0 GID table + ibv_devinfo
+### captured: 2026-09-17T12:44:15.3NZ
+gid[0] fe80:0000:0000:0000:b282:e2ff:fe52:6679 type=IB/RoCE v1 ndev=enp1s0f0np0
+gid[1] fe80:0000:0000:0000:b282:e2ff:fe52:6679 type=RoCE v2 ndev=enp1s0f0np0
+gid[2] fe80:0000:0000:0000:5584:dab7:96e4:dbd5 type=IB/RoCE v1 ndev=enp1s0f0np0
+gid[3] fe80:0000:0000:0000:5584:dab7:96e4:dbd5 type=RoCE v2 ndev=enp1s0f0np0
+gid[4] 0000:0000:0000:0000:0000:ffff:c0a8:640a type=IB/RoCE v1 ndev=enp1s0f0np0
+gid[5] 0000:0000:0000:0000:0000:ffff:c0a8:640a type=RoCE v2 ndev=enp1s0f0np0
+gid[6] 0000:0000:0000:0000:0000:0000:0000:0000 type=none ndev=none
+gid[7] 0000:0000:0000:0000:0000:0000:0000:0000 type=none ndev=none
+--- ibv_devinfo ---
+hca_id:	rocep1s0f0
+	transport:			InfiniBand (0)
+	fw_ver:				28.45.4028
+	node_guid:			b082:e203:0052:6679
+	sys_image_guid:			b082:e203:0052:6679
+	vendor_id:			0x02c9
+	vendor_part_id:			4129
+	hw_ver:				0x0
+	board_id:			NVD0000000087
+	phys_port_cnt:			1
+		port:	1
+			state:			PORT_ACTIVE (4)
+			max_mtu:		4096 (5)
+			active_mtu:		1024 (3)
+			sm_lid:			0
+			port_lid:		0
+			port_lmc:		0x00
+			link_layer:		Ethernet
+
