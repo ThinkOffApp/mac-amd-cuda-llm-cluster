@@ -408,6 +408,14 @@ different commits, which is stated here because it is a limitation of every cros
 - The default placement is the slow one: see the table. Put the layers where the bandwidth is.
 - Build the Strix `ggml-rpc-server` with **`GGML_RPC_RDMA=OFF`** unless both ends carry the same
   RDMA transport; a mismatch aborts every split load mid-way with no useful message.
+- **When both ends DO carry it, llama.cpp's RPC finds it by itself.** Between the two Sparks the
+  stock `434ddbbc0` build announces `transport: TCP (RDMA auto-negotiate enabled)` and then, per
+  client connection, `RDMA probed: dev=rocep1s0f0 gid=5 RoCEv2` / `RDMA activated: qpn=N->N
+  mtu=1024`. So the control channel is TCP and the data path is RDMA over RoCEv2, without a flag
+  at run time. `libggml-rpc.so` links `libibverbs.so.1`, which is the compile-time half of the
+  same fact. Logs, binary hashes and both ends' output:
+  [`benchmarks/rpc-rdma-2026-09-17/`](benchmarks/rpc-rdma-2026-09-17/). This says nothing about
+  whether it is *faster* for inference: no model has loaded across that pair yet.
 - The server's `-c` file cache makes warm restarts ~64x faster but writes every shard of every
   run to `~/.cache/llama.cpp/rpc` (441 GB after one day of sweeps). Use it, and clear it.
 
