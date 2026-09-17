@@ -1,0 +1,31 @@
+=== Spark-to-Spark RoCE bandwidth, 17 Sep 2026 ===
+server: gx10-6678 (192.168.100.10 / 192.168.101.10)
+client: gx10-e6a8 (192.168.100.11 / 192.168.101.11)
+one 200G QSFP56 DAC, left port, presented as two PCIe functions
+
+--- environment ---
+gx10-6678: 	fw_ver:				28.45.4028 			link_layer:		Ethernet   mtu=1500  speed=200000Mb/s
+gx10-e6a8: 	fw_ver:				28.45.4028 			link_layer:		Ethernet   mtu=1500  speed=200000Mb/s
+
+--- A. SINGLE function, rocep1s0f0, two passes ---
+server: ib_write_bw -d rocep1s0f0 -F --report_gbits -D 10
+client: ib_write_bw -d rocep1s0f0 -F --report_gbits -D 10 192.168.100.10
+  pass 1:
+     #bytes     #iterations    BW peak[Gb/sec]    BW average[Gb/sec]   MsgRate[Mpps]
+     65536      1239691          0.00               108.33 		   0.206617
+    ---------------------------------------------------------------------------------------
+  pass 2:
+     #bytes     #iterations    BW peak[Gb/sec]    BW average[Gb/sec]   MsgRate[Mpps]
+     65536      1239696          0.00               108.33 		   0.206614
+    ---------------------------------------------------------------------------------------
+
+--- B. BOTH functions concurrently ---
+server: ib_write_bw -d rocep1s0f0 -p 18515  AND  -d roceP2p1s0f0 -p 18516
+client: same devices against 192.168.100.10 and 192.168.101.10
+  pass 1:
+     65536      1059286          0.00               92.56  		   0.176550
+     65536      1059286          0.00               92.56  		   0.176549
+  pass 2:
+     65536      1059281          0.00               92.56  		   0.176549
+     65536      1059289          0.00               92.56  		   0.176549
+=== DONE 2026-09-17T11:31:07Z ===

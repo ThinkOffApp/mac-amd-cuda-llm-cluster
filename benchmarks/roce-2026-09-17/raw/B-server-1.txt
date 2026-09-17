@@ -1,0 +1,30 @@
+### host: 10.10.10.2 (server, concurrent run)
+### unit: bsrv1   full journal, unfiltered
+Started bsrv1.service - /usr/bin/ib_write_bw -d roceP2p1s0f0 -F --report_gbits -D 14 -p 18516.
+ WARNING: BW peak won't be measured in this run.
+************************************
+* Waiting for client to connect... *
+************************************
+---------------------------------------------------------------------------------------
+                    RDMA_Write BW Test
+ Dual-port       : OFF		Device         : roceP2p1s0f0
+ Number of qps   : 1		Transport type : IB
+ Connection type : RC		Using SRQ      : OFF
+ PCIe relax order: ON
+ ibv_wr* API     : ON
+ CQ Moderation   : 1
+ Mtu             : 1024[B]
+ Link type       : Ethernet
+ GID index       : 5
+ Max inline data : 0[B]
+ rdma_cm QPs	 : OFF
+ Data ex. method : Ethernet
+---------------------------------------------------------------------------------------
+ local address: LID 0000 QPN 0x01ac PSN 0xab59 RKey 0x1a0300 VAddr 0x00f75f92555000
+ GID: 00:00:00:00:00:00:00:00:00:00:255:255:192:168:101:10
+ remote address: LID 0000 QPN 0x01ac PSN 0x716eb6 RKey 0x1a0300 VAddr 0x00e53d0caed000
+ GID: 00:00:00:00:00:00:00:00:00:00:255:255:192:168:101:11
+---------------------------------------------------------------------------------------
+ #bytes     #iterations    BW peak[Gb/sec]    BW average[Gb/sec]   MsgRate[Mpps]
+ 65536      1412456          0.00               92.57  		   0.176556
+---------------------------------------------------------------------------------------

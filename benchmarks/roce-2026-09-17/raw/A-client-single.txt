@@ -1,0 +1,29 @@
+### host: 192.168.0.90
+### command: ib_write_bw -d rocep1s0f0 -F --report_gbits -D 10 192.168.100.10
+### start:   2026-09-17T12:42:37.3NZ
+ WARNING: BW peak won't be measured in this run.
+---------------------------------------------------------------------------------------
+                    RDMA_Write BW Test
+ Dual-port       : OFF		Device         : rocep1s0f0
+ Number of qps   : 1		Transport type : IB
+ Connection type : RC		Using SRQ      : OFF
+ PCIe relax order: ON
+ ibv_wr* API     : ON
+ TX depth        : 128
+ CQ Moderation   : 1
+ Mtu             : 1024[B]
+ Link type       : Ethernet
+ GID index       : 5
+ Max inline data : 0[B]
+ rdma_cm QPs	 : OFF
+ Data ex. method : Ethernet
+---------------------------------------------------------------------------------------
+ local address: LID 0000 QPN 0x0134 PSN 0xdb4a28 RKey 0x184300 VAddr 0x00f50acda8d000
+ GID: 00:00:00:00:00:00:00:00:00:00:255:255:192:168:100:11
+ remote address: LID 0000 QPN 0x0134 PSN 0x4d9947 RKey 0x184300 VAddr 0x00eaead2016000
+ GID: 00:00:00:00:00:00:00:00:00:00:255:255:192:168:100:10
+---------------------------------------------------------------------------------------
+ #bytes     #iterations    BW peak[Gb/sec]    BW average[Gb/sec]   MsgRate[Mpps]
+ 65536      1239774          0.00               108.32 		   0.206607
+---------------------------------------------------------------------------------------
+### end:     2026-09-17T12:42:48.3NZ  ssh_rc=0

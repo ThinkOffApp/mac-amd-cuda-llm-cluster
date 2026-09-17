@@ -1,0 +1,29 @@
+### host: 192.168.0.90
+### command: cat /tmp/cliB1.out
+### start:   2026-09-17T12:43:12.3NZ
+ WARNING: BW peak won't be measured in this run.
+---------------------------------------------------------------------------------------
+                    RDMA_Write BW Test
+ Dual-port       : OFF		Device         : roceP2p1s0f0
+ Number of qps   : 1		Transport type : IB
+ Connection type : RC		Using SRQ      : OFF
+ PCIe relax order: ON
+ ibv_wr* API     : ON
+ TX depth        : 128
+ CQ Moderation   : 1
+ Mtu             : 1024[B]
+ Link type       : Ethernet
+ GID index       : 5
+ Max inline data : 0[B]
+ rdma_cm QPs	 : OFF
+ Data ex. method : Ethernet
+---------------------------------------------------------------------------------------
+ local address: LID 0000 QPN 0x01ab PSN 0x2fd63b RKey 0x1a0300 VAddr 0x00e81e7a4cd000
+ GID: 00:00:00:00:00:00:00:00:00:00:255:255:192:168:101:11
+ remote address: LID 0000 QPN 0x01ab PSN 0x313138 RKey 0x1a0300 VAddr 0x00eacb1cf47000
+ GID: 00:00:00:00:00:00:00:00:00:00:255:255:192:168:101:10
+---------------------------------------------------------------------------------------
+ #bytes     #iterations    BW peak[Gb/sec]    BW average[Gb/sec]   MsgRate[Mpps]
+ 65536      1059349          0.00               92.57  		   0.176557
+---------------------------------------------------------------------------------------
+### end:     2026-09-17T12:43:12.3NZ  ssh_rc=0

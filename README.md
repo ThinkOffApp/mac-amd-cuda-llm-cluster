@@ -15,7 +15,64 @@ identical files, and then split across the cable with the Mac: when that split i
 doing, when it is not, and the 186 GiB quant that exceeds either device budget and ran split
 across both.
 
-![The pair on the desk: Bosgame M5 (Strix Halo) and the MacBook, Thunderbolt-joined](images/m5-macbook-desk.webp)
+### Two desks, two halves of this repo
+
+**Helsinki — the Thunderbolt pair.** Bosgame M5 (Strix Halo, ROCm) and the MacBook, joined by one
+Thunderbolt cable. This is the rig behind the M5² card and every ROCm row below.
+
+![Helsinki: Bosgame M5 (Strix Halo) and the MacBook, Thunderbolt-joined](images/m5-macbook-desk.webp)
+
+**Berlin — the CUDA half.** Two ASUS Ascent GX10 (NVIDIA GB10) stacked beside the same MacBook,
+which is where every GB10 number on this page was measured, with the 200 GbE DAC between them and
+the 10 GbE cable to the Mac.
+
+Both boxes are visible in the fleet view on the screen behind, `gx10-6678` and `gx10-e6a8`, each
+reporting CPU, memory and its **own** critical temperature rather than a guessed scale: 49.1 °C and
+46.8 °C against the 104.8 °C every ACPI zone on a GX10 declares, beside the Strix Halo box at 73 °C
+against its 110. The 5-inch panel on top is the Sparks' console, the e-ink tablet on the left is the
+same fleet on a phone-class screen.
+
+![Berlin: two ASUS Ascent GX10 (NVIDIA GB10) stacked beside the MacBook](images/berlin-two-sparks-desk.jpg)
+
+Three links, all measured:
+
+| link | what it carries | measured |
+|---|---|---|
+| **Thunderbolt** | MacBook ↔ Strix Halo, Helsinki | see the M5² table |
+| **10 GbE** | MacBook ↔ Spark 1, direct cable | **8.7 Gbit/s** by file transfer; every GB10 split number on this page crossed it |
+| **200 GbE** | Spark 1 ↔ Spark 2, one QSFP56 DAC | **185 Gbit/s** RDMA write, 93 % of line rate |
+
+**The 200 GbE figure has a trap in it.** A single RDMA stream reaches 108.33 Gbit/s, about half the
+port, and stays there. The full 185 only appears when **both PCIe functions of that one port are
+driven at once** — 92.56 Gbit/s each, concurrently. Configure one interface, measure it, and you
+will conclude the cable does 108 and move on, which is why NVIDIA's playbook has you address every
+interface of a populated port rather than one.
+
+```
+ib_write_bw -d rocep1s0f0   -F --report_gbits -D 10                      108.33  (x2 passes)
+ib_write_bw -d rocep1s0f0   -p 18515  +  -d roceP2p1s0f0 -p 18516        92.56 + 92.56  (x2 passes)
+```
+
+ConnectX-7, firmware 28.45.4028 both ends, MTU 1500, `Link type: Ethernet`, `GID index: 5` — the
+RoCEv2 entry carrying the IPv4-mapped fabric address on `enp1s0f0np0` at each end, so the device and
+GID selection is checkable rather than asserted. `BW peak` reads 0.00 in duration mode, so only the
+average is a real number.
+
+Complete per-process stdout and stderr, with the exact command and timestamps in every header, and
+the full GID tables from both boxes:
+[`benchmarks/roce-2026-09-17/raw/`](benchmarks/roce-2026-09-17/raw/). The concurrent configuration
+was run twice, independently, and agreed. Failed capture attempts are kept in that directory as
+empty files rather than deleted.
+
+This is RDMA write bandwidth between two idle machines, **not** what an inference run achieves over
+the same wire. NCCL will be lower, and that is the figure that matters for a model split across both
+Sparks. It has not been measured yet.
+
+**One thing the photo makes easy to misread:** each Spark shows *two* 200 GbE interfaces
+(`enp1s0f0np0` and `enP2p1s0f0np0`), and that is one physical QSFP port presented as two PCIe
+functions, not two cables. NVIDIA states it plainly — "Each QSFP port appears as two independent
+Linux Ethernet interfaces". There is exactly one cable between the boxes.
+
 
 **Companion repo:** [StrixLink](https://github.com/ThinkOffApp/StrixLink) is the cable underneath
 this one — what a Thunderbolt link between a Mac and a Strix Halo box can actually carry, measured
@@ -358,6 +415,14 @@ different commits, which is stated here because it is a limitation of every cros
 - The default placement is the slow one: see the table. Put the layers where the bandwidth is.
 - Build the Strix `ggml-rpc-server` with **`GGML_RPC_RDMA=OFF`** unless both ends carry the same
   RDMA transport; a mismatch aborts every split load mid-way with no useful message.
+- **When both ends DO carry it, llama.cpp's RPC finds it by itself.** Between the two Sparks the
+  stock `434ddbbc0` build announces `transport: TCP (RDMA auto-negotiate enabled)` and then, per
+  client connection, `RDMA probed: dev=rocep1s0f0 gid=5 RoCEv2` / `RDMA activated: qpn=N->N
+  mtu=1024`. So the control channel is TCP and the data path is RDMA over RoCEv2, without a flag
+  at run time. `libggml-rpc.so` links `libibverbs.so.1`, which is the compile-time half of the
+  same fact. Logs, binary hashes and both ends' output:
+  [`benchmarks/rpc-rdma-2026-09-17/`](benchmarks/rpc-rdma-2026-09-17/). This says nothing about
+  whether it is *faster* for inference: no model has loaded across that pair yet.
 - The server's `-c` file cache makes warm restarts ~64x faster but writes every shard of every
   run to `~/.cache/llama.cpp/rpc` (441 GB after one day of sweeps). Use it, and clear it.
 

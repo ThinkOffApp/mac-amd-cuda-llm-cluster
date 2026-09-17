@@ -1,0 +1,107 @@
+### Provenance for the llama.cpp RPC RDMA claim, 17 Sep 2026
+### captured 2026-09-17T11:53:10.3NZ
+
+=== binaries and build, BOTH boxes ===
+--- gx10-6678 ---
+git: 434ddbbc0e30522e897670681e503b797c12b7c1  b10884
+806e82f13fe9c6743f0a64257397318b  ggml-rpc-server  248480 bytes
+8443df78cc5612dc7d16a4e24e20bd18  llama-bench  72456 bytes
+12277c067d26c26a611c084870d7c4f0  libggml-rpc.so.0  21 bytes
+RDMA symbols compiled into libggml-rpc:
+ibv_alloc_pd
+ibv_alloc_pd@IBVERBS_1.1
+ibv_close_device
+ibv_close_device@IBVERBS_1.1
+ibv_create_cq
+ibv_create_cq@IBVERBS_1.1
+ibv_create_qp
+ibv_create_qp@IBVERBS_1.1
+libibverbs linked:
+	libibverbs.so.1 => /lib/aarch64-linux-gnu/libibverbs.so.1 (0x0000ff30704b0000)
+--- gx10-e6a8 ---
+git:   
+806e82f13fe9c6743f0a64257397318b  ggml-rpc-server  248480 bytes
+8443df78cc5612dc7d16a4e24e20bd18  llama-bench  72456 bytes
+12277c067d26c26a611c084870d7c4f0  libggml-rpc.so.0  21 bytes
+RDMA symbols compiled into libggml-rpc:
+ibv_alloc_pd
+ibv_alloc_pd@IBVERBS_1.1
+ibv_close_device
+ibv_close_device@IBVERBS_1.1
+ibv_create_cq
+ibv_create_cq@IBVERBS_1.1
+ibv_create_qp
+ibv_create_qp@IBVERBS_1.1
+libibverbs linked:
+	libibverbs.so.1 => /lib/aarch64-linux-gnu/libibverbs.so.1 (0x0000f4b178630000)
+
+=== SERVER: full journal for the transient unit (its stdout) ===
+29422
+Thu 2026-09-17 13:47:01 CEST
+--- journal ---
+Started rpc.service - /home/petrus/llama.cpp/build-rpc/bin/ggml-rpc-server -H 192.168.100.11 -p 50052 -d CUDA0.
+ggml_cuda_init: found 1 CUDA devices (Total VRAM: 124544 MiB):
+  Device 0: NVIDIA GB10, compute capability 12.1, VMM: yes, VRAM: 124544 MiB
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+WARNING: Host ('192.168.100.11') is != '127.0.0.1'
+         Never expose the RPC server to an open network!
+         This is an experimental feature and is not secure!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ggml_backend_cuda_get_available_uma_memory: final available_memory_kb: 121669560
+Starting RPC server v6.0.0
+  endpoint       : 192.168.100.11:50052
+  local cache    : n/a
+Devices:
+  CUDA0: NVIDIA GB10 (124544 MiB, 118817 MiB free)
+  transport      : TCP (RDMA auto-negotiate enabled)
+Accepted client connection
+Client connection closed
+Accepted client connection
+RDMA probed: dev=rocep1s0f0 gid=5 RoCEv2 qpn=303 inline=316
+RDMA activated: qpn=303->303 mtu=1024 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=rocep1s0f0 gid=5 RoCEv2 qpn=304 inline=316
+RDMA activated: qpn=304->304 mtu=1024 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=rocep1s0f0 gid=5 RoCEv2 qpn=305 inline=316
+RDMA activated: qpn=305->305 mtu=1024 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=rocep1s0f0 gid=5 RoCEv2 qpn=306 inline=316
+RDMA activated: qpn=306->306 mtu=1024 rx_depth=24
+Client connection closed
+
+=== CLIENT: full unfiltered output of one run ===
+ggml_cuda_init: found 1 CUDA devices (Total VRAM: 124544 MiB):
+  Device 0: NVIDIA GB10, compute capability 12.1, VMM: yes, VRAM: 124544 MiB
+RDMA probed: dev=rocep1s0f0 gid=5 RoCEv2 qpn=307 inline=316
+RDMA activated: qpn=307->307 mtu=1024 rx_depth=24
+llama_bench: error: failed to load model '/home/petrus/models/glm53-q4kxl/GLM-5.3-Flash-UD-Q4_K_XL-00001-of-00006.gguf'
+| model                          |       size |     params | backend    | ngl | ts           |            test |                  t/s |
+| ------------------------------ | ---------: | ---------: | ---------- | --: | ------------ | --------------: | -------------------: |
+### client exit: 1
+
+=== SERVER journal again, AFTER the client connected ===
+Accepted client connection
+RDMA probed: dev=rocep1s0f0 gid=5 RoCEv2 qpn=303 inline=316
+RDMA activated: qpn=303->303 mtu=1024 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=rocep1s0f0 gid=5 RoCEv2 qpn=304 inline=316
+RDMA activated: qpn=304->304 mtu=1024 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=rocep1s0f0 gid=5 RoCEv2 qpn=305 inline=316
+RDMA activated: qpn=305->305 mtu=1024 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=rocep1s0f0 gid=5 RoCEv2 qpn=306 inline=316
+RDMA activated: qpn=306->306 mtu=1024 rx_depth=24
+Client connection closed
+Accepted client connection
+RDMA probed: dev=rocep1s0f0 gid=5 RoCEv2 qpn=307 inline=316
+RDMA activated: qpn=307->307 mtu=1024 rx_depth=24
+Client connection closed
+### end 2026-09-17T11:53:13.3NZ

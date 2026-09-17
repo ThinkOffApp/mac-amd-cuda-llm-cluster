@@ -1,0 +1,32 @@
+### host: 10.10.10.2
+### command: cat /tmp/srvB0.out
+### start:   2026-09-17T12:43:12.3NZ
+ WARNING: BW peak won't be measured in this run.
+
+************************************
+* Waiting for client to connect... *
+************************************
+---------------------------------------------------------------------------------------
+                    RDMA_Write BW Test
+ Dual-port       : OFF		Device         : rocep1s0f0
+ Number of qps   : 1		Transport type : IB
+ Connection type : RC		Using SRQ      : OFF
+ PCIe relax order: ON
+ ibv_wr* API     : ON
+ CQ Moderation   : 1
+ Mtu             : 1024[B]
+ Link type       : Ethernet
+ GID index       : 5
+ Max inline data : 0[B]
+ rdma_cm QPs	 : OFF
+ Data ex. method : Ethernet
+---------------------------------------------------------------------------------------
+ local address: LID 0000 QPN 0x0135 PSN 0x7f8cfa RKey 0x184300 VAddr 0x00f6634210d000
+ GID: 00:00:00:00:00:00:00:00:00:00:255:255:192:168:100:10
+ remote address: LID 0000 QPN 0x0135 PSN 0x7e31fc RKey 0x184300 VAddr 0x00f1153b25d000
+ GID: 00:00:00:00:00:00:00:00:00:00:255:255:192:168:100:11
+---------------------------------------------------------------------------------------
+ #bytes     #iterations    BW peak[Gb/sec]    BW average[Gb/sec]   MsgRate[Mpps]
+ 65536      1059348          0.00               92.57  		   0.176558
+---------------------------------------------------------------------------------------
+### end:     2026-09-17T12:43:12.3NZ  ssh_rc=0
