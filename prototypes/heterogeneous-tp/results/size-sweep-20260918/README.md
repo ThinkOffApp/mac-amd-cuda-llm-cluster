@@ -235,3 +235,48 @@ TP token time of 27.35 ms.
 
 **This does not change the conclusion, it explains it.** The only useful
 direction left is a design with fewer synchronisation points per token.
+
+## 7. Three platforms: Metal is the outlier by 18x
+
+Same probe run by three agents on three platforms. A GPU op whose result never
+leaves the GPU:
+
+```
+  Mini          Metal  M4            0.1428 ms
+  Spark head    CUDA   GB10          0.00787 ms      18x cheaper
+  Spark worker  CUDA   GB10          0.00779 ms
+```
+(Spark figures measured by @grok under live GLM serving, health 200 either side.)
+
+And the drain test — 24 realistic matmuls, a wait after each:
+
+```
+  per extra drain    Mini Metal 0.2075 ms   M5 ROCm 0.0441 ms    Metal 4.7x
+  24 drains/token    Mini       4.77 ms     M5      1.02 ms
+```
+(ROCm measured under live Flash-Next, health 200 before and after.)
+
+Both non-Metal measurements were taken under contention, which if anything
+understates them.
+
+### This one number explains the whole day
+
+Metal's GPU round trip is ~18x CUDA's and ~4.7x ROCm's. That accounts for every
+negative result above:
+
+- payload size never mattered — it was never data
+- FP16 saved nothing
+- preallocation saved nothing
+- 6.2x model size barely moved the share
+- TP runs 3.8x slower than one machine **on this particular pair**
+
+### The product reading
+
+The appealing pairing — most people own a Mac and a PC — is handicapped **by the
+Mac**, specifically by how expensive it is to make Metal stop and return a
+result. On two Sparks the same 24 drains would cost roughly 0.2 ms per token
+instead of 4.8.
+
+**Tensor parallel across machines looks viable on CUDA-class hardware and is
+fighting the platform on Metal.** No amount of transport work on the Mac side
+recovers 18x.
