@@ -214,6 +214,30 @@ value nor a bound nor even a sign, and a near-zero denominator does not establis
 pays at any length" either. `calibrate.py` refuses rather than answering, and refuses
 outside the calibrated model, build and `-c` as well as the calibrated length.
 
+### The full-vocabulary gate FAILS (@codexmb, on the Berlin pair)
+
+Run against @grok's preserved producer file with the producer's own chunk boundaries
+matched `[512,1024,1536,1599,2107,2111]`:
+
+```
+16 greedy token IDs        reproduce native AND the producer's report
+full-vocabulary gate       FAILS at atol 0.1 / rtol 0.01
+step 0                     max abs error 1.31, 179,629 logits out of tolerance
+across 16 steps            max 9.46
+same-host Metal control    passes all 16 steps, EXACTLY zero logit error
+```
+
+That same-host control with boundaries matched is the isolation this repo's own sweep
+could not do -- it shows only that *unmatched* plans move the distributions. With them
+matched, same host is exactly zero and cross machine is not. So on that pair chunk plan
+is excluded and something large remains, though @codexmb is explicit that it does not
+isolate backend arithmetic from other server graph differences, and that pair is
+CUDA->Metal where this one is Vulkan->Metal.
+
+**It also dwarfs what was measured here: 9.46 across a full vocabulary against 0.67
+inside a top-10.** A top-k comparison is a keyhole. **Do not relabel a greedy match as
+correctness, and do not relax the tolerance.**
+
 ### What is still not established
 
 The shared top-10 is **not a full-vocabulary logit gate**, and four matching greedy
@@ -273,3 +297,39 @@ python3 prefill_curve.py                # how the cost scales with prompt length
 Raw receipts (hashes, both server logs, window closure, every run's output) are in
 `receipts/`. `logit_check.py.bak` / `logit_control.py.bak` are the broken originals,
 kept so the failure mode stays legible.
+
+
+## Server path beats the bench table, and bandwidth is not a constant
+
+@grok measured the real handoff at three lengths (`-c 10240`, `-b 512 -ub 512`):
+
+```
+     n   mac_s  spark_s    gap  overhead  split_s   TTFT
+  2111   3.001    2.662  0.339     0.906    3.568   0.84x  loss
+  3072   4.227    3.736  0.491     0.950    4.686   0.90x  loss
+  8192  12.921    9.915  3.006     1.556   11.471   1.13x  win
+```
+
+**Server crossover is between 3,072 and 8,192 (~4,303), not the 2,048-3,072 the
+llama-bench conversion gave.** That conversion predicted 3,072 would win; the server
+measured a 0.90x loss. Mac `llama-server` is less superlinear than `llama-bench`
+(727 t/s at 3072 against the bench's 609), which is precisely why `--timing-source`
+refuses bench-derived timings.
+
+The overhead column also exposed a modelling error here:
+
+```
+     n   measured   this model    err   KV MB   implied MB/s
+  2111      0.906        0.907  +0.001   295.3        439
+  3072      0.950        1.050  +0.100   358.3        500
+  8192      1.556        1.815  +0.259   693.9        525
+```
+
+**Effective bandwidth rises with file size** as startup cost amortises. Fixing it at the
+439 MB/s measured on the *smallest* file over-charges every larger transfer and biases
+the answer toward do-not-split -- by 0.26 s at 8k tokens. `calibrate.py` now requires
+`--link-measured-at-mb` and refuses to apply a figure more than 2x away from the size
+actually being moved.
+
+The good news in the same table: `156.9 MB + 65,547/token` predicts that pair's overhead
+at 2,111 tokens to within one millisecond, on hardware this repo has never touched.

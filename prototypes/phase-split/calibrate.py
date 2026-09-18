@@ -41,6 +41,15 @@ def main():
                     help="two short prefills on the FAST machine")
     ap.add_argument("--link-mbps", type=float, required=True,
                     help="MEASURED MB/s from one timed copy, not the nominal line rate")
+    # Bandwidth is not a constant of the link. Measured on @grok's pair, the same
+    # copy path gave 439, 500 and 525 MB/s for 295, 358 and 694 MB -- startup cost
+    # amortising. Taking the figure from the smallest file and applying it to a
+    # larger one over-charges the transfer and makes the split look worse than it
+    # is, by 0.26 s at 8k tokens.
+    ap.add_argument("--link-measured-at-mb", type=float, required=True,
+                    help="size of the file the --link-mbps timing was taken on, in MB")
+    ap.add_argument("--link-tolerance", type=float, default=2.0,
+                    help="how far from that size the figure may be applied (default 2x)")
     # @claudeMB published a 52,440-token crossover fitted from data ending at 3,072,
     # on servers that could not have run a prompt that long. A linear fit evaluated
     # 17x outside its range is not a result, and a tool that hands it over without
@@ -103,6 +112,18 @@ def main():
             "under and about no other. Re-calibrate on the target.")
 
     n = a.tokens
+    kv_mb = (a.kv_const_mb * 1e6 + a.kv_per_token * n) / 1e6
+    lo, hi = a.link_measured_at_mb / a.link_tolerance, a.link_measured_at_mb * a.link_tolerance
+    if not lo <= kv_mb <= hi:
+        raise SystemExit(
+            f"REFUSING: --link-mbps was timed on {a.link_measured_at_mb:,.0f} MB but this "
+            f"prompt moves {kv_mb:,.0f} MB.\n"
+            "Effective bandwidth is not a constant of the link -- on one measured pair the "
+            "same\npath gave 439, 500 and 525 MB/s for 295, 358 and 694 MB as startup cost "
+            "amortised.\nApplying a small-file figure to a large transfer over-charges it "
+            "and biases the\nanswer toward do-not-split. Re-time the copy at roughly the "
+            "size you will move.")
+
     calibrated_to = min(max(a.slow_cal[0], a.slow_cal[2]),
                         max(a.fast_cal[0], a.fast_cal[2]))
     if n > calibrated_to and not a.allow_extrapolation:
