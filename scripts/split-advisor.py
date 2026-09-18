@@ -49,16 +49,35 @@ WHY THIS EXISTS
     for THAT pair the question is open in both directions: unmeasured, not
     condemned and not cleared.
 
-    What IS unexplained, on the Sparks, with the client remote: asus1 alone at
-    4 streams gives 37.1 tok/s, and two boxes at 4 streams each give 29.2 TOTAL
-    where ~74 was expected. Not client CPU -- the table above rules that out.
-    Something slows both boxes when both are busy at once.
+    RESOLVED, and it was the instrument again: that pair result came from
+    server-side token counts divided by a CLIENT-side wall clock taken on a busy
+    box. Per-stream generation was identical in both conditions (9.8 tok/s), so
+    nothing was contended. Two machines do scale. Counting tokens server-side and
+    then dividing by the client's clock is not a server-side measurement.
 
-    ALSO, NOT IN THE NUMBERS ABOVE: add the second host as OVERFLOW once the
-    first is at its knee. Round-robin HALVES each host's batch and puts both
-    below the knee; the 1.17x above kept the M5 at 56 streams and gave the Mini
-    the 8 on top. A pair run that comes out BELOW one machine alone is usually
-    this, or a client that serialises.
+    THE KNEE IS A CLIFF, NOT A PLATEAU. One GB10 Spark on Qwen3.8-27B, client
+    on another box, measured 2026-09-18:
+
+        1 stream  11.6      16 streams  73.4
+        4         37.1      32          92.0   <- best
+        8         56.4      64          82.9   <- WORSE than 32
+
+    Past the knee the box loses throughput. So cap each host at its knee and
+    send the overflow elsewhere; running one box at 64 costs 10% against running
+    it at 32 and queueing the rest.
+
+    AND COMPARE AT A FIXED TOTAL LOAD, not at a fixed per-host stream count.
+    From the same curve:
+
+        total load   one box   two boxes    gain    (per box)
+              8 st     56.4      74.2      1.32x    (4 each)
+             32 st     92.0     146.8      1.60x    (16 each)
+             64 st     82.9     184.0      2.22x    (32 each)
+
+    The second host is worth 1.3x at light load and 2.2x past the knee, because
+    splitting a light load puts BOTH hosts far below it. A per-host comparison
+    ("4 streams each vs 4 streams alone") compares 8 streams of work against 4
+    and overstates the gain.
 
     Layer split lost to one machine on its own at every ratio and every
     concurrency tried. Request split is the only arrangement where the pair
