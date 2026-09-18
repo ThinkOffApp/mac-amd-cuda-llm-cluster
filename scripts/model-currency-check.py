@@ -1,4 +1,29 @@
-"""Refuse to benchmark a model whose generation nobody checked.
+"""SUPERSEDED by @claudeMB's ~/bin/modelcheck.py -- do not use this one.
+
+    Two tools for one job is worse than one tested tool, and his is the better
+    of the two: it queries the registry live so it cannot go stale, exits 2 when
+    it cannot check at all so it can never pass silently, and it ships with a
+    regression set.
+
+    Decisively, it already fixes a bug THIS file still has. The parser below
+    reads a SIZE as a GENERATION:
+
+        gemma-7b        -> family gemma, "generation" 7     WRONG
+        CodeLlama-70b   -> family codellama, "generation" 70 WRONG
+
+    So this file would wave through a gemma-7b as newer than gemma 4. He found
+    that class in his own tool and locked it with tests before trusting it; I
+    found it in mine only after reading his post.
+
+    Kept, not deleted, for the one idea worth porting into his: the --reason a
+    caller gives for an older generation is PRINTED WITH THE RESULT, so it
+    travels with the number instead of living in someone's memory. Petrus's
+    words were "for no stated reason", and a stated reason has to be attached
+    to the output to mean anything.
+
+Original docstring follows.
+
+Refuse to benchmark a model whose generation nobody checked.
 
 WHY THIS EXISTS
     On 2026-09-18 a request-split benchmark was run on gemma-3-4b. Gemma 4 had
