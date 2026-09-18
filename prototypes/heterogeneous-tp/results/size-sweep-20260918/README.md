@@ -142,3 +142,55 @@ than it is. A clean measurement would widen this gap, not narrow it.
 3. The bound from section 3 matters more now: this is a floor in **PyTorch's**
    MPS copy path. Whether a non-PyTorch path on Metal does better is unknown and
    decides whether this is fixable software or a hardware property.
+
+## 5. It was never the copy: 81% is GPU round-trip latency
+
+Everything above calls this a copy cost. That label was wrong, and the control
+that shows it is simple — time a trivial GPU op whose result **never leaves the
+GPU**:
+
+```
+  loop + sync overhead only      0.0001 ms
+  GPU op, result stays on GPU    0.1428 ms
+  copy of a settled tensor       0.1571 ms
+  GPU op THEN copy to host       0.1772 ms
+
+  attributable to the copy            0.034 ms
+  attributable to the GPU round trip  0.143 ms   = 81%
+```
+
+A `tensor.add(1.0)` that stays on the GPU costs 0.143 ms if you wait for it.
+
+MLX, Apple's own framework on the same hardware, corroborates:
+
+```
+  MLX read of an ALREADY-COMPUTED array to host   0.0006 ms
+  MLX GPU op + read to host                       0.138  ms
+  PyTorch MPS op + copy                           0.117  ms
+```
+
+**Reading unified memory is almost free.** It becomes expensive only when a GPU
+operation must complete first — and both frameworks pay the same toll, so this
+is not a PyTorch defect.
+
+### What it actually means
+
+Tensor parallel here does not have a transfer problem, it has a **pipeline**
+problem. Every collective forces the GPU to drain before its result can be sent.
+**24 drains per token at 0.143 ms is ~3.4 ms of pure waiting**, before copying,
+framing or network. A single machine runs the whole token as one continuous
+pipeline.
+
+This explains, rather than merely observing, why neither a smaller payload nor a
+faster wire helps. The only lever is **fewer GPU-wait points per token**, and
+those points are sequentially dependent.
+
+### Correction to section 2
+
+The "8.53 ms/token copy floor" number stands as measured; **its label was
+wrong**. It is roughly 3.4 ms of GPU round trips plus copying, not 8.5 ms of
+copying.
+
+And it re-reads section 4: AMD's dispatch-and-complete round trip is ~6x cheaper
+than Apple's — a hardware and driver property, not something our code can
+optimise around.

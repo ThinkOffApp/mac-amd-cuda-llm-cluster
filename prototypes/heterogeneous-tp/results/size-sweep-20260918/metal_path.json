@@ -1,0 +1,6 @@
+{
+ "torch_mps_to_cpu_ms": 0.1171670010080561,
+ "mlx_gpu_op_plus_to_host_ms": 0.13825049973092973,
+ "mlx_to_host_only_ms": 0.0006250047590583563,
+ "numpy_host_to_host_ms": 0.0002499727997928858
+}
