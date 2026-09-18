@@ -1,0 +1,9 @@
+  FAILS as required  unreachable server       /completion: curl exit 7: curl: (7) Failed to connect to 127.0.0.1 por
+  FAILS as required  HTTP error on restore    /slots/0?action=restore: HTTP 400: {"error":{"code":400,"message":"Una
+  FAILS as required  empty probability list   fixture: no completion_probabilities. Either this build does not suppo
+  FAILS as required  step with no entries     fixture: step 0 has an empty distribution
+  FAILS as required  non-finite logprob       fixture: step 0 non-finite logprob for 'x'
+  FAILS as required  mismatched step counts   x produced 1 steps, y produced 2 -- not comparable
+  FAILS as required  disjoint top-10 sets     step 0: the two top-10 sets share no token at all
+
+self-test: 7/7 cases fail as they must

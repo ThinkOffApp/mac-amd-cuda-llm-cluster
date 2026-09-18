@@ -1,0 +1,24 @@
+prompt 2107 tokens, both caches produced on THIS machine
+
+A: single request
+  fed  2107 tok -> prompt_n=2107 prompt_ms=37476.2
+  saved chunkA.bin: 295038132 bytes, 2107 tokens
+
+B: 1107 tokens, then extended to 2107
+  fed  1107 tok -> prompt_n=1107 prompt_ms=20603.9
+  fed  2107 tok -> prompt_n=1000 prompt_ms=19089.6
+  saved chunkB.bin: 295038132 bytes, 2107 tokens
+
+step  A top           B top             |dlogprob|  shared
+0     .               .                   0.000000  9/9
+1      Section         Section            0.000000  9/9
+2                                         0.000000  9/9
+3     7               7                   0.000000  10/10
+
+same text: True
+SAME BACKEND, DIFFERENT CHUNKING: worst |dlogprob| = 0.000000
+cross-machine figure for comparison:                 0.670641
+
+-> if these are comparable, 'cross-backend' is NOT established
+
+[exited with code 0]

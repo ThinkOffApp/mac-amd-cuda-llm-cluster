@@ -1,0 +1,16 @@
+comparison                 same text  steps  worst |dlogprob|
+pd.bin:pd.bin              True       4      0.000000   <- SAME FILE twice (control)
+    step 0   Section          Section         0.000000  (shared 9/9)
+    step 1                                    0.000000  (shared 9/9)
+    step 2  7                7                0.000000  (shared 10/10)
+    step 3  0                0                0.000000  (shared 9/9)
+q27.bin:q27.bin            True       4      0.000000   <- SAME FILE twice (control)
+    step 0   Section          Section         0.000000  (shared 9/9)
+    step 1                                    0.000000  (shared 9/9)
+    step 2  7                7                0.000000  (shared 10/10)
+    step 3  0                0                0.000000  (shared 9/9)
+pd.bin:q27.bin             True       4      0.670641   <- cross-file
+    step 0   Section          Section         0.102773  (shared 9/9)
+    step 1                                    0.097987  (shared 9/9)
+    step 2  7                7                0.670641  (shared 9/10)
+    step 3  0                0                0.225183  (shared 8/9)

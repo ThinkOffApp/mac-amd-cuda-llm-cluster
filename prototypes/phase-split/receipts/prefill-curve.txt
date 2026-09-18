@@ -1,0 +1,17 @@
+source prompt: 2108 tokens
+
+n=  256  prefill=   7902.8 ms     32.4 tok/s  KV=  173.7 MB    678434 B/tok
+n=  512  prefill=   9087.3 ms     56.3 tok/s  KV=  190.5 MB    371999 B/tok
+n= 1024  prefill=  18445.9 ms     55.5 tok/s  KV=  224.0 MB    218782 B/tok
+n= 2048  prefill=  38330.3 ms     53.4 tok/s  KV=  291.2 MB    142173 B/tok
+n= 3072  prefill=  56157.0 ms     54.7 tok/s  KV=  358.3 MB    116637 B/tok
+
+  from     to  length x  prefill x    KV x  exponent
+   256    512      2.00       1.15    1.10    0.20
+   512   1024      2.00       2.03    1.18    1.02
+  1024   2048      2.00       2.08    1.30    1.06
+  2048   3072      1.50       1.47    1.23    0.94
+
+exponent 1.0 = linear (split is scale-invariant); >1 = longer prompts favour the split
+
+[exited with code 0]
