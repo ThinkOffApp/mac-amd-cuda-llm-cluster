@@ -144,9 +144,12 @@ SAME BACKEND, DIFFERENT CHUNKING   worst |dlogprob| = 0.269895
 cross-machine, for comparison                        0.670641
 ```
 
-**Chunking alone accounts for 40% of the cross-machine gap**, on one machine with one
-backend, one build and one set of weights. So the cross-machine difference is **NOT
-established as a backend effect**, and the earlier claim in this file that chunking was
+**A chunk-plan difference alone moves the distributions**, on one machine with one
+backend, one build and one set of weights. (Setting 0.269895 against 0.670641 as a
+percentage would be wrong: they are maxima from different experiments, at different
+steps, over different tokens -- a ratio, not a decomposition. The chunk contribution to
+the physical gap is unknown.) So the cross-machine difference is **NOT established as a
+backend effect**, and the earlier claim in this file that chunking was
 ruled out is withdrawn -- it rested on the void control above, which returned a clean
 zero because it was comparing two fresh native prefills.
 
@@ -164,11 +167,16 @@ it would be valid only at `-c 4096`. Measured, same 512-token prompt, only `-c` 
 -c 4096    190,463,552 B      difference: 0 B
 ```
 
-**Identical.** The fixed block is a model property, so the constant is portable across
-context settings. (`-c 8192` does not fit beside a 27B on this 24 GB machine: it loads,
-answers `/health` with 200, and returns `Compute error` on every completion. The two
-servers must be run sequentially, and a health probe is not evidence that a server
-works -- only a completion that returns content is.)
+**Equal at these two settings.** That is the whole claim: `-c 2048` and `-c 4096` give
+the same state size for a 512-token prompt. It is **not** universal context portability
+-- no other `-c` has been tested, and a rule computed at one context is evidence about
+that context.
+
+Kept separate, because it is a different fact: **`-c 8192` does not fit beside a 27B on
+this 24 GB machine.** It loads, answers `/health` with 200, and returns `Compute error`
+on every completion. That is a memory limit on this host, not a measurement of state
+size. The two servers must run sequentially, and a health probe is never evidence that a
+server works -- only a completion that returns content is.
 
 ### Crossover lengths are NOT bounds
 
