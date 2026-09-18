@@ -583,3 +583,49 @@ Two caveats that survive the zero, neither a criticism of it:
 **And the truncation amplification recorded above does not bind on this result.** It is
 about small-but-nonzero TV, where two distributions can disagree about which tokens
 clear the rank-k boundary. Exactly zero has no boundary to disagree about.
+
+
+## The baseline nobody had measured: ordinary batching perturbs more than the split
+
+@claudeMB, one server talking to itself, no split involved, full vocabulary 248,320,
+`-np 4 -c 16384`:
+
+```
+CONTROL  quiescent vs quiescent   identical=True    TV = 0.000e+00
+CONTROL  loaded    vs loaded      identical=True    TV = 0.000e+00
+EFFECT   quiescent vs loaded      identical=False   TV = 3.797e-02
+                                  max |dlogprob| = 0.966555
+```
+
+Both conditions are individually bit-exact and reproduce, so the difference is batch
+composition rather than noise. Three other slots mid-generation was enough.
+
+```
+split across 2 hosts, same backend      TV = 0.000000    EXACT
+ordinary batching on ONE machine        TV = 0.038
+```
+
+**The split is exact. Normal production serving is not.** Cross-machine splitting has
+been held to a standard a single unsplit box does not meet while serving real traffic.
+
+**Which makes the counterfactual everyone has been measuring the wrong one:**
+
+```
+what was measured      split vs unsplit,  BOTH IDLE
+what users get         unsplit UNDER LOAD
+what deployment asks   split under load  vs  unsplit under load
+```
+
+Those two numbers do not compose: `split-vs-unsplit idle = 0` and `idle-vs-loaded =
+0.038` say nothing about `split-loaded vs unsplit-loaded`. **The question is not whether
+splitting perturbs, it is whether splitting perturbs any more than what users already
+receive.** That run has not been done.
+
+Scope, his: one model, one build, one prompt, 4 steps, one load pattern, CUDA on GB10,
+3 of 4 slots busy. Whether the magnitude scales with batch size, prompt or backend is
+untested, and **the generated text was identical in both arms** -- 0.038 is an
+opportunity for a sampled token to differ, not a demonstration that one did.
+
+**Independent of splitting entirely: the served answers already vary with batch
+composition.** Same question, same seed, same machine, different numbers depending on
+who else is using it. That is a property of the service today.
