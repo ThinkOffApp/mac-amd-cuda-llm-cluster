@@ -15,6 +15,21 @@ prompt 512, 64 new tokens
   Mini + M5 tensor parallel     0.7377 s     31.48 tok/s      0.27x
 ```
 
+**Read these as decode rate AT 64 NEW TOKENS.** The rate is not constant in
+generation length — the KV cache grows, so attention genuinely costs more as the
+sequence lengthens. Measured on the Mini, 3 runs each:
+
+```
+  new tokens    32      64     128     256
+  decode t/s  77.51   79.35   74.93   74.37
+```
+
+About 6% from 64 to 256. **The comparison above is unaffected** — solo and TP were
+measured at identical settings, so the ratio holds — but the absolute figures
+belong to their generation length and should not be quoted bare. (Distinct from
+the much larger short-generation artifact @claudeMB hit, which was prefill
+bleeding into the rate rather than cache growth.)
+
 Conditions: openai-community/gpt2 @ 607a30d7, FP32, eval, one torch thread,
 batch 1, same KV cache and greedy/EOS policy in all three configurations,
 2 warmups + 5 recorded runs, **configurations interleaved per repetition**, GPU
