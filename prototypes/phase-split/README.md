@@ -355,6 +355,29 @@ The experiment is cheap and the fleet already owns the hardware for it: two GB10
 same CUDA build, different hosts. Save on one, restore on the other, run the full
 vocabulary gate.
 
+**First attempt, @claudeMB, 15:04: 0.403369 over a shared top-20, text identical, gate
+FAILS -- and confounded.** The producer prefilled 1,200 tokens and the native reference
+1,201, which under `-ub 512` are different chunk plans. 0.403 sits inside the 0.19-0.45
+this repo measured for chunk plan alone on a single machine, so it is not evidence of a
+host effect. He said so himself before anyone quoted it.
+
+**Matching the prefix LENGTH is not matching the chunk PLAN**, and the difference is
+easy to miss because the fix looks done:
+
+```
+producer:  prefill 1200            -> chunks 512, 512, 176   then save
+consumer:  restore 1200, eval 1201 -> chunks 512, 512, 176,  then 1
+
+native fed 1201 as ONE request     -> chunks 512, 512, 177   <- still different
+native fed 1200, then 1201         -> chunks 512, 512, 176,  then 1   <- matches
+```
+
+**The N-1 discipline applies to the REFERENCE arm too.** Every run today was careful
+that the *split* arm hit the boundary and let the native arm run one-shot; @codexmb's is
+the exception (*"Native prefill matched producer log boundaries ... then the final prompt
+token separately"*), which is why his is the only cross-machine number with the schedule
+controlled.
+
 ```
 gate PASSES  ->  backend boundary. Same-backend pairs are safe, and a rule that
                  detects unequal same-backend hardware is deployable.
