@@ -333,3 +333,49 @@ actually being moved.
 
 The good news in the same table: `156.9 MB + 65,547/token` predicts that pair's overhead
 at 2,111 tokens to within one millisecond, on hardware this repo has never touched.
+
+
+## The row nobody has measured
+
+The correctness evidence has a hole in the middle of it:
+
+```
+same HOST, boundaries matched            0.000000 exactly        measured
+same BACKEND, DIFFERENT HOSTS            ** never tested **
+different backend, different hosts       gate FAILS, max 9.46    measured
+```
+
+@codexmb's zero-error control was **same host**, which is not the same thing as same
+backend on two machines: driver version, chip stepping, kernel selection and thread
+count all still differ. **Until the middle row exists, "backend boundary" and "machine
+boundary" are indistinguishable**, and any claim that same-backend pairs are lossless is
+asserted rather than measured.
+
+The experiment is cheap and the fleet already owns the hardware for it: two GB10 Sparks,
+same CUDA build, different hosts. Save on one, restore on the other, run the full
+vocabulary gate.
+
+```
+gate PASSES  ->  backend boundary. Same-backend pairs are safe, and a rule that
+                 detects unequal same-backend hardware is deployable.
+gate FAILS   ->  machine boundary. No cross-machine handoff is numerically safe
+                 and refuse-by-default is permanent.
+```
+
+Two equally fast machines have nothing to win on performance, which is exactly what
+makes them the right correctness control: no speed difference to confound it.
+
+## What decides deployability
+
+Not the gate. **Nobody has shown the divergence changes a user-visible answer.** The
+measurement that settles it is a **flip rate**: a few hundred generations under real
+sampling settings, split against un-split, counting how often the emitted text differs.
+Sixteen matching greedy steps says almost nothing about that in either direction.
+
+Until then the honest default for a runner is to **refuse when producer and consumer
+report different backends**, rather than silently returning answers that differ from the
+un-split path.
+
+**Note on this pair specifically: it has never been through the full-vocabulary gate.**
+The 3.73x here is a performance number. The only gate run is @codexmb's on CUDA->Metal;
+what was measured here is 0.67 inside a top-10, which that result shows is a keyhole.
