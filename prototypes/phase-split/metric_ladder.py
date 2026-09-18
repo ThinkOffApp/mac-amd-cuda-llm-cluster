@@ -14,13 +14,22 @@ hardware, so the reasoning can be checked in a second.
                             moved most, and the tail moves most while mattering
                             least. A token at p=1e-17 can fail an atol=0.1 gate.
 
-    TOTAL VARIATION         0.5 * sum |p - q|. Exactly the maximum probability
-                            that a single sampled token differs. A BOUND, not an
-                            estimate, and free of any assumption about top_k.
+    TOTAL VARIATION         0.5 * sum |p - q|. The MINIMUM probability that a
+                            single sampled token differs, over all couplings --
+                            a LOWER bound, achieved only by the optimal coupling.
+                            An earlier version of this file called it the maximum
+                            and said "whatever the sampler does". @claudeMB
+                            caught it; it was wrong in the direction that
+                            licenses a deployment. Measured below.
 
-    observed FLIP RATE      what actually happens under real settings. TV is the
-                            ceiling; the flip rate is the realisation. A measured
-                            flip rate above TV means the harness is wrong.
+    observed FLIP RATE      the only thing that answers the question. No cheap
+                            bound stands in for it.
+
+TV IS STILL WORTH COMPUTING. It is a floor, so a large TV settles the question
+immediately and against us. TV = 0 exactly means p = q, and identical
+distributions give identical samples under a shared seed, so a zero is
+conclusive. It is the small-but-nonzero range where it says much less than it
+looks like it says.
 """
 import math
 import random
@@ -43,8 +52,46 @@ def maxdiff(a, b):
 
 
 def tv(p, q):
-    """Total variation. Bounds the probability that one sampled token differs."""
+    """Total variation: the MINIMUM disagreement probability over couplings."""
     return 0.5 * sum(abs(x - y) for x, y in zip(p, q))
+
+
+def cdf_sample(dist, u):
+    c = 0.0
+    for i, x in enumerate(dist):
+        c += x
+        if u <= c:
+            return i
+    return len(dist) - 1
+
+
+def coupling_demo(n=200_000, vocab=2000, sd=0.05, seed=7):
+    """Show that TV is a floor, not a ceiling, by sampling three couplings."""
+    rng = random.Random(seed)
+    base = [rng.gauss(0, 3) for _ in range(vocab)]
+    noisy = [v + rng.gauss(0, sd) for v in base]
+    p, q = probs(base), probs(noisy)
+    t = tv(p, q)
+
+    r1 = random.Random(99)
+    shared = sum(1 for _ in range(n)
+                 for u in (r1.random(),)
+                 if cdf_sample(p, u) != cdf_sample(q, u))
+    r2 = random.Random(1234)
+    indep = sum(1 for _ in range(n)
+                if cdf_sample(p, r2.random()) != cdf_sample(q, r2.random()))
+
+    print(f"\n{'TV(p,q)':<36}{t*100:>9.3f}%")
+    print(f"{'optimal coupling (theory)':<36}{t*100:>9.3f}%   <- TV IS THIS")
+    print(f"{'shared uniform, same token order':<36}{shared/n*100:>9.3f}%"
+          f"   <- {shared/n/t:.1f}x TV")
+    print(f"{'independent randomness':<36}{indep/n*100:>9.3f}%"
+          f"   <- {indep/n/t:.0f}x TV")
+    print("\nTV is the MINIMUM over couplings. It does not cap anything.")
+    print("Caveat on this demo: inverse-CDF over an untruncated 2,000-token")
+    print("distribution. Real sampling truncates to top_k first, where orderings")
+    print("agree far more often, so the multiple above is illustrative. Only the")
+    print("DIRECTION of the inequality is certain.")
 
 
 def row(label, base, other):
@@ -68,7 +115,8 @@ def main():
 
     print("\nRow 1: a raw-logit gate FAILS, nothing can change.")
     print("Row 3: a log-prob gate FAILS at atol=0.1, nothing can change.")
-    print("Only TV is small in both, and only TV bounds what a sampler can do.")
+    print("Only TV is small in both -- but TV is a FLOOR, not a ceiling:")
+    coupling_demo()
 
 
 if __name__ == "__main__":

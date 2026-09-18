@@ -7,4 +7,15 @@ one p=1e-17 token moved 3.0             3.000000      3.000000     1.809e-15
 
 Row 1: a raw-logit gate FAILS, nothing can change.
 Row 3: a log-prob gate FAILS at atol=0.1, nothing can change.
-Only TV is small in both, and only TV bounds what a sampler can do.
+Only TV is small in both -- but TV is a FLOOR, not a ceiling:
+
+TV(p,q)                                 1.731%
+optimal coupling (theory)               1.731%   <- TV IS THIS
+shared uniform, same token order       23.863%   <- 13.8x TV
+independent randomness                 97.678%   <- 56x TV
+
+TV is the MINIMUM over couplings. It does not cap anything.
+Caveat on this demo: inverse-CDF over an untruncated 2,000-token
+distribution. Real sampling truncates to top_k first, where orderings
+agree far more often, so the multiple above is illustrative. Only the
+DIRECTION of the inequality is certain.

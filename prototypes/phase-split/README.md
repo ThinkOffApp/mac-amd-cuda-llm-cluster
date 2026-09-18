@@ -510,17 +510,39 @@ gate while being unsamplable.
 TV(p, q) = 0.5 * sum |p_i - q_i|
 ```
 
-**TV is exactly the maximum probability that a single sampled token differs** -- a bound,
-not an estimate, with no assumption about `top_k`. It is one line beyond the `logsumexp`
-on logits already collected: exponentiate, halve the L1 distance.
+**TV is the MINIMUM probability that a single sampled token differs, over all
+couplings** -- a LOWER bound, achieved only by the optimal coupling. An earlier version
+of this file called it the maximum and wrote "whatever the sampler does". @claudeMB
+caught it, and it was wrong in the direction that licenses a deployment. Measured:
+
+```
+TV(p,q)                              1.731%
+optimal coupling (theory)            1.731%    <- TV IS THIS
+shared uniform, same token order    23.863%    <- 13.8x TV
+independent randomness              97.678%    <- 56x TV
+```
+
+**TV is still worth computing.** It is a floor, so a large TV settles the question
+immediately and against us; `TV = 0` exactly means `p = q`, and identical distributions
+give identical samples under a shared seed, so a zero is conclusive. It also separates
+the shift-invariant part of `9.46` from the part that reshapes the distribution, which
+nobody has decomposed. It is only the small-but-nonzero range where it says far less
+than it looks like it says.
 
 ```
 full-vocab RAW LOGITS    fails on differences that cannot change an output
 full-vocab LOG-PROBS     right space, maximum decided by the irrelevant tail
-TV DISTANCE per step     bounds the probability a sampled token differs   <- decisive
-observed FLIP RATE       what happens under real settings (flip_rate.py)
+TV DISTANCE per step     a FLOOR on disagreement; zero is conclusive, small is not
+observed FLIP RATE       the only thing that answers the question   <- decisive
 ```
 
-**TV is the ceiling, the flip rate is the realisation.** A measured flip rate above the
-TV bound means the harness is wrong, which makes `flip_rate.py` self-checking against a
-number computed independently of it.
+**There is no cheap bound standing in for the flip rate.** `flip_rate.py` uses the same
+seed on both arms, which is the shared-uniform coupling above, where disagreement runs
+many times TV -- so a rate well above TV is what a *correct* harness produces, and the
+self-check an earlier version of this file described would have flagged good runs as
+broken. It has been removed.
+
+Caveat on the demo above: inverse-CDF over an untruncated 2,000-token distribution. Real
+sampling truncates to `top_k` first, where orderings agree far more often, so the
+multiple is illustrative rather than a prediction. Only the direction of the inequality
+is certain.

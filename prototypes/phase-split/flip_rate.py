@@ -13,6 +13,13 @@ safety. The question a product owner actually has is: **under our real sampling
 settings, how often does the split path emit different text than the un-split path?**
 That is a rate, it has a confidence interval, and it is measurable.
 
+AND THERE IS NO CHEAP SUBSTITUTE FOR IT. Total variation distance was proposed as a
+ceiling this rate could be checked against; that was wrong. TV is the MINIMUM
+disagreement over couplings, achieved only by the optimal one, so it is a LOWER bound.
+This harness uses the same seed on both arms -- the shared-uniform coupling -- where
+disagreement can run many times TV. A rate well above TV is what a CORRECT harness
+produces here, and an earlier version of this docstring said the opposite.
+
 WHAT THIS REFUSES TO DO
     Report a rate without controls. A zero flip rate is exactly what a broken harness
     produces -- comparing a string with itself, or silently re-prefilling so both
