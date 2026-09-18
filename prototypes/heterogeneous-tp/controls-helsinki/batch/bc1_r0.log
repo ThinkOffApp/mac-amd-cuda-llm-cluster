@@ -1,0 +1,60 @@
+{
+  "ranks": [
+    {
+      "rank": 0,
+      "world": 2,
+      "host": "Petruss-Mini",
+      "device": "cpu",
+      "torch": "2.11.0",
+      "hip": null,
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+      "batch": 4,
+      "prompt_tokens": 12,
+      "new_tokens": 5,
+      "layers": 12,
+      "collectives_per_step": 25,
+      "payload_bytes_per_collective": 12288,
+      "correctness_checked": true,
+      "all_sequences_match_reference": false,
+      "runs": [
+        {
+          "total_wall_s": 0.0798368749965448,
+          "ttft_s": 0.024901166005292907,
+          "decode_tokens_total": 16,
+          "decode_elapsed_s": 0.05492704201606102,
+          "aggregate_tokens_per_s": 291.2954969488708,
+          "per_stream_tokens_per_s": 72.8238742372177
+        }
+      ],
+      "median_aggregate_tokens_per_s": 291.2954969488708
+    },
+    {
+      "rank": 1,
+      "world": 2,
+      "host": "Petruss-Mini",
+      "device": "cpu",
+      "torch": "2.11.0",
+      "hip": null,
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+      "batch": 4,
+      "prompt_tokens": 12,
+      "new_tokens": 5,
+      "layers": 12,
+      "collectives_per_step": 25,
+      "payload_bytes_per_collective": 12288,
+      "correctness_checked": true,
+      "all_sequences_match_reference": false,
+      "runs": [
+        {
+          "total_wall_s": 0.07985191702027805,
+          "ttft_s": 0.024963292002212256,
+          "decode_tokens_total": 16,
+          "decode_elapsed_s": 0.054879667004570365,
+          "aggregate_tokens_per_s": 291.54695852413835,
+          "per_stream_tokens_per_s": 72.88673963103459
+        }
+      ],
+      "median_aggregate_tokens_per_s": 291.54695852413835
+    }
+  ]
+}
