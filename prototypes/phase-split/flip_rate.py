@@ -40,6 +40,25 @@ WHAT THIS REFUSES TO DO
     requests survived long enough to be published. The positive control is the guard
     against that, and it is the one people leave out.
 
+IF YOU COMPUTE TV FROM A SERVER API, REPORT THE CAPTURED MASS BESIDE IT
+    @claudeMB hit this immediately: at top-2000 his TV bound came back 3.52e-02, and
+    the whole of it was UNCAPTURED TAIL. The captured log-probs were already
+    bit-identical, so the measured term was exactly zero and the number was an artefact
+    of the window. Widening to top-120,000 dropped it to 9.8e-4 with nothing else
+    changed.
+
+    The rigorous form, for S = ids captured by BOTH arms:
+
+        TV_full  <=  0.5 * [ sum_S |p_i - q_i|  +  (1 - P(S))  +  (1 - Q(S)) ]
+
+    The unseen tail can contribute at most the mass living in it, so that is an UPPER
+    bound and needs no apology -- but only if the captured mass is reported. A bare
+    top-k TV figure is uninterpretable.
+
+    This is the mirror of the truncation finding in metric_ladder.py: truncation can
+    make TV bigger, an unreported tail can invent TV that is not there, and neither is
+    visible from the number alone.
+
 VALIDATE IT ON A KNOWN-GOOD PAIR FIRST
     @claudeMB measured bit-identical full-vocabulary log-probs for CUDA -> CUDA across
     two hosts with the chunk plan matched. Bit-identical log-probs means bit-identical
