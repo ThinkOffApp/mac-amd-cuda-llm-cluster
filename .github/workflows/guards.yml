@@ -1,0 +1,58 @@
+# Run the guards. They exist because things went wrong; a guard nobody runs is
+# the same shape as the bug it was written to catch.
+#
+# @claudeMB found CarWatch's CI red since 15 Sep with tests that `unittest
+# discover` never collected -- present, and never executed. Checking this repo
+# for the same shape: it had no CI at all, so every guard added on 2026-09-18
+# ran only when someone typed it. That is the identical failure one directory
+# over.
+#
+# Deliberately python-only and dependency-free: these checks must run even when
+# no model, no GPU and no second machine exist.
+name: guards
+
+on:
+  push:
+    paths: ['prototypes/**', 'scripts/**', '.github/workflows/guards.yml']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  self-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+
+      - name: kvcheck refuses every failure case
+        run: python3 prototypes/phase-split/kvcheck.py --self-test
+
+      - name: metric ladder runs and reports its couplings
+        run: python3 prototypes/phase-split/metric_ladder.py
+
+      - name: model-currency check refuses an outdated generation
+        run: |
+          set +e
+          out=$(python3 scripts/model-currency-check.py gemma-3-4b-it-Q4_K_M.gguf 2>&1)
+          rc=$?
+          set -e
+          echo "$out"
+          # A guard that cannot fail is worthless, so assert the FAILURE path.
+          test $rc -ne 0 || { echo "::error::the currency check PASSED an outdated model"; exit 1; }
+          echo "$out" | grep -q "current is gemma 4" \
+            || { echo "::error::refusal did not name the current generation"; exit 1; }
+
+      - name: model-currency check accepts a stated reason
+        run: |
+          python3 scripts/model-currency-check.py gemma-3-4b-it-Q4_K_M.gguf \
+            --reason "ci: exercising the stated-reason path" | grep -q "stated reason"
+
+      - name: every script at least parses
+        run: |
+          fail=0
+          for f in $(git ls-files '*.py'); do
+            python3 -c "import ast,sys; ast.parse(open(sys.argv[1]).read())" "$f" \
+              || { echo "::error file=$f::does not parse"; fail=1; }
+          done
+          exit $fail
