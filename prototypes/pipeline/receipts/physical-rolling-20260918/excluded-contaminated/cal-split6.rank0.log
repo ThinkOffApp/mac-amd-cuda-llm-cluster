@@ -1,0 +1,15 @@
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 14094.98it/s]
+Traceback (most recent call last):
+  File "/private/tmp/het-tp/rolling.py", line 375, in <module>
+    main()
+    ~~~~^^
+  File "/private/tmp/het-tp/rolling.py", line 233, in main
+    chan = PipeChannel(rank, os.environ.get('MASTER_ADDR', '127.0.0.1'),
+                       int(os.environ.get('MASTER_PORT', '29901')))
+  File "/private/tmp/het-tp/rolling.py", line 78, in __init__
+    self.sock, _ = listener.accept()
+                   ~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 298, in accept
+    fd, addr = self._accept()
+               ~~~~~~~~~~~~^^
+TimeoutError: timed out

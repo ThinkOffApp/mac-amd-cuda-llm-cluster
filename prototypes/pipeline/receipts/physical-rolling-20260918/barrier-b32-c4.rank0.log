@@ -1,0 +1,2 @@
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 24987.20it/s]
+{"valid": true, "schedule": "barrier", "out": "/tmp/het-tp/rolling-results/barrier-b32-c4.json"}

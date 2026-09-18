@@ -1,0 +1,2 @@
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 23878.94it/s]
+{"valid": true, "schedule": "alternating", "out": "/tmp/het-tp/rolling-results/cal-split4.json"}

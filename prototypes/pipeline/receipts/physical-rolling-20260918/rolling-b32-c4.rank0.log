@@ -1,0 +1,2 @@
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 16346.03it/s]
+{"valid": true, "schedule": "rolling", "out": "/tmp/het-tp/rolling-results/rolling-b32-c4.json"}
