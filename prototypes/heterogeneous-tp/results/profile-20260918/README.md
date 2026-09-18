@@ -1,38 +1,56 @@
-# Where the time goes — first decomposition, 2026-09-18
+# Where the time goes — corrected, 2026-09-18
 
-**Mini alone, Metal, 128-token prompt, 64 decode steps. No M5, no network.**
-The staged column makes exactly the same device-to-CPU round trips tensor
-parallel makes; only the collective is a no-op.
+**The first version of this file was wrong. It is kept corrected, not deleted,
+because the error is instructive.**
+
+@codexmb found two measurement bugs: the stage counters accumulated during
+prefill, the correctness gate and the warmups, while the denominator counted
+only decode forwards — 189 forwards over 63 tokens. And "compute" timed only the
+two row-parallel matmuls, omitting embedding, layer norms, most of attention,
+residuals and the LM head.
+
+The profiler now switches on **only for the decode steps of a recorded run**, and
+measures against a directly-timed `total_forward` with an explicit `unaccounted`
+bucket, so a missing term cannot hide.
+
+## Corrected: Mini alone, Metal, staged, decode only
 
 ```
-                        ms/token    share
-GPU-resident
-  compute                  9.083     100%
-
-Staged through CPU
-  compute                  9.374    51.5%
-  device -> CPU            4.520    24.9%
-  collective (no-op)       0.016     0.1%
-  CPU -> device            4.274    23.5%
-  total                   18.184
+  compute (row-parallel matmuls)   8.797 ms   28.2%
+  device -> CPU                    4.389 ms   14.1%
+  CPU -> device                    4.137 ms   13.3%
+  lm_head matmul                   1.788 ms    5.7%
+  logits -> CPU                    0.219 ms    0.7%
+  embed                            0.395 ms    1.3%
+  UNACCOUNTED                     11.456 ms   36.7%
+  total forward                   31.191 ms
 ```
 
-**The device-to-host round trip costs 8.8 ms per token — about as much as all
-the GPU arithmetic in the model.** Even with an instantaneous network, staging
-alone nearly doubles per-token time.
+Staging is **27%**, not the 48% first reported. The largest single bucket is the
+arithmetic that was never instrumented, plus the sync overhead profiling adds.
 
-That redirects the optimisation target named in the goal ("reduce time spent in
-traffic"): **the first cost is the copies, not the wire.**
+## The finding worth keeping: cost is per-transfer, not per-byte
+
+```
+  1 copy of 201,028 B   0.219 ms       918 MB/s effective
+ 24 copies of 3,072 B   0.183 ms each   17 MB/s effective
+```
+
+**The LM head copy moves 65x more bytes for 1.2x the time.** Device-to-host cost
+here is dominated by fixed per-call overhead, not bandwidth.
+
+**Consequence for optimisation: compressing the payload buys almost nothing.**
+A narrower wire dtype halves bytes that were not the problem. **Fewer, larger
+transfers is the lever** — fusing or batching the per-block collectives.
 
 ## How to read it
 
-`--profile` takes a GPU sync around every stage, which **inflates the absolute
-numbers**. Read the shares. Profiled runs deliberately return no `timings` at
-all, so a profiled number can never be quoted as throughput.
+`--profile` takes a GPU sync around every stage, so absolute totals are inflated
+(31.2 ms/token profiled against ~24.4 unprofiled). Read shares. Profiled runs
+return no `timings` at all, so a profiled figure cannot be quoted as throughput.
 
 ## Bounds
 
-One machine. No network. GPT-2 124M. This is the staged *control*, not a
-decomposition of the real TP cost, which additionally pays wire time,
-synchronisation and waiting for the peer. That measurement needs the M5 GPU and
-has not been taken.
+One machine, Metal, no network, GPT-2 124M, staged control rather than real TP.
+The real TP breakdown additionally pays wire time, synchronisation and waiting
+for the peer, and has not been measured.

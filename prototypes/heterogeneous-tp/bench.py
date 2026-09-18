@@ -128,6 +128,7 @@ def main():
     import transformers as _tf, tokenizers as _tk
     cfg = json.load(open(os.path.join(MODEL_DIR, "config.json")))
     n_layer, n_head, dim = cfg["n_layer"], cfg["n_head"], cfg["n_embd"]
+    vocab = cfg["vocab_size"]
     head_dim, eps = dim // n_head, cfg["layer_norm_epsilon"]
     sd = load_file(os.path.join(MODEL_DIR, "model.safetensors"))
     tok = AutoTokenizer.from_pretrained(MODEL_DIR)
@@ -173,8 +174,22 @@ def main():
             wte_d, wpe_d = sd["wte.weight"].to(device), sd["wpe.weight"].to(device)
             lnf_w, lnf_b = sd["ln_f.weight"].to(device), sd["ln_f.bias"].to(device)
 
-            prof = {k: 0.0 for k in ('compute', 'to_cpu', 'collective', 'to_device')}
+            # Buckets must SUM TO THE WHOLE TOKEN. The first version timed only
+            # the two row-parallel matmuls and their staging, which silently
+            # excluded the LM head — the largest single copy in the model — and
+            # most of the attention maths. A breakdown that does not add up can
+            # hide its own biggest term, so `total_forward` is measured directly
+            # and `unaccounted` is reported rather than left implicit.
+            prof = {k: 0.0 for k in ('compute', 'to_cpu', 'collective', 'to_device',
+                                     'embed', 'lm_head', 'logits_to_cpu',
+                                     'total_forward')}
             prof_n = {'tokens': 0}
+            # @codexmb, 2026-09-18: the first version accumulated during prefill,
+            # the correctness gate and the warmups, while the denominator counted
+            # only decode forwards. The per-token figures were therefore inflated
+            # by work that was never in the denominator. Accumulation is now
+            # switched on ONLY for the decode steps of a recorded run.
+            prof_on = {'v': False}
 
             def _t():
                 sync(device)
@@ -196,7 +211,7 @@ def main():
                 # Solo keeps this on the GPU. Staging it through CPU with no
                 # peer to reduce with would make the single-host baseline slower
                 # than it is, and flatter any TP comparison against it.
-                if args.profile:
+                if prof_on['v']:
                     t0 = _t(); part = ctx @ b["cp_w"]; t1 = _t()
                     prof['compute'] += t1 - t0
                     if stage_cpu:
@@ -214,7 +229,7 @@ def main():
                         part = part.to(device)
                 x = x + (part + b["cp_b"])
                 h = F.layer_norm(x, (dim,), b["ln2_w"], b["ln2_b"], eps)
-                if args.profile:
+                if prof_on['v']:
                     t0 = _t()
                     part = gelu_new(h @ b["fc_w"] + b["fc_b"]) @ b["mp_w"]
                     t1 = _t(); prof['compute'] += t1 - t0
@@ -234,16 +249,33 @@ def main():
                 return x + (part + b["mp_b"])
 
             def forward(ids, caches, offset):
+                if not prof_on['v']:
+                    pos = torch.arange(offset, offset + len(ids), device=device)
+                    x = wte_d[torch.tensor(ids, device=device)] + wpe_d[pos]
+                    for b, c in zip(blocks, caches):
+                        x = block_forward(x, b, c, offset)
+                    x = F.layer_norm(x, (dim,), lnf_w, lnf_b, eps)
+                    return (x @ wte_d.T).to("cpu")
+                f0 = _t()
                 pos = torch.arange(offset, offset + len(ids), device=device)
                 x = wte_d[torch.tensor(ids, device=device)] + wpe_d[pos]
+                f1 = _t(); prof['embed'] += f1 - f0
                 for b, c in zip(blocks, caches):
                     x = block_forward(x, b, c, offset)
+                f2 = _t()
                 x = F.layer_norm(x, (dim,), lnf_w, lnf_b, eps)
-                return (x @ wte_d.T).to("cpu")
+                logits = x @ wte_d.T
+                f3 = _t(); prof['lm_head'] += f3 - f2
+                out = logits.to("cpu")
+                f4 = _t(); prof['logits_to_cpu'] += f4 - f3
+                prof['total_forward'] += f4 - f0
+                return out
 
-            def generate(n_new, stamps=None):
+            def generate(n_new, stamps=None, profile=False):
                 caches = [{"k": None, "v": None} for _ in range(n_layer)]
+                prof_on['v'] = False          # prefill is not a decode token
                 logits = forward(prompt_ids, caches, 0)
+                prof_on['v'] = profile
                 offset = len(prompt_ids)
                 out = []
                 for i in range(n_new):
@@ -262,7 +294,9 @@ def main():
                     if i < n_new - 1:
                         logits = forward([nxt], caches, offset)
                         offset += 1
-                        prof_n['tokens'] += 1
+                        if prof_on['v']:
+                            prof_n['tokens'] += 1
+                prof_on['v'] = False
                 return out
 
             # ---------- correctness gate, BEFORE any timing ----------
@@ -309,10 +343,13 @@ def main():
                 barrier()
                 for _ in range(args.runs):
                     stamps = []
+                    if args.profile:
+                        for k in prof: prof[k] = 0.0
+                        prof_n['tokens'] = 0
                     barrier()
                     sync(device)
                     t0 = time.perf_counter()
-                    produced = generate(args.new_tokens, stamps)
+                    produced = generate(args.new_tokens, stamps, profile=args.profile)
                     sync(device)
                     t1 = time.perf_counter()
                     # Check THIS run's output, not just the untimed one earlier:
@@ -379,6 +416,9 @@ def main():
             "timings": [] if args.profile else (runs if globally_valid else []),
             "profiled": bool(args.profile),
             "stage_breakdown": (None if not args.profile else {
+                "scope": ("DECODE steps of the last recorded run only. Prefill, the "
+                          "correctness gate and warmups are excluded from both the "
+                          "numerator and the denominator."),
                 "note": ("Per-stage totals across all decode forwards. A GPU sync is "
                          "taken around every stage, which INFLATES the absolute "
                          "numbers; read the SHARES, not the totals. Throughput is "
@@ -388,8 +428,19 @@ def main():
                 "totals_s": {k: round(v, 6) for k, v in prof.items()},
                 "per_token_ms": {k: round(1000 * v / max(prof_n['tokens'], 1), 4)
                                  for k, v in prof.items()},
-                "share_pct": {k: round(100 * v / max(sum(prof.values()), 1e-12), 1)
-                              for k, v in prof.items()},
+                # Shares are of the MEASURED TOTAL forward, and `unaccounted`
+                # closes the books so a missing term cannot hide.
+                "share_of_total_pct": {
+                    k: round(100 * v / max(prof['total_forward'], 1e-12), 1)
+                    for k, v in prof.items() if k != 'total_forward'},
+                "unaccounted_ms_per_token": round(
+                    1000 * (prof['total_forward']
+                            - sum(v for k, v in prof.items() if k != 'total_forward'))
+                    / max(prof_n['tokens'], 1), 4),
+                "device_to_host_bytes_per_token": {
+                    "lm_head_logits": vocab * 4,
+                    "collectives": 2 * n_layer * dim * 4,
+                },
             }),
             "coordinator_statistic": ("rank 0 total_wall_s; per-rank raw timings "
                                       "are kept in ranks[] and not averaged"),
