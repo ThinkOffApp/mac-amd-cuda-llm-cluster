@@ -86,8 +86,10 @@ tax, and no link fixes that: the Berlin pair would need 22 Gbit before it broke 
 ## Correctness: matching tokens is not equivalence
 
 The transfer is lossless (`sha256` of the slot file is identical on both machines),
-but the two backends (Metal, Vulkan) do not produce the same KV for the same prompt, so the files
-differ. `kvcheck.py` compares the next-token distributions. It replaces the first pair of
+but the two machines do not produce the same KV for the same prompt, so the files differ.
+**Why they differ is not established**: the backends differ (Metal, Vulkan) and so do the
+prefill chunk boundaries, and the control below shows chunking alone is enough to move the
+distributions. `kvcheck.py` compares the next-token distributions. It replaces the first pair of
 scripts, which @codexmb showed would print the headline result -- "same text True,
 worst gap 0.000000" -- for two FAILED requests: `curl -sS` exits 0 on an HTTP error,
 the restore response was never read, and `gap([], [])` returns 0.0. A zero from a dead
@@ -99,7 +101,7 @@ one to fail.
 comparison              same text   worst |dlogprob| over shared top-10
 pd.bin  vs pd.bin       True        0.000000    <- SAME FILE twice (control)
 q27.bin vs q27.bin      True        0.000000    <- SAME FILE twice (control)
-pd.bin  vs q27.bin      True        0.670641    <- Vulkan-KV vs Metal-KV
+pd.bin  vs q27.bin      True        0.670641    <- cross-machine (cause NOT established)
 ```
 
 The same-file control is exactly zero, so the 0.67 is cross-backend and not run
@@ -131,12 +133,26 @@ script and its log are kept as `chunk_control_INVALID.py.bak` and
 `receipts/chunk-control.txt`.
 
 The corrected control saves N-1 and requests N, and **asserts `cache_n == N-1` and
-`prompt_n == 1` before comparing anything**, so the re-prefill path cannot masquerade
-as agreement again. Result in `receipts/chunk-control-v2.txt`.
+`prompt_n == 1` before comparing anything**. With a confirmed cache hit on both sides
+it does **not** reproduce zero:
 
-Even a clean result here narrows rather than eliminates the confound: these are an
-arbitrary chunk plan, not the producer's actual boundaries, and matching those needs
-the producer.
+```
+A   one request for all 2106 tokens        cache_n=2106 prompt_n=1
+B   1107 tokens, then extended to 2106     cache_n=2106 prompt_n=1
+
+SAME BACKEND, DIFFERENT CHUNKING   worst |dlogprob| = 0.269895
+cross-machine, for comparison                        0.670641
+```
+
+**Chunking alone accounts for 40% of the cross-machine gap**, on one machine with one
+backend, one build and one set of weights. So the cross-machine difference is **NOT
+established as a backend effect**, and the earlier claim in this file that chunking was
+ruled out is withdrawn -- it rested on the void control above, which returned a clean
+zero because it was comparing two fresh native prefills.
+
+The producer and the decoder do not batch identically and those boundaries were never
+matched. Separating backend from chunk plan needs the producer, matched boundaries, and
+a GPU window.
 
 ### Does the fixed block belong to the model or to `-c`?
 

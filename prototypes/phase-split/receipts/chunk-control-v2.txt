@@ -1,0 +1,27 @@
+prompt 2107 tokens; both caches hold the first 2106 and are built on THIS machine
+
+A: one request for all 2106 tokens
+  fed  2106 tok -> prompt_n=2106 cache_n=0 prompt_ms=40123.8
+  saved chunkA.bin: 294,972,568 bytes
+
+B: 1107 tokens, then extended to 2106
+  fed  1107 tok -> prompt_n=1107 cache_n=0 prompt_ms=22445.2
+  fed  2106 tok -> prompt_n=999 cache_n=1107 prompt_ms=19682.1
+  saved chunkB.bin: 294,972,568 bytes
+
+comparing:
+  chunkA.bin: cache_n=2106 prompt_n=1  (cache hit confirmed)
+  chunkB.bin: cache_n=2106 prompt_n=1  (cache hit confirmed)
+
+step  A top               B top                 |dlogprob|  shared
+0     '.'#13              '.'#13                  0.269895  10/10
+1     ' Section'#10790    ' Section'#10790        0.053249  10/10
+2     ' '#220             ' '#220                 0.024322  10/10
+3     '7'#22              '7'#22                  0.047880  10/10
+
+same text: True
+SAME BACKEND, DIFFERENT CHUNKING: worst |dlogprob| = 0.269895
+cross-machine figure for comparison:                 0.670641
+
+A near-zero here narrows chunking as a confound but does not eliminate it:
+these are an arbitrary chunk plan, not the producer's actual boundaries.
