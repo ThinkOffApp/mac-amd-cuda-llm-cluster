@@ -308,6 +308,29 @@ MODEL_CHECKERS = ["~/bin/modelcheck.py",
 RECEIPT = "model-currency-receipt.json"
 
 
+def _assert_we_load_the_models():
+    """This tool may only gate a typed path while it LOADS the model itself.
+
+    @claudeMB gates his harness on what the server reports at /props, not on
+    what someone typed, so a harness pointed at a server running something else
+    is still caught. That is strictly better -- and it does not apply here, for
+    a reason worth asserting rather than remembering: Host.run invokes
+    `llama-bench -m <model>`, so the typed path IS the loaded model. With
+    --tune-ts the local llama.cpp still loads --model-local and uses the remote
+    only as a compute backend.
+
+    If anyone adds an attach-to-running-server mode, this assertion fails and
+    they have to gate on what the server reports instead of what was typed.
+    """
+    src = open(os.path.abspath(__file__)).read()
+    if "llama-bench" not in src or "-m {shlex.quote(self.model)}" not in src:
+        raise SystemExit(
+            "REFUSING: this tool no longer launches llama-bench with the model it was\n"
+            "given, so a typed path is no longer evidence of what is loaded. Gate on\n"
+            "what the server reports (llama-server /props -> model_path) before\n"
+            "measuring anything.")
+
+
 def _preflight_models(models, reason, receipt_path):
     """Refuse to benchmark until every model's generation has been checked.
 
@@ -383,6 +406,7 @@ def main():
 
     # Before ANY host is touched. Every model this run will use, including the
     # remote ones, goes through the check or the run does not start.
+    _assert_we_load_the_models()
     _preflight_models(
         [args.model_local] + [h.split(":")[-1] for h in args.host],
         args.older_model_reason, args.currency_receipt)
