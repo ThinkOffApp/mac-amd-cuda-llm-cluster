@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/Users/petrus/Documents/Codex/2026-09-16/che/work/engine-correctness",
+    "/Volumes/t705/ModelArchive/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q4_K_XL.gguf",
+    "tensor",
+    "127.0.0.1:29591",
+    "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/heterogeneous-tp/engine-correctness/tensor",
+    "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/heterogeneous-tp/engine-correctness/solo"
+  ],
+  "returncode": 1,
+  "wall_s": 37.56429600715637,
+  "engine_commit": "bdcbaaf6e7520b68c8c60ff724c67409970d70e1",
+  "source_sha256": "95a96defae456bb237a943d8c543e56db7a16b8aef781f1f739991cd8b7f3a8e",
+  "rpc_patch_sha256": "c565231af8598830d302dd6ea5fffd95bb9aa71bbc64b527a63357eb6a657dea"
+}

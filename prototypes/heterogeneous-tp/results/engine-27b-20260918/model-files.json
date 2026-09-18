@@ -1,0 +1,27 @@
+[
+  {
+    "path": "/Volumes/t705/ModelArchive/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q4_K_XL.gguf",
+    "size": 17559178144,
+    "mtime_ns": 1789409353601665530,
+    "first_1MiB_sha256": "177ae5e70ef0d340fdf2d1d75539cf992d69eecdd8d244e36e33456cdcb07cfa",
+    "full_sha256": "3f227079003add2511437e5b1e94812e363385225bf6a9b47b0054a72bc8b01e"
+  },
+  {
+    "path": "/Volumes/t705/ModelArchive/Qwen38-Flash-Next-IQ4_XS/UD-IQ4_XS/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf",
+    "size": 10946624,
+    "mtime_ns": 1789597436834524629,
+    "first_1MiB_sha256": "5516f3d16a3478a0cc99584238c850ec8d35f2f80408b8969888ab7dc5d5e040"
+  },
+  {
+    "path": "/Volumes/t705/ModelArchive/Qwen38-Flash-Next-IQ4_XS/UD-IQ4_XS/Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf",
+    "size": 49835229856,
+    "mtime_ns": 1789604788282839134,
+    "first_1MiB_sha256": "338a91f7e6129f85768b30bb0ec6738b9c59d02df4b62f2d206b81e3e33118ca"
+  },
+  {
+    "path": "/Volumes/t705/ModelArchive/Qwen38-Flash-Next-IQ4_XS/UD-IQ4_XS/Qwen3.8-Flash-Next-UD-IQ4_XS-00003-of-00003.gguf",
+    "size": 43836407744,
+    "mtime_ns": 1789604729786365800,
+    "first_1MiB_sha256": "f3dbd3947e1715092383e07ac258ae96f04e9477be45696732750a97bdcbed6f"
+  }
+]

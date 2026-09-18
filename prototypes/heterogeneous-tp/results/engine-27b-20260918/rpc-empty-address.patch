@@ -1,0 +1,31 @@
+diff --git a/ggml/src/ggml-rpc/ggml-rpc.cpp b/ggml/src/ggml-rpc/ggml-rpc.cpp
+index c24caad..01db1c3 100644
+--- a/ggml/src/ggml-rpc/ggml-rpc.cpp
++++ b/ggml/src/ggml-rpc/ggml-rpc.cpp
+@@ -641,6 +641,10 @@ static rpc_tensor serialize_tensor(const ggml_tensor * tensor, const std::shared
+         if (ctx != nullptr && (dispatcher == nullptr || ctx->dispatcher == dispatcher)) {
+             result.buffer = ctx->remote_ptr;
+             result.data = reinterpret_cast<uint64_t>(tensor->data);
++            if (ggml_is_empty(tensor)) {
++                // Empty views have no payload; keep their wire address inside the owning buffer.
++                result.data = reinterpret_cast<uint64_t>(ggml_backend_buffer_get_base(buffer));
++            }
+         } else {
+             result.buffer = 0;
+             result.data = 0;
+@@ -1404,6 +1408,15 @@ ggml_tensor * rpc_server::deserialize_tensor(struct ggml_context * ctx, const rp
+         uint64_t buffer_start = (uint64_t) ggml_backend_buffer_get_base(result->buffer);
+         uint64_t buffer_size = (uint64_t) ggml_backend_buffer_get_size(result->buffer);
+         GGML_ASSERT(tensor->data + tensor_size >= tensor->data); // check for overflow
++        if (!(tensor->data >= buffer_start && tensor->data + tensor_size <= buffer_start + buffer_size)) {
++            fprintf(stderr, "TP_RPC_BOUNDS name=%.*s type=%u op=%u ne=%u,%u,%u,%u nb=%u,%u,%u,%u data=%llu base=%llu span=%llu capacity=%llu view_offset=%llu\n",
++                    GGML_MAX_NAME, tensor->name, tensor->type, tensor->op,
++                    tensor->ne[0], tensor->ne[1], tensor->ne[2], tensor->ne[3],
++                    tensor->nb[0], tensor->nb[1], tensor->nb[2], tensor->nb[3],
++                    (unsigned long long) tensor->data, (unsigned long long) buffer_start,
++                    (unsigned long long) tensor_size, (unsigned long long) buffer_size,
++                    (unsigned long long) tensor->view_offs);
++        }
+         GGML_ASSERT(tensor->data >= buffer_start && tensor->data + tensor_size <= buffer_start + buffer_size);
+     }
+ 
