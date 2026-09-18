@@ -1,0 +1,51 @@
+{
+  "prompt": "The capital of France is",
+  "prompt_ids": [
+    2,
+    818,
+    5279,
+    529,
+    7001,
+    563
+  ],
+  "model": "/Users/petrus/Documents/Codex/2026-09-16/che/work/models/gemma-4-e4b/gemma-4-E4B-it-Q4_K_M.gguf",
+  "vocabulary_size": 262144,
+  "chosen_ids": [
+    9079,
+    236761,
+    108,
+    1018,
+    14977,
+    53121,
+    2900,
+    563,
+    506,
+    5279,
+    529,
+    7001,
+    236881,
+    106
+  ],
+  "reference_context_ids": [
+    9079,
+    236761,
+    108,
+    1018,
+    14977,
+    53121,
+    2900,
+    563,
+    506,
+    5279,
+    529,
+    7001,
+    236881,
+    106
+  ],
+  "finite": true,
+  "tokens_match": true,
+  "logits_within_tolerance": true,
+  "max_abs_logit_error": 0.011819601058959961,
+  "min_reference_top2_margin": 0.15482139587402344,
+  "valid": true
+}
