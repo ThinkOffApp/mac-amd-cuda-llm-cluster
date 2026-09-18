@@ -17,6 +17,13 @@ on:
   pull_request:
   workflow_dispatch:
 
+# KNOWN GAP, stated rather than left for someone to discover: split-advisor's
+# own two guards are NOT exercised here. The provenance gate only fires for a
+# model path that EXISTS, and the load-the-model precondition needs the script
+# to run, so both want a fixture. That is a real hole in the same shape as the
+# one this file was written to close -- recorded, not hidden, and left undone
+# because the owner asked for inference work rather than more scaffolding.
+
 jobs:
   self-tests:
     runs-on: ubuntu-latest
