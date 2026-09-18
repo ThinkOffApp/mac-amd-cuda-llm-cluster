@@ -56,6 +56,16 @@ def main():
                          "'sha3f227079/build434ddbbc/c4096'")
     ap.add_argument("--target-on", required=True,
                     help="identity this prediction is for; must match --calibrated-on")
+    # Where the prefill timings came from is part of what they mean. @grok posted
+    # llama-bench and llama-server numbers for the same pair at the same length:
+    # each machine's ABSOLUTE prefill agreed to within 7%, and their DIFFERENCE
+    # disagreed by 2.07x, because the difference is small and the errors point
+    # opposite ways. This rule uses only the difference, so it inherits the worst
+    # of both -- and on that pair the two sources fall on opposite sides of the
+    # split/do-not-split line.
+    ap.add_argument("--timing-source", required=True, choices=["llama-server", "llama-bench"],
+                    help="where the prefill timings came from. llama-bench is REFUSED: "
+                         "it is not the path being split")
     # No defaults on any of these. Today's recurring failure was a constant
     # carried across a boundary where it did not hold: a per-token KV rate that
     # hid a fixed block, and a ceiling from one pair quoted at another. A default
@@ -70,6 +80,17 @@ def main():
                     help="decoder's prefill of token N -- the N-1 boundary. "
                          "Constant across links, NOT across machines.")
     a = ap.parse_args()
+
+    if a.timing_source != "llama-server":
+        raise SystemExit(
+            "REFUSING: timings from llama-bench.\n"
+            "Measured on one real pair, llama-bench and llama-server agreed within 7% on\n"
+            "each machine's absolute prefill and disagreed by 2.07x on their DIFFERENCE\n"
+            "(0.702 s against 0.339 s at 2,111 tokens). This rule uses only the\n"
+            "difference. On that pair the two sources sit on OPPOSITE SIDES of the line:\n"
+            "llama-bench says split, the server run measured a 0.84x loss.\n"
+            "Time the prefill with llama-server on the real prompt -- that is the path\n"
+            "being split.")
 
     if a.calibrated_on != a.target_on:
         raise SystemExit(

@@ -1,0 +1,22 @@
+llama-bench curve, rule evaluated at each MEASURED length:
+     n   slow s   fast s    gap s   cost s   margin   verdict
+   512    0.701    0.607    0.094    0.668   -0.573   do not split
+  1024    1.439    1.211    0.228    0.744   -0.516   do not split
+  2048    3.082    2.424    0.657    0.897   -0.240   do not split
+  3072    5.044    3.660    1.384    1.050    0.334   SPLIT
+  4096    7.079    4.913    2.166    1.203    0.963   SPLIT
+  6144   11.581    7.444    4.137    1.509    2.628   SPLIT
+  8192   18.414    9.951    8.463    1.815    6.649   SPLIT
+
+crossover bracketed by MEASURED rows: between 2,048 and 3,072, interpolated ~2,476 tokens
+
+SAME PAIR, SAME LENGTH (2,111 tokens), two instruments:
+                     slow     fast      gap   margin   verdict
+llama-bench         3.202    2.500    0.702   -0.205   do not split
+llama-server        3.001    2.662    0.339   -0.568   do not split
+
+absolute prefill differs by 6.7% (slow) and 6.1% (fast)
+their DIFFERENCE differs by 2.07x
+
+grok's actual handoff at this length measured 0.84x, a LOSS -- which is the
+server row, not the bench row. Time the prefill with llama-server.
