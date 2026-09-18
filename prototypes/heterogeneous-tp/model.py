@@ -17,6 +17,7 @@ would need an all_gather the transport does not implement; stated, not hidden.
 """
 import argparse
 from datetime import timedelta
+import hashlib
 import json
 import os
 import platform
@@ -118,6 +119,27 @@ def main():
                         'w2': w['w2'][m0:m1, :].contiguous().to(device),
                         'n1': w['n1'].to(device), 'n2': w['n2'].to(device),
                         'bo': w['bo'].to(device), 'b2': w['b2'].to(device)}
+            def tensor_sha(t):
+                return hashlib.sha256(t.contiguous().numpy()
+                                      .astype('<f4', copy=False).tobytes()).hexdigest()
+
+            # Hash the ACTUAL post-transform tensors this run uses, per layer.
+            # Computed here rather than replicated in a second script, because a
+            # separate replica of the draw order can silently drift from the run.
+            combined = hashlib.sha256()
+            weight_sha = {}
+            for i, lw in enumerate(layers):
+                weight_sha[f"layer{i}"] = {}
+                for name in sorted(lw):
+                    full = tensor_sha(lw[name])
+                    combined.update(bytes.fromhex(full))
+                    weight_sha[f"layer{i}"][name] = full[:16]
+            for name, tensor in (("emb", emb), ("final_norm", nf), ("lm_head", lm_head)):
+                full = tensor_sha(tensor)
+                combined.update(bytes.fromhex(full))
+                weight_sha[name] = full[:16]
+            weight_sha["combined"] = combined.hexdigest()
+
             local = [localise(w) for w in layers]
             emb_d, nf_d, lm_d = emb.to(device), nf.to(device), lm_head.to(device)
 
@@ -242,6 +264,7 @@ def main():
                   "cuda": torch.version.cuda, "host": platform.node(),
                   "layers": LAYERS, "heads": heads, "local_heads": local_heads,
                   "dim": dim, "hidden": hidden, "local_hidden": width, "vocab": vocab,
+                  "weight_sha256_post_transform": weight_sha,
                   "collectives_per_token": 2 * LAYERS,
                   "collectives_total": counters['collectives'], "cases": cases}
         reports = [None] * world

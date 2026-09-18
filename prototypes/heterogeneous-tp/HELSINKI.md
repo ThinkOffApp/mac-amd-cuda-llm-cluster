@@ -93,19 +93,37 @@ from these byte counts; nothing here has been timed.**
 across a near-tie would be a coin flip presented as a result. Observed margin
 ~0.064, against a worst logit error of 2.1e-6.
 
-## Weight draws differ between the two builds
+## Weight hashes
 
-`weight_hash.py` replicates the rank-0 draw order and hashes each tensor:
+`model.py` hashes **the actual post-transform tensors the run uses**, per layer,
+and emits them in its report under `weight_sha256_post_transform`. They are
+computed inside the run rather than replicated in a second script, because a
+separate replica of the draw order drifts from the thing it claims to describe.
+
+Two properties fall out of the cross-host run and are worth reading off:
+
+```
+combined hash, rank 0 == combined hash, rank 1     the broadcast really does
+                                                   distribute identical weights
+layer0 hashes != layer1 hashes                     the two blocks really are
+                                                   independently weighted
+```
+
+Both were previously asserted in prose and are now evidenced.
+
+`weight_hash.py` is a **diagnostic of the RNG draw stream only**. It draws the
+norm weights at scale 0.0 and hashes values before the `+1` transform, so it
+describes the draw stream of a superseded harness, not any current weight set.
+Caveat raised by @codexmb. What it does still support is the cross-build
+comparison: the same seed produces different draws on
 
 ```
 Mini  torch 2.11.0                       combined d759bcde...
 M5    torch 2.12.0a0+rocm7.13.0a20260411 combined fdd71511...
 ```
 
-Different. **This shows the two builds draw differently; it does not isolate the
-cause to the version number** — build flags or platform would explain it equally
-well. Recorded because a rank-swapped run therefore does not reuse the same
-weights, which is worth knowing when reading a swapped result.
+**This shows the two builds draw differently. It does not isolate the cause to
+the version number** — build flags or platform would explain it equally well.
 
 ## Not done
 

@@ -1,6 +1,15 @@
-"""Hash the rank-0 weight draw, to test whether torch version changes it.
+"""DIAGNOSTIC ONLY: hashes the RNG DRAW STREAM, not any run's actual weights.
 
-Replicates decode.py's generator draw ORDER exactly (no collectives, rank 0 path).
+Caveat raised by @codexmb and it is correct: this uses scale 0.0 for the norm
+draws and hashes values BEFORE the +1 transform, so it describes the draw stream
+of the SUPERSEDED harness, not the weights any current run uses.
+
+The authoritative per-layer hashes of the actual post-transform tensors are
+emitted by model.py itself, under report key "weight_sha256_post_transform".
+They live in the run that uses them so they cannot drift from it.
+
+Kept because the cross-build comparison it supports is still valid FOR THE DRAW
+STREAM: two builds given the same seed produce different draws.
 """
 import hashlib, json, platform, torch
 

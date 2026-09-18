@@ -21,6 +21,38 @@
       "hidden": 256,
       "local_hidden": 128,
       "vocab": 64,
+      "weight_sha256_post_transform": {
+        "layer0": {
+          "b1": "5768e0e20cec5054",
+          "b2": "9c89a1079b382b8c",
+          "bo": "f6ea2549bd1bb00b",
+          "n1": "df0cbf8b438f6fc4",
+          "n2": "d3c756c7600864e0",
+          "w1": "43de659e9ba0dfc3",
+          "w2": "5a8ca41dace7dab3",
+          "wk": "4af6ac554580373c",
+          "wo": "ec5cb25886a17ad2",
+          "wq": "62fc0f134106681d",
+          "wv": "a18b4752806e2879"
+        },
+        "layer1": {
+          "b1": "a3e08e5d2bb2dac5",
+          "b2": "9fcfb62685202580",
+          "bo": "ee59c018f8e26535",
+          "n1": "a614b89c136e15c0",
+          "n2": "503e53fe0fbdc808",
+          "w1": "de81d06b44c97a37",
+          "w2": "39f81dfaf62de154",
+          "wk": "0ab1305d023a681e",
+          "wo": "53b5a67a5a6dd039",
+          "wq": "f3ec259793e455ec",
+          "wv": "b7e0c42a999cc618"
+        },
+        "emb": "ea55aa8cc7bf18c6",
+        "final_norm": "3d44fd7ca60042b8",
+        "lm_head": "7f15d753941d3521",
+        "combined": "e6ee0bc7d9b696e77bf76a9e7c97b8848d6926831c045bbc7a86d89849278f26"
+      },
       "collectives_per_token": 4,
       "collectives_total": 336,
       "cases": [
@@ -196,6 +228,38 @@
       "hidden": 256,
       "local_hidden": 128,
       "vocab": 64,
+      "weight_sha256_post_transform": {
+        "layer0": {
+          "b1": "5768e0e20cec5054",
+          "b2": "9c89a1079b382b8c",
+          "bo": "f6ea2549bd1bb00b",
+          "n1": "df0cbf8b438f6fc4",
+          "n2": "d3c756c7600864e0",
+          "w1": "43de659e9ba0dfc3",
+          "w2": "5a8ca41dace7dab3",
+          "wk": "4af6ac554580373c",
+          "wo": "ec5cb25886a17ad2",
+          "wq": "62fc0f134106681d",
+          "wv": "a18b4752806e2879"
+        },
+        "layer1": {
+          "b1": "a3e08e5d2bb2dac5",
+          "b2": "9fcfb62685202580",
+          "bo": "ee59c018f8e26535",
+          "n1": "a614b89c136e15c0",
+          "n2": "503e53fe0fbdc808",
+          "w1": "de81d06b44c97a37",
+          "w2": "39f81dfaf62de154",
+          "wk": "0ab1305d023a681e",
+          "wo": "53b5a67a5a6dd039",
+          "wq": "f3ec259793e455ec",
+          "wv": "b7e0c42a999cc618"
+        },
+        "emb": "ea55aa8cc7bf18c6",
+        "final_norm": "3d44fd7ca60042b8",
+        "lm_head": "7f15d753941d3521",
+        "combined": "e6ee0bc7d9b696e77bf76a9e7c97b8848d6926831c045bbc7a86d89849278f26"
+      },
       "collectives_per_token": 4,
       "collectives_total": 336,
       "cases": [
