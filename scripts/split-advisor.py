@@ -30,6 +30,26 @@ WHY THIS EXISTS
     interact, so there is no coordination cost waiting to reappear at scale --
     but "expect" is not "measured", and this tool exists to measure.
 
+    THE DRIVER MUST NOT RUN ON A HOST UNDER TEST. Measured 2026-09-18 on two
+    identical GB10s: a benchmark client sharing a box with the server it is
+    measuring steals the CPU llama.cpp needs to feed the GPU, and the effect
+    grows with stream count.
+
+        both clients on asus1:   asus2 (remote) 18.7 tok/s
+                                 asus1 (local)  10.5 tok/s   <- same hardware
+
+    It is not client serialisation -- two wholly independent processes
+    reproduce it (29.2 vs 29.4 tok/s). The bias direction depends on WHICH
+    host hosts the driver:
+
+        driver on the host you compare AGAINST   splitting looks BAD
+        driver on the host you are ADDING        splitting looks GOOD
+
+    which is how two people measuring the same technique the same afternoon got
+    opposite signs. The 1.17x above was driven from the Mini, which is one of
+    its two hosts, so it is a FLOOR rather than a figure. Put the driver on a
+    box that serves nothing.
+
     ALSO, NOT IN THE NUMBERS ABOVE: add the second host as OVERFLOW once the
     first is at its knee. Round-robin HALVES each host's batch and puts both
     below the knee; the 1.17x above kept the M5 at 56 streams and gave the Mini
