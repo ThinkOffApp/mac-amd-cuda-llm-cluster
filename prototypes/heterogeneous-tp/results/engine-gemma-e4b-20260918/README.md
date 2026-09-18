@@ -14,8 +14,8 @@ requires that patch; it tests the same experimental engine build.
 
 The helper `engine_correctness.cpp` compared unpartitioned Metal against a
 50/50 tensor split between local Metal and a local Metal RPC peer. Both use
-one physical Mac GPU. Three prompts, 16 output choices each: **48/48 token
-choices match**, all logits finite, all full-vocabulary logits within the
+one physical Mac GPU. Three prompts, up to 16 output choices each (14 before EOS, then 16 and 16):
+**46/46 token choices match**, all logits finite, all full-vocabulary logits within the
 predeclared atol 0.1 / rtol 0.01 criterion. Per-prompt maximum logit errors are
 0.011820, 0.006348, and 0.013723. Reports preserve the raw token IDs, minimum
 reference top-two margins, and source/patch hashes.
