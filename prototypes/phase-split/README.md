@@ -18,8 +18,8 @@ Qwen3.8-27B-UD-Q4_K_XL, 2107-token prompt, **both ends `-c 4096 -ngl 99 -np 1`**
 | step | time |
 |---|---|
 | M5 prefill, 2107 tokens | 7082.8 ms |
-| save slot (281.4 MB) | 92.2 ms |
-| transfer M5 to Mini | 2.70 s = 104 MB/s |
+| save slot (295.0 MB = 281.4 MiB) | 92.2 ms |
+| transfer M5 to Mini | 2.70 s = 109.3 MB/s (104 MiB/s) |
 | restore on Mini | 91-107 ms |
 | Mini finishes (1 prefill + 4 decode) | 0.97 s |
 | **TTFT** | **~10.2 s** |
@@ -27,7 +27,12 @@ Qwen3.8-27B-UD-Q4_K_XL, 2107-token prompt, **both ends `-c 4096 -ngl 99 -np 1`**
 
 **3.7x.** Same-machine save/restore: 38,152.7 ms cold to 271.0 ms restored = **141x**,
 so the restore itself is nearly free and the wire sets the break-even. KV for this
-model is **140 KB/token**.
+model is **140,028 B/token** = 140.0 kB = 136.7 KiB.
+
+Units matter here: a first pass at the break-even inherited a `MB`/`MiB` slip from me and
+came out 5% low. Break-even link for this model is **9.50 MB/s = 76 Mbit/s** -- gigabit
+has 11.5x headroom, so **the wire is not the constraint**; once transfer is small against
+the fast machine's prefill, that prefill is the floor.
 
 ## Correctness: matching tokens is not equivalence
 
@@ -48,6 +53,15 @@ The same-file control is exactly zero, so the 0.67 is cross-backend and not run
 noise. The top-10 sets agreed on only 8-9 of 10 entries. Greedy decoding matched for
 four tokens and **that is the whole claim** — a 0.67 logprob gap will diverge under
 sampling or over a long generation. Do not quote this result as "token-identical".
+
+**This is a latency result, not a throughput one.** Decode after the restore ran at
+5.33 tok/s against 4.81 solo, on n=3 tokens -- unchanged within noise, and it has to be.
+The decoder does exactly what it did before; what disappears is 28 s of waiting. Do not
+report this on a tok/s axis.
+
+Also note the fast machine was **idle**: the M5's 7.08 s prefill was measured with its
+serving workload stopped. Under real contention `prefill_fast` grows and break-even moves
+up, so both terms of the rule must be measured under the load the box will actually carry.
 
 Still owed: a long greedy run and a sampled run, to find where the two actually part.
 
