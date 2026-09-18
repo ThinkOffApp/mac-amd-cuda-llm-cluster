@@ -12,11 +12,29 @@ WHY THIS EXISTS
                      requests. The hosts overlap completely and throughput adds.
 
     Measured on a Mac mini M4 (Metal) + Bosgame M5 (Vulkan) over gigabit,
-    gemma-3-4b Q4_K_M, 64 concurrent streams, 2026-09-18:
+    **gemma-3-4b Q4_K_M** -- a small model, NOT one we serve -- 64 concurrent
+    streams, 2026-09-18:
 
         best layer split (-ts 16/1)        681 tok/s
         M5 alone                          1077 tok/s
-        request split, measured CONCURRENTLY  1261 tok/s
+        request split, measured CONCURRENTLY  1261 tok/s     1.17x
+
+    THE MODEL MATTERS AND THIS ONE IS A TOY. On the same day, a mechanism
+    concluded from GPT-2 was wrong about Qwen3.8-27B: per-call time looked flat
+    against batch size on the toy and the real model turned out partly
+    work-bound (32x work -> 5.4x time). So treat the 1.17x as a result ABOUT
+    gemma-3-4b until someone re-runs it on the 27B.
+
+    The reason to expect it to carry is stronger here than for anything else
+    measured that day -- two machines answering DIFFERENT requests never
+    interact, so there is no coordination cost waiting to reappear at scale --
+    but "expect" is not "measured", and this tool exists to measure.
+
+    ALSO, NOT IN THE NUMBERS ABOVE: add the second host as OVERFLOW once the
+    first is at its knee. Round-robin HALVES each host's batch and puts both
+    below the knee; the 1.17x above kept the M5 at 56 streams and gave the Mini
+    the 8 on top. A pair run that comes out BELOW one machine alone is usually
+    this, or a client that serialises.
 
     Layer split lost to one machine on its own at every ratio and every
     concurrency tried. Request split is the only arrangement where the pair
