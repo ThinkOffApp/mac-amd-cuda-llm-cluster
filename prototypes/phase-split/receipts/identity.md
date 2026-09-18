@@ -2,7 +2,7 @@
 
 ## Model identity
 ```
-producer (M5, ROCm)  /home/petrus/llm/models/Qwen3.8-27B-UD-Q4_K_XL.gguf
+producer (M5, VULKAN -- libggml-vulkan.so.0, no HIP/ROCm linked)  /home/petrus/llm/models/Qwen3.8-27B-UD-Q4_K_XL.gguf
 decoder  (Mini, Metal) /Users/petrus/models/gguf/Qwen3.8-27B-UD-Q4_K_XL.gguf
 ```
 

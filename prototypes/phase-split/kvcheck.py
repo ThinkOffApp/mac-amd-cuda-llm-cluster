@@ -70,6 +70,28 @@ def request(base, path, payload, timeout=600):
     return parsed
 
 
+def assert_cache_hit(completion, expect_cached, slotfile):
+    """The restored cache must be the thing that answered.
+
+    @codexmb found the failure this prevents: sending back the SAME prompt that was
+    saved triggers llama.cpp's rewind path, the server re-prefills every token, and
+    the comparison silently becomes "two fresh native prefills" -- which of course
+    agree exactly. The restore is then decorative and the zero means nothing.
+    """
+    t = completion.get("timings", {})
+    cache_n, prompt_n = t.get("cache_n"), t.get("prompt_n")
+    if cache_n is None or prompt_n is None:
+        raise CheckFailed(f"{slotfile}: timings lack cache_n/prompt_n; cannot prove a cache hit")
+    if cache_n != expect_cached:
+        raise CheckFailed(
+            f"{slotfile}: cache_n={cache_n}, expected {expect_cached}. The restored "
+            "cache was NOT used -- this is the re-prefill path and the comparison is void.")
+    if prompt_n != 1:
+        raise CheckFailed(
+            f"{slotfile}: prompt_n={prompt_n}, expected 1. More than the held-back "
+            "token was evaluated, so the saved history is not what produced this output.")
+
+
 def restore(base, slotfile, expect_tokens):
     r = request(base, "/slots/0?action=restore", {"filename": slotfile})
     n = r.get("n_restored")
@@ -94,14 +116,25 @@ def steps_of(completion, slotfile):
         entries = step.get("top_logprobs") or step.get("probs")
         if not entries:
             raise CheckFailed(f"{slotfile}: step {i} has an empty distribution")
+        # Key by token ID, never by decoded text. Distinct IDs can decode to the
+        # same string, so a text-keyed dict silently collapses them -- which is why
+        # a request for the top 10 was reporting 9 shared entries.
         d = {}
         for e in entries:
-            tok, lp = e.get("token"), e.get("logprob", e.get("prob"))
-            if tok is None or lp is None:
-                raise CheckFailed(f"{slotfile}: step {i} entry missing token or logprob: {e}")
+            tid, lp = e.get("id"), e.get("logprob", e.get("prob"))
+            if tid is None:
+                raise CheckFailed(
+                    f"{slotfile}: step {i} entry has no token id; this build cannot "
+                    "support an ID-keyed comparison and text keys collapse duplicates")
+            if lp is None:
+                raise CheckFailed(f"{slotfile}: step {i} entry missing logprob: {e}")
             if not math.isfinite(lp):
-                raise CheckFailed(f"{slotfile}: step {i} non-finite logprob for {tok!r}")
-            d[tok] = lp
+                raise CheckFailed(f"{slotfile}: step {i} non-finite logprob for id {tid}")
+            if tid in d:
+                raise CheckFailed(f"{slotfile}: step {i} duplicate token id {tid}")
+            d[tid] = (lp, e.get("token"))
+        if len(d) != len(entries):
+            raise CheckFailed(f"{slotfile}: step {i} lost entries when keyed by id")
         out.append(d)
     return out
 
@@ -112,6 +145,7 @@ def run(base, slotfile, req, expect_tokens, n_predict, n_probs):
     body.update(n_predict=n_predict, cache_prompt=True, temperature=0.0,
                 top_k=0, top_p=1.0, n_probs=n_probs)
     c = request(base, "/completion", body)
+    assert_cache_hit(c, expect_tokens, slotfile)
     return c.get("content"), steps_of(c, slotfile)
 
 
@@ -124,9 +158,12 @@ def compare(a_steps, b_steps, label_a, label_b):
         shared = set(da) & set(db)
         if not shared:
             raise CheckFailed(f"step {i}: the two top-10 sets share no token at all")
-        d = max(abs(da[k] - db[k]) for k in shared)
+        d = max(abs(da[k][0] - db[k][0]) for k in shared)
         worst = max(worst, d)
-        rows.append((i, max(da, key=da.get), max(db, key=db.get), d, len(shared), len(da)))
+        top_a = max(da, key=lambda k: da[k][0])
+        top_b = max(db, key=lambda k: db[k][0])
+        rows.append((i, f"{da[top_a][1]!r}#{top_a}", f"{db[top_b][1]!r}#{top_b}",
+                     d, len(shared), len(da)))
     return worst, rows
 
 
@@ -147,9 +184,18 @@ def self_test(args):
                            [{"top_logprobs": [{"token": "x", "logprob": float("-inf")}]}]},
                           "fixture")),
         ("mismatched step counts",
-         lambda: compare([{"a": 0.0}], [{"a": 0.0}, {"b": 0.0}], "x", "y")),
+         lambda: compare([{1: (0.0, "a")}], [{1: (0.0, "a")}, {2: (0.0, "b")}], "x", "y")),
         ("disjoint top-10 sets",
-         lambda: compare([{"a": 0.0}], [{"b": 0.0}], "x", "y")),
+         lambda: compare([{1: (0.0, "a")}], [{2: (0.0, "b")}], "x", "y")),
+        ("entry with no token id",
+         lambda: steps_of({"completion_probabilities":
+                           [{"top_logprobs": [{"token": "x", "logprob": -1.0}]}]}, "fixture")),
+        ("restore not actually used (re-prefill path)",
+         lambda: assert_cache_hit({"timings": {"cache_n": 0, "prompt_n": 2107}}, 2107, "fixture")),
+        ("more than the held-back token evaluated",
+         lambda: assert_cache_hit({"timings": {"cache_n": 2107, "prompt_n": 5}}, 2107, "fixture")),
+        ("timings without cache_n",
+         lambda: assert_cache_hit({"timings": {"prompt_n": 1}}, 2107, "fixture")),
     ]
     bad = 0
     for name, fn in cases:

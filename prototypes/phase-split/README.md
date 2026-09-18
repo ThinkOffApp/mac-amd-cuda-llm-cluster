@@ -119,20 +119,24 @@ up, so both terms of the rule must be measured under the load the box will actua
 ### Is it the backend, or just a different chunk boundary?
 
 That objection is not hypothetical -- @codexmb's own local failures moved when he
-matched prefill chunk boundaries. Settled here without a second machine, by producing
-two caches on the SAME machine that differ only in how the prompt was fed:
+matched prefill chunk boundaries.
 
-```
-A   one request for all 2107 tokens
-B   1107 tokens, then extended to 2107 (so the second pass prefilled 1000)
+**The first version of this control was VOID**, and he found it in the raw log
+committed here. It saved a 2107-token cache and then sent back the same 2107 tokens,
+which takes llama.cpp's rewind path: the server re-prefilled everything
+(`receipts/decoder-server.log:244` and `:253`, tasks 158 and 166, 38.6 s and 39.2 s),
+discarded the restored history and built a fresh native cache on both sides. Two fresh
+native prefills agree exactly, so its `0.000000` said nothing about chunking. The void
+script and its log are kept as `chunk_control_INVALID.py.bak` and
+`receipts/chunk-control.txt`.
 
-worst |dlogprob|, A vs B:  0.000000     <- chunking is not the confound
-cross-machine, for comparison: 0.670641
-```
+The corrected control saves N-1 and requests N, and **asserts `cache_n == N-1` and
+`prompt_n == 1` before comparing anything**, so the re-prefill path cannot masquerade
+as agreement again. Result in `receipts/chunk-control-v2.txt`.
 
-So the cross-machine gap is not explained by chunking, at least on Metal. This does
-not prove Vulkan is equally insensitive; it removes the confound on the side that
-could be tested.
+Even a clean result here narrows rather than eliminates the confound: these are an
+arbitrary chunk plan, not the producer's actual boundaries, and matching those needs
+the producer.
 
 ### Does the fixed block belong to the model or to `-c`?
 
@@ -166,6 +170,16 @@ outside the calibrated model, build and `-c` as well as the calibrated length.
 The shared top-10 is **not a full-vocabulary logit gate**, and four matching greedy
 tokens is a narrow positive observation, not a validated equivalence. Still owed: a
 long greedy run, a sampled run, and a full-vocabulary comparison.
+
+What the runs establish, in @codexmb's terms: **a real prefix-reuse path and a real
+difference in the sampled distributions, with the cause not established.** Not a
+validated inference speedup, and not validation of a universal install-time rule.
+
+Distributions are keyed by **token ID, never by decoded text** -- distinct ids can
+decode to the same string, and a text-keyed dict silently collapsed them. That bug is
+why a request for the top 10 was reporting 9 shared entries, and it changed two of the
+four per-step numbers first published (step 0: 0.102773 -> 0.238789, step 1: 0.097987
+-> 0.272204). The headline 0.670641 and the exactly-zero controls survived it.
 
 ### How the cost scales
 
