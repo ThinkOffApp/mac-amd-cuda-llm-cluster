@@ -112,7 +112,7 @@ two milestones. Status as of 17 Sep 2026, from the tables further down:
 | pair | backends | prefill beats best single host | generation beats best single host |
 |---|---|---|---|
 | **Mac + Strix** | Metal + ROCm | **no** — when the model fits one box, solo wins (491 vs 333 pp on IQ1_S) | **no** — 30.6 solo vs 24.2 split |
-| **Mac + Spark** | Metal + CUDA | **yes, past a crossover** — measured below | **no** — 0.711x, see below |
+| **Mac + Spark** | Metal + CUDA | **yes, past a crossover** — measured below | **no at 1 stream** — 0.711x; concurrency untested |
 | **Strix + Spark** | ROCm + CUDA | **not tested** | **not tested** |
 | **all three** | Metal + ROCm + CUDA | **not attempted** | **not attempted** |
 
@@ -133,11 +133,16 @@ link      direct cable, 0.904 ms RTT
 | pp512 | **1064.03** | 809.80 | 842.75 | loses, 0.792x |
 | pp2048 | 1043.26 | 828.03 | **1089.97** | **beats, 1.045x** |
 | pp4096 | 964.71 | 819.94 | **1143.03** | **beats, 1.185x** |
-| tg128 | **37.88** | 26.98 | 26.95 | loses, 0.711x |
+| tg128 (1 stream) | **37.88** | 26.98 | 26.95 | loses, 0.711x — see caveat |
 
-**Milestone 1 asks for both prefill and generation. This is the prefill half only.** Generation
-loses by 29% and no placement we have tried changes that; decode is one token at a time, so the
-second machine cannot help and its share is pure added latency.
+**Milestone 1 asks for both prefill and generation. This is the prefill half only.**
+
+**The generation row is measured at concurrency 1 and says nothing about concurrency above 1.**
+`llama-bench` is single-stream by design. At one stream a pipeline is structurally worse than one
+machine: token N+1 needs token N, so only one stage works at a time and the other idles. With
+several concurrent streams the stages overlap *across requests*, which is the regime pipeline
+parallelism exists for and which a single-stream benchmark cannot show. **Untested here. Do not
+read the 0.711x as a verdict on generation.**
 
 Replication is tight: pair pp4096 read 1142.70 and 1143.36 on two independent rounds.
 
