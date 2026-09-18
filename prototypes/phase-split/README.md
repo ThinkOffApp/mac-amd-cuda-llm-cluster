@@ -372,9 +372,27 @@ measurement that settles it is a **flip rate**: a few hundred generations under 
 sampling settings, split against un-split, counting how often the emitted text differs.
 Sixteen matching greedy steps says almost nothing about that in either direction.
 
-Until then the honest default for a runner is to **refuse when producer and consumer
-report different backends**, rather than silently returning answers that differ from the
-un-split path.
+Both are now implemented rather than recommended:
+
+- `calibrate.py --producer-backend/--consumer-backend` **refuses a cross-backend pair**
+  by default, and the refusal names the flip rate as what would settle it.
+  `--accept-numerical-divergence` overrides, for someone who has measured it.
+- `flip_rate.py` measures it: N generations under *your* sampling settings, split
+  against un-split, same seed each time, reported as a rate with a Wilson interval
+  (which stays meaningful at zero -- 0/300 still reaches 1.26%).
+
+`flip_rate.py` refuses to report a rate without three guards, and the third is the one
+people leave out:
+
+```
+cache hit asserted   cache_n == N-1 and prompt_n == 1 on every split run
+negative control     split vs split at one seed must AGREE
+POSITIVE control     a deliberately altered prompt must DIFFER
+```
+
+Without the positive control a zero flip rate is exactly what a harness comparing a
+string with itself produces -- which is the failure mode that got a confident
+`0.000000` published earlier the same day.
 
 **Note on this pair specifically: it has never been through the full-vocabulary gate.**
 The 3.73x here is a performance number. The only gate run is @codexmb's on CUDA->Metal;

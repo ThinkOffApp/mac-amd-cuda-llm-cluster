@@ -72,6 +72,20 @@ def main():
     # opposite ways. This rule uses only the difference, so it inherits the worst
     # of both -- and on that pair the two sources fall on opposite sides of the
     # split/do-not-split line.
+    # The honest default the room agreed on: a handoff between different backends
+    # is not numerically equivalent to the un-split path. @codexmb's full-vocabulary
+    # gate fails across CUDA->Metal (max 9.46, 179,629 logits out of tolerance) while
+    # his same-host control is exactly zero. Nobody has shown this changes a
+    # user-visible answer -- and nobody has shown it does not -- so the tool refuses
+    # and says what would settle it, rather than quietly recommending a split whose
+    # output differs from not splitting.
+    ap.add_argument("--producer-backend", required=True,
+                    help="backend the producer runs, e.g. CUDA, Metal, Vulkan")
+    ap.add_argument("--consumer-backend", required=True,
+                    help="backend the consumer runs; a mismatch is refused")
+    ap.add_argument("--accept-numerical-divergence", action="store_true",
+                    help="proceed across a backend boundary anyway. Only with a measured "
+                         "flip rate you are willing to defend to users")
     ap.add_argument("--timing-source", required=True, choices=["llama-server", "llama-bench"],
                     help="where the prefill timings came from. llama-bench is REFUSED: "
                          "it is not the path being split")
@@ -89,6 +103,21 @@ def main():
                     help="decoder's prefill of token N -- the N-1 boundary. "
                          "Constant across links, NOT across machines.")
     a = ap.parse_args()
+
+    if (a.producer_backend.strip().lower() != a.consumer_backend.strip().lower()
+            and not a.accept_numerical_divergence):
+        raise SystemExit(
+            f"REFUSING: producer is {a.producer_backend} and consumer is "
+            f"{a.consumer_backend}.\n"
+            "Across a backend boundary the handoff is NOT numerically equivalent to the\n"
+            "un-split path: a full-vocabulary check across CUDA->Metal fails at\n"
+            "atol 0.1 / rtol 0.01, max abs error 9.46 with 179,629 logits out of\n"
+            "tolerance at one step, while the same-host control is exactly 0.000000.\n"
+            "Sixteen greedy tokens still matched, so this may never change an answer --\n"
+            "but nobody has measured that. What would settle it is a FLIP RATE: a few\n"
+            "hundred generations under your real sampling settings, split against\n"
+            "un-split, counting how often the emitted text differs.\n"
+            "Measure it, then pass --accept-numerical-divergence if you can defend it.")
 
     if a.timing_source != "llama-server":
         raise SystemExit(
