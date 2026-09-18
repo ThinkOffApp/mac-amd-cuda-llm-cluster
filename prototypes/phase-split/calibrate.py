@@ -37,6 +37,13 @@ def main():
                     help="two short prefills on the FAST machine")
     ap.add_argument("--link-mbps", type=float, required=True,
                     help="MEASURED MB/s from one timed copy, not the nominal line rate")
+    # @claudeMB published a 52,440-token crossover fitted from data ending at 3,072,
+    # on servers that could not have run a prompt that long. A linear fit evaluated
+    # 17x outside its range is not a result, and a tool that hands it over without
+    # comment is how it becomes one. Refuse by default.
+    ap.add_argument("--allow-extrapolation", action="store_true",
+                    help="evaluate beyond the longest calibrated length anyway; "
+                         "the answer is then a model, not a measurement")
     # No defaults on any of these. Today's recurring failure was a constant
     # carried across a boundary where it did not hold: a per-token KV rate that
     # hid a fixed block, and a ceiling from one pair quoted at another. A default
@@ -53,6 +60,18 @@ def main():
     a = ap.parse_args()
 
     n = a.tokens
+    calibrated_to = min(max(a.slow_cal[0], a.slow_cal[2]),
+                        max(a.fast_cal[0], a.fast_cal[2]))
+    if n > calibrated_to and not a.allow_extrapolation:
+        raise SystemExit(
+            f"REFUSING: asked for {n:,} tokens, calibrated only to {calibrated_to:,.0f}.\n"
+            f"That is a {n/calibrated_to:.1f}x extrapolation of a linear fit.\n"
+            "Prefill is not linear -- attention is quadratic -- so the prefill GAP grows\n"
+            "faster than this model assumes while KV grows exactly linearly. A crossover\n"
+            "computed out here is an UPPER BOUND at best, and the run may not even be\n"
+            "possible at the configured context.\n"
+            "Calibrate at a length near the target, or pass --allow-extrapolation and\n"
+            "report the answer as a model rather than a measurement.")
     s_slope, s_icept = fit_linear([(a.slow_cal[0], a.slow_cal[1]), (a.slow_cal[2], a.slow_cal[3])])
     f_slope, f_icept = fit_linear([(a.fast_cal[0], a.fast_cal[1]), (a.fast_cal[2], a.fast_cal[3])])
     slow = s_slope * n + s_icept
@@ -62,7 +81,9 @@ def main():
     fixed = fast + a.save_ms + a.restore_ms + a.token_n_ms
     split = fixed + transfer
 
-    print(f"target {n} tokens\n")
+    print(f"target {n} tokens (calibrated to {calibrated_to:,.0f})"
+          + (f"  ** {n/calibrated_to:.1f}x EXTRAPOLATION -- this is a model, not a measurement **"
+             if n > calibrated_to else "") + "\n")
     print(f"  slow machine prefill      {slow:>10,.0f} ms   ({n/(slow/1000):.0f} tok/s)")
     print(f"  fast machine prefill      {fast:>10,.0f} ms   ({n/(fast/1000):.0f} tok/s)")
     print(f"  prefill ratio             {slow/fast:>10.2f}x")
