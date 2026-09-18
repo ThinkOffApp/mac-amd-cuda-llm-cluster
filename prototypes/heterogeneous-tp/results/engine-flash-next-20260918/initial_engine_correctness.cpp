@@ -22,13 +22,13 @@ constexpr int max_new = 16;
 
 int main(int argc, char ** argv) {
     if (argc != 6) {
-        std::cerr << "Usage: engine_correctness MODEL solo|layer|tensor|tensor-local|tensor-single RPC_ENDPOINT OUTPUT_DIR REFERENCE_DIR\n";
+        std::cerr << "Usage: engine_correctness MODEL solo|layer|tensor|tensor-local RPC_ENDPOINT OUTPUT_DIR REFERENCE_DIR\n";
         return 2;
     }
     try {
         const std::string model_path = argv[1], mode = argv[2], endpoint = argv[3];
         const fs::path output = argv[4], reference = argv[5];
-        if (mode != "solo" && mode != "layer" && mode != "tensor" && mode != "tensor-local" && mode != "tensor-single") throw std::runtime_error("invalid mode");
+        if (mode != "solo" && mode != "layer" && mode != "tensor" && mode != "tensor-local") throw std::runtime_error("invalid mode");
         fs::create_directories(output);
         ggml_backend_load_all();
         llama_backend_init();
@@ -37,7 +37,7 @@ int main(int argc, char ** argv) {
         std::vector<ggml_backend_dev_t> devices = {metal};
         if (mode == "tensor-local") {
             devices.push_back(metal);
-        } else if (mode != "solo" && mode != "tensor-single") {
+        } else if (mode != "solo") {
             auto rpc = ggml_backend_rpc_add_server(endpoint.c_str());
             if (!rpc || ggml_backend_reg_dev_count(rpc) != 1) throw std::runtime_error("expected one RPC device");
             devices.push_back(ggml_backend_reg_dev_get(rpc, 0));
@@ -89,7 +89,7 @@ int main(int argc, char ** argv) {
                 expected_logits.open(reference / (stem + ".f32"), std::ios::binary);
                 if (!expected_logits) throw std::runtime_error("reference logits missing");
             }
-            json choices = json::array(), forced = json::array(), step_errors = json::array();
+            json choices = json::array(), forced = json::array();
             float max_error = 0, min_margin = std::numeric_limits<float>::infinity();
             bool finite = true, within = true, same_ids = true;
             const int steps = mode == "solo" ? max_new : expected.at("chosen_ids").size();
@@ -114,19 +114,14 @@ int main(int argc, char ** argv) {
                     same_ids = same_ids && best == next;
                 }
                 float largest = -std::numeric_limits<float>::infinity(), second = largest;
-                float step_max_error = 0;
-                int step_outside_tolerance = 0;
                 for (int j = 0; j < nv; ++j) {
                     finite = finite && std::isfinite(logits[j]) && std::isfinite(ref[j]);
                     const float error = std::abs(logits[j] - ref[j]);
                     max_error = std::max(max_error, error);
-                    step_max_error = std::max(step_max_error, error);
-                    step_outside_tolerance += !std::isfinite(error) || error > logit_atol + logit_rtol * std::abs(ref[j]);
                     within = within && error <= logit_atol + logit_rtol * std::abs(ref[j]);
                     if (ref[j] > largest) { second = largest; largest = ref[j]; }
                     else second = std::max(second, ref[j]);
                 }
-                step_errors.push_back({{"step", step}, {"max_abs_error", step_max_error}, {"outside_tolerance", step_outside_tolerance}});
                 min_margin = std::min(min_margin, largest - second);
                 forced.push_back(next);
                 if (llama_vocab_is_eog(vocab, next)) break;
@@ -138,7 +133,7 @@ int main(int argc, char ** argv) {
             json result = {{"prompt", prompt}, {"prompt_ids", prompt_ids}, {"model", model_path}, {"vocabulary_size", nv},
                            {"chosen_ids", choices}, {"reference_context_ids", forced}, {"finite", finite},
                            {"tokens_match", same_ids}, {"logits_within_tolerance", within}, {"max_abs_logit_error", max_error},
-                           {"min_reference_top2_margin", min_margin}, {"step_errors", step_errors}, {"valid", ok}};
+                           {"min_reference_top2_margin", min_margin}, {"valid", ok}};
             std::ofstream(output / (stem + ".json")) << result.dump(2) << '\n';
             report["cases"].push_back(result);
             all_ok = all_ok && ok;

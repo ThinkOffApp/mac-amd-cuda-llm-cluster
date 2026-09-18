@@ -5,6 +5,7 @@
 #include "nlohmann/json.hpp"
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -19,6 +20,36 @@ namespace fs = std::filesystem;
 constexpr float logit_atol = 0.1f;
 constexpr float logit_rtol = 0.01f;
 constexpr int max_new = 16;
+
+struct trace_state {
+    std::ofstream out;
+    size_t prompt = 0;
+    int step = 0;
+};
+static bool trace_callback(ggml_tensor * t, bool ask, void * opaque) {
+    auto & state = *static_cast<trace_state *>(opaque);
+    const std::string name = t->name;
+    const bool wanted = state.prompt == 0 && state.step <= 3 &&
+        (name.find("ffn_moe_topk") == 0 || name.find("ffn_moe_probs") == 0 || name.find("indexer_top_k") == 0);
+    if (ask) return wanted;
+    if (!wanted) return true;
+    if (t->type != GGML_TYPE_I32 && t->type != GGML_TYPE_F32) throw std::runtime_error("unexpected trace tensor type");
+    std::vector<char> bytes(ggml_nbytes(t));
+    ggml_backend_tensor_get(t, bytes.data(), 0, bytes.size());
+    json values = json::array();
+    for (int64_t d = 0; d < t->ne[3]; ++d)
+    for (int64_t c = 0; c < t->ne[2]; ++c)
+    for (int64_t b = 0; b < t->ne[1]; ++b)
+    for (int64_t a = 0; a < t->ne[0]; ++a) {
+        const size_t offset = a*t->nb[0] + b*t->nb[1] + c*t->nb[2] + d*t->nb[3];
+        if (offset + 4 > bytes.size()) throw std::runtime_error("trace bounds");
+        if (t->type == GGML_TYPE_I32) { int32_t v; std::memcpy(&v, bytes.data()+offset, 4); values.push_back(v); }
+        else { float v; std::memcpy(&v, bytes.data()+offset, 4); values.push_back(v); }
+    }
+    state.out << json({{"prompt", state.prompt}, {"step", state.step}, {"name", name}, {"shape", {t->ne[0],t->ne[1],t->ne[2],t->ne[3]}}, {"values", values}}).dump() << '\n';
+    if (!state.out) throw std::runtime_error("trace write failed");
+    return true;
+}
 
 int main(int argc, char ** argv) {
     if (argc != 6) {
@@ -53,7 +84,10 @@ int main(int argc, char ** argv) {
         mp.load_mtp = false;
         std::unique_ptr<llama_model, decltype(&llama_model_free)> model(llama_model_load_from_file(model_path.c_str(), mp), llama_model_free);
         if (!model) throw std::runtime_error("model load failed");
+        trace_state tracing;
+        tracing.out.open(output / "routing.jsonl");
         auto cp = llama_context_default_params();
+        cp.cb_eval = trace_callback; cp.cb_eval_user_data = &tracing;
         cp.n_ctx = 256; cp.n_batch = 128; cp.n_ubatch = 128; cp.n_seq_max = 1;
         cp.n_threads = 4; cp.n_threads_batch = 4;
         cp.flash_attn_type = LLAMA_FLASH_ATTN_TYPE_ENABLED;
@@ -69,6 +103,7 @@ int main(int argc, char ** argv) {
                        {"cases", json::array()}};
         bool all_ok = true;
         for (size_t pi = 0; pi < prompts.size(); ++pi) {
+            tracing.prompt = pi;
             llama_memory_clear(llama_get_memory(ctx.get()), true);
             const auto & prompt = prompts[pi];
             int count = -llama_tokenize(vocab, prompt.data(), prompt.size(), nullptr, 0, true, false);
@@ -94,6 +129,7 @@ int main(int argc, char ** argv) {
             bool finite = true, within = true, same_ids = true;
             const int steps = mode == "solo" ? max_new : expected.at("chosen_ids").size();
             for (int step = 0; step < steps; ++step) {
+                tracing.step = step;
                 auto batch = llama_batch_get_one(ids.data(), ids.size());
                 if (llama_decode(ctx.get(), batch) != 0) throw std::runtime_error("decode failed");
                 llama_synchronize(ctx.get());

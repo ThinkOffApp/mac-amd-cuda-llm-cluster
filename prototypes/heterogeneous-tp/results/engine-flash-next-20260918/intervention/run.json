@@ -1,0 +1,14 @@
+{
+  "command": [
+    "work/engine-flash-intervention",
+    "/Volumes/t705/ModelArchive/Qwen38-Flash-Next-IQ4_XS/UD-IQ4_XS/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf",
+    "tensor-local",
+    "unused",
+    "outputs/heterogeneous-tp/engine-flash-next/intervention",
+    "outputs/heterogeneous-tp/engine-flash-next/solo"
+  ],
+  "exit_code": 1,
+  "elapsed_seconds": 77.09986519813538,
+  "source_sha256": "ab5012cae8d53c899dee990736c92ad0f59f4a116d29fe9ffa35dcc59b0dabdb",
+  "scope": "DIAGNOSTIC forced expert; not production correctness or performance"
+}

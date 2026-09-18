@@ -1,0 +1,8 @@
+main: using seed 1234
+|     Model arch.|      Device|Config|   NMSE vs. CPU|Roundtrip|
+|----------------|------------|------|---------------|---------|
+|          qwen35|Apple M5 Max| Dense|  [1;32mOK[0m (2.10e-07)|       [1;32mOK[0m|
+|          qwen35|  Accelerate| Dense|  [1;32mOK[0m (1.44e-16)|       [1;32mOK[0m|
+|          qwen35|Apple M5 Max| Dense|  [1;32mOK[0m (1.07e-13)|       [1;32mOK[0m|
+|          qwen35|        Meta| Dense|  [1;32mOK[0m (2.10e-07)|     [1;33mSKIP[0m|
+|          qwen35|Meta-local-2| Dense|  [1;32mOK[0m (2.10e-07)|     [1;33mSKIP[0m|

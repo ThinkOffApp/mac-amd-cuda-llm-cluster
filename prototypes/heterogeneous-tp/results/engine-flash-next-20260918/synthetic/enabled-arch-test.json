@@ -1,0 +1,14 @@
+{
+  "command": [
+    "build-probe/bin/test-llama-archs",
+    "-a",
+    "qwen4exp",
+    "-s",
+    "1234",
+    "-v",
+    "1"
+  ],
+  "returncode": -6,
+  "scope": "Diagnostic-only build defining LOCAL_QWEN4EXP_TP_PROBE; production architecture guard unchanged",
+  "engine_commit": "bdcbaaf6e7520b68c8c60ff724c67409970d70e1"
+}

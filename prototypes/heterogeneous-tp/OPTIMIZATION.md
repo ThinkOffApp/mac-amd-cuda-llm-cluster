@@ -70,3 +70,8 @@ then restore and verify affected services. Larger model experiments require
 architecture-specific adapters or a supported engine and a separate memory
 plan; changing a checkpoint name does not make this GPT-2 adapter support 27B
 or Flash-Next.
+
+
+## Actual Flash-Next experiment
+
+[Flash-Next receipts](results/engine-flash-next-20260918/README.md) extend the large-model investigation to actual UD-IQ4_XS weights on one M5 Max. A local engine patch fixes a CPU-view handling crash; synthetic prefill and incremental tests pass. Actual single-partition tensor mode matches solo logits exactly. Two local partitions match 48/48 choices but fail the unchanged full-logit gate. A routing trace and diagnostic intervention identify a near-tied expert selection as the first discontinuity. These are correctness diagnostics, not RPC, physical-pair performance or a production support claim. The normal helper never forces routing; the intervention source is preserved only with its clearly labelled experimental receipts.

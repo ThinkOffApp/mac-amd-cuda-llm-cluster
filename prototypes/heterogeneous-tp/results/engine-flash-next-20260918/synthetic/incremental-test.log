@@ -1,0 +1,8 @@
+main: using seed 1234
+|     Model arch.|      Device|Config|   NMSE vs. CPU|Roundtrip|
+|----------------|------------|------|---------------|---------|
+|        qwen4exp|Apple M5 Max|   MoE|  [1;32mOK[0m (1.05e-07)|       [1;32mOK[0m|
+|        qwen4exp|  Accelerate|   MoE|  [1;32mOK[0m (2.18e-15)|       [1;32mOK[0m|
+|        qwen4exp|Apple M5 Max|   MoE|  [1;32mOK[0m (4.55e-14)|       [1;32mOK[0m|
+|        qwen4exp|        Meta|   MoE|  [1;32mOK[0m (1.05e-07)|     [1;33mSKIP[0m|
+|        qwen4exp|Meta-local-2|   MoE|  [1;32mOK[0m (1.05e-07)|     [1;33mSKIP[0m|

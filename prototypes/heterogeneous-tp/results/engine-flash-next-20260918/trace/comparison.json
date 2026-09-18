@@ -1,0 +1,2898 @@
+{
+  "matched_keys": 672,
+  "differences": [
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-0",
+      "max_abs_difference": 5.960464477539063e-08
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-0 (reshaped)",
+      "max_abs_difference": 5.960464477539063e-08
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-1",
+      "max_abs_difference": 3.3527612686157227e-08
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-1 (reshaped)",
+      "max_abs_difference": 3.3527612686157227e-08
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-2",
+      "max_abs_difference": 1.862645149230957e-08
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-2 (reshaped)",
+      "max_abs_difference": 1.862645149230957e-08
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-3",
+      "max_abs_difference": 3.8743019104003906e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-3 (reshaped)",
+      "max_abs_difference": 3.8743019104003906e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-4",
+      "max_abs_difference": 1.3783574104309082e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-4 (reshaped)",
+      "max_abs_difference": 1.3783574104309082e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-5",
+      "max_abs_difference": 3.2782554626464844e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-5 (reshaped)",
+      "max_abs_difference": 3.2782554626464844e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-6",
+      "max_abs_difference": 7.82310962677002e-08
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-6 (reshaped)",
+      "max_abs_difference": 7.82310962677002e-08
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-7",
+      "max_abs_difference": 1.0710209608078003e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-7 (reshaped)",
+      "max_abs_difference": 1.0710209608078003e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-8",
+      "max_abs_difference": 8.568167686462402e-08
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-8 (reshaped)",
+      "max_abs_difference": 8.568167686462402e-08
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-9",
+      "max_abs_difference": 1.3597309589385986e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-9 (reshaped)",
+      "max_abs_difference": 1.3597309589385986e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-10",
+      "max_abs_difference": 5.587935447692871e-08
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-10 (reshaped)",
+      "max_abs_difference": 5.587935447692871e-08
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-11",
+      "max_abs_difference": 1.0151416063308716e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-11 (reshaped)",
+      "max_abs_difference": 1.0151416063308716e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-12",
+      "max_abs_difference": 8.381903171539307e-08
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-12 (reshaped)",
+      "max_abs_difference": 8.381903171539307e-08
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-13",
+      "max_abs_difference": 1.0989606380462646e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-13 (reshaped)",
+      "max_abs_difference": 1.0989606380462646e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-14",
+      "max_abs_difference": 1.601874828338623e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-14 (reshaped)",
+      "max_abs_difference": 1.601874828338623e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-15",
+      "max_abs_difference": 2.0489096641540527e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-15 (reshaped)",
+      "max_abs_difference": 2.0489096641540527e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-16",
+      "max_abs_difference": 1.564621925354004e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-16 (reshaped)",
+      "max_abs_difference": 1.564621925354004e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-17",
+      "max_abs_difference": 2.1420419216156006e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-17 (reshaped)",
+      "max_abs_difference": 2.1420419216156006e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-18",
+      "max_abs_difference": 7.450580596923828e-08
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-18 (reshaped)",
+      "max_abs_difference": 7.450580596923828e-08
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-19",
+      "max_abs_difference": 8.419156074523926e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-19 (reshaped)",
+      "max_abs_difference": 8.419156074523926e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-20",
+      "max_abs_difference": 3.948807716369629e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-20 (reshaped)",
+      "max_abs_difference": 3.948807716369629e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-21",
+      "max_abs_difference": 5.066394805908203e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-21 (reshaped)",
+      "max_abs_difference": 5.066394805908203e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-22",
+      "max_abs_difference": 4.3213367462158203e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-22 (reshaped)",
+      "max_abs_difference": 4.3213367462158203e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-23",
+      "max_abs_difference": 6.780028343200684e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-23 (reshaped)",
+      "max_abs_difference": 6.780028343200684e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-24",
+      "max_abs_difference": 2.1979212760925293e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-24 (reshaped)",
+      "max_abs_difference": 2.1979212760925293e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-25",
+      "max_abs_difference": 5.140900611877441e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-25 (reshaped)",
+      "max_abs_difference": 5.140900611877441e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-26",
+      "max_abs_difference": 3.296881914138794e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-26 (reshaped)",
+      "max_abs_difference": 3.296881914138794e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-27",
+      "max_abs_difference": 8.605420589447021e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-27 (reshaped)",
+      "max_abs_difference": 8.605420589447021e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-28",
+      "max_abs_difference": 3.371387720108032e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-28 (reshaped)",
+      "max_abs_difference": 3.371387720108032e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-29",
+      "max_abs_difference": 1.0356307029724121e-06
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-29 (reshaped)",
+      "max_abs_difference": 1.0356307029724121e-06
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-30",
+      "max_abs_difference": 3.5390257835388184e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-30 (reshaped)",
+      "max_abs_difference": 3.5390257835388184e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-31",
+      "max_abs_difference": 1.1362135410308838e-06
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-31 (reshaped)",
+      "max_abs_difference": 1.1362135410308838e-06
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-32",
+      "max_abs_difference": 1.7993152141571045e-06
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-32 (reshaped)",
+      "max_abs_difference": 1.7993152141571045e-06
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-33",
+      "max_abs_difference": 1.1101365089416504e-06
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-33 (reshaped)",
+      "max_abs_difference": 1.1101365089416504e-06
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-34",
+      "max_abs_difference": 1.6316771507263184e-06
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-34 (reshaped)",
+      "max_abs_difference": 1.6316771507263184e-06
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-35",
+      "max_abs_difference": 1.1213123798370361e-06
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-35 (reshaped)",
+      "max_abs_difference": 1.1213123798370361e-06
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-36",
+      "max_abs_difference": 6.966292858123779e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-36 (reshaped)",
+      "max_abs_difference": 6.966292858123779e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-37",
+      "max_abs_difference": 6.584450602531433e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-37 (reshaped)",
+      "max_abs_difference": 6.584450602531433e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-38",
+      "max_abs_difference": 7.860362529754639e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-38 (reshaped)",
+      "max_abs_difference": 7.860362529754639e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-39",
+      "max_abs_difference": 1.4379620552062988e-06
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-39 (reshaped)",
+      "max_abs_difference": 1.4379620552062988e-06
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-40",
+      "max_abs_difference": 6.92903995513916e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-40 (reshaped)",
+      "max_abs_difference": 6.92903995513916e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-41",
+      "max_abs_difference": 1.1548399925231934e-06
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-41 (reshaped)",
+      "max_abs_difference": 1.1548399925231934e-06
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-42",
+      "max_abs_difference": 9.499490261077881e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-42 (reshaped)",
+      "max_abs_difference": 9.499490261077881e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-43",
+      "max_abs_difference": 4.917383193969727e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-43 (reshaped)",
+      "max_abs_difference": 4.917383193969727e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-44",
+      "max_abs_difference": 3.781169652938843e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-44 (reshaped)",
+      "max_abs_difference": 3.781169652938843e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-45",
+      "max_abs_difference": 7.245689630508423e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-45 (reshaped)",
+      "max_abs_difference": 7.245689630508423e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-46",
+      "max_abs_difference": 5.485489964485168e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-46 (reshaped)",
+      "max_abs_difference": 5.485489964485168e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-47",
+      "max_abs_difference": 4.675239324569702e-07
+    },
+    {
+      "prompt": 0,
+      "step": 0,
+      "name": "ffn_moe_probs-47 (reshaped)",
+      "max_abs_difference": 4.675239324569702e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-0",
+      "max_abs_difference": 8.381903171539307e-09
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-0 (reshaped)",
+      "max_abs_difference": 8.381903171539307e-09
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-1",
+      "max_abs_difference": 4.6566128730773926e-09
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-1 (reshaped)",
+      "max_abs_difference": 4.6566128730773926e-09
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-2",
+      "max_abs_difference": 7.450580596923828e-09
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-2 (reshaped)",
+      "max_abs_difference": 7.450580596923828e-09
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-3",
+      "max_abs_difference": 1.4901161193847656e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-3 (reshaped)",
+      "max_abs_difference": 1.4901161193847656e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-4",
+      "max_abs_difference": 2.421438694000244e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-4 (reshaped)",
+      "max_abs_difference": 2.421438694000244e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-5",
+      "max_abs_difference": 8.568167686462402e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-5 (reshaped)",
+      "max_abs_difference": 8.568167686462402e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-6",
+      "max_abs_difference": 1.862645149230957e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-6 (reshaped)",
+      "max_abs_difference": 1.862645149230957e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-7",
+      "max_abs_difference": 5.029141902923584e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-7 (reshaped)",
+      "max_abs_difference": 5.029141902923584e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-8",
+      "max_abs_difference": 5.587935447692871e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-8 (reshaped)",
+      "max_abs_difference": 5.587935447692871e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-9",
+      "max_abs_difference": 3.3527612686157227e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-9 (reshaped)",
+      "max_abs_difference": 3.3527612686157227e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-10",
+      "max_abs_difference": 5.960464477539063e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-10 (reshaped)",
+      "max_abs_difference": 5.960464477539063e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-11",
+      "max_abs_difference": 5.587935447692871e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-11 (reshaped)",
+      "max_abs_difference": 5.587935447692871e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-12",
+      "max_abs_difference": 5.587935447692871e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-12 (reshaped)",
+      "max_abs_difference": 5.587935447692871e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-13",
+      "max_abs_difference": 4.7963112592697144e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-13 (reshaped)",
+      "max_abs_difference": 4.7963112592697144e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-14",
+      "max_abs_difference": 8.195638656616211e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-14 (reshaped)",
+      "max_abs_difference": 8.195638656616211e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-15",
+      "max_abs_difference": 1.7881393432617188e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-15 (reshaped)",
+      "max_abs_difference": 1.7881393432617188e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-16",
+      "max_abs_difference": 3.6694109439849854e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-16 (reshaped)",
+      "max_abs_difference": 3.6694109439849854e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-17",
+      "max_abs_difference": 1.4528632164001465e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-17 (reshaped)",
+      "max_abs_difference": 1.4528632164001465e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-18",
+      "max_abs_difference": 4.0978193283081055e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-18 (reshaped)",
+      "max_abs_difference": 4.0978193283081055e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-19",
+      "max_abs_difference": 1.564621925354004e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-19 (reshaped)",
+      "max_abs_difference": 1.564621925354004e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-20",
+      "max_abs_difference": 1.3224780559539795e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-20 (reshaped)",
+      "max_abs_difference": 1.3224780559539795e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-21",
+      "max_abs_difference": 1.1362135410308838e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-21 (reshaped)",
+      "max_abs_difference": 1.1362135410308838e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-22",
+      "max_abs_difference": 1.341104507446289e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-22 (reshaped)",
+      "max_abs_difference": 1.341104507446289e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-23",
+      "max_abs_difference": 2.421438694000244e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-23 (reshaped)",
+      "max_abs_difference": 2.421438694000244e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-24",
+      "max_abs_difference": 3.501772880554199e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-24 (reshaped)",
+      "max_abs_difference": 3.501772880554199e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-25",
+      "max_abs_difference": 8.009374141693115e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-25 (reshaped)",
+      "max_abs_difference": 8.009374141693115e-08
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-26",
+      "max_abs_difference": 2.4493783712387085e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-26 (reshaped)",
+      "max_abs_difference": 2.4493783712387085e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-27",
+      "max_abs_difference": 4.4889748096466064e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-27 (reshaped)",
+      "max_abs_difference": 4.4889748096466064e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-28",
+      "max_abs_difference": 2.477318048477173e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-28 (reshaped)",
+      "max_abs_difference": 2.477318048477173e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-29",
+      "max_abs_difference": 4.6193599700927734e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-29 (reshaped)",
+      "max_abs_difference": 4.6193599700927734e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-30",
+      "max_abs_difference": 7.878988981246948e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-30 (reshaped)",
+      "max_abs_difference": 7.878988981246948e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-31",
+      "max_abs_difference": 5.308538675308228e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-31 (reshaped)",
+      "max_abs_difference": 5.308538675308228e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-32",
+      "max_abs_difference": 9.052455425262451e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-32 (reshaped)",
+      "max_abs_difference": 9.052455425262451e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-33",
+      "max_abs_difference": 4.414469003677368e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-33 (reshaped)",
+      "max_abs_difference": 4.414469003677368e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-34",
+      "max_abs_difference": 8.009374141693115e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-34 (reshaped)",
+      "max_abs_difference": 8.009374141693115e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-35",
+      "max_abs_difference": 7.953494787216187e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-35 (reshaped)",
+      "max_abs_difference": 7.953494787216187e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-36",
+      "max_abs_difference": 1.3783574104309082e-06
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-36 (reshaped)",
+      "max_abs_difference": 1.3783574104309082e-06
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-37",
+      "max_abs_difference": 5.746260285377502e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-37 (reshaped)",
+      "max_abs_difference": 5.746260285377502e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-38",
+      "max_abs_difference": 6.612390279769897e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-38 (reshaped)",
+      "max_abs_difference": 6.612390279769897e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-39",
+      "max_abs_difference": 4.996545612812042e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-39 (reshaped)",
+      "max_abs_difference": 4.996545612812042e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-40",
+      "max_abs_difference": 6.7148357629776e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-40 (reshaped)",
+      "max_abs_difference": 6.7148357629776e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-41",
+      "max_abs_difference": 9.10833477973938e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-41 (reshaped)",
+      "max_abs_difference": 9.10833477973938e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-42",
+      "max_abs_difference": 1.600012183189392e-06
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-42 (reshaped)",
+      "max_abs_difference": 1.600012183189392e-06
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-43",
+      "max_abs_difference": 1.344829797744751e-06
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-43 (reshaped)",
+      "max_abs_difference": 1.344829797744751e-06
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-44",
+      "max_abs_difference": 6.547197699546814e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-44 (reshaped)",
+      "max_abs_difference": 6.547197699546814e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-45",
+      "max_abs_difference": 3.157183527946472e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-45 (reshaped)",
+      "max_abs_difference": 3.157183527946472e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-46",
+      "max_abs_difference": 8.456408977508545e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-46 (reshaped)",
+      "max_abs_difference": 8.456408977508545e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-47",
+      "max_abs_difference": 5.094334483146667e-07
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "name": "ffn_moe_probs-47 (reshaped)",
+      "max_abs_difference": 5.094334483146667e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-0",
+      "max_abs_difference": 7.450580596923828e-09
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-0 (reshaped)",
+      "max_abs_difference": 7.450580596923828e-09
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-1",
+      "max_abs_difference": 1.4901161193847656e-08
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-1 (reshaped)",
+      "max_abs_difference": 1.4901161193847656e-08
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-2",
+      "max_abs_difference": 5.587935447692871e-09
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-2 (reshaped)",
+      "max_abs_difference": 5.587935447692871e-09
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-3",
+      "max_abs_difference": 7.078051567077637e-08
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-3 (reshaped)",
+      "max_abs_difference": 7.078051567077637e-08
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-4",
+      "max_abs_difference": 4.377216100692749e-08
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-4 (reshaped)",
+      "max_abs_difference": 4.377216100692749e-08
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-5",
+      "max_abs_difference": 8.568167686462402e-08
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-5 (reshaped)",
+      "max_abs_difference": 8.568167686462402e-08
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-6",
+      "max_abs_difference": 1.30385160446167e-08
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-6 (reshaped)",
+      "max_abs_difference": 1.30385160446167e-08
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-7",
+      "max_abs_difference": 5.122274160385132e-08
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-7 (reshaped)",
+      "max_abs_difference": 5.122274160385132e-08
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-8",
+      "max_abs_difference": 3.3527612686157227e-08
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-8 (reshaped)",
+      "max_abs_difference": 3.3527612686157227e-08
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-9",
+      "max_abs_difference": 6.51925802230835e-08
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-9 (reshaped)",
+      "max_abs_difference": 6.51925802230835e-08
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-10",
+      "max_abs_difference": 4.842877388000488e-08
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-10 (reshaped)",
+      "max_abs_difference": 4.842877388000488e-08
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-11",
+      "max_abs_difference": 1.6763806343078613e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-11 (reshaped)",
+      "max_abs_difference": 1.6763806343078613e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-12",
+      "max_abs_difference": 1.126900315284729e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-12 (reshaped)",
+      "max_abs_difference": 1.126900315284729e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-13",
+      "max_abs_difference": 3.520399332046509e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-13 (reshaped)",
+      "max_abs_difference": 3.520399332046509e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-14",
+      "max_abs_difference": 1.434236764907837e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-14 (reshaped)",
+      "max_abs_difference": 1.434236764907837e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-15",
+      "max_abs_difference": 1.8067657947540283e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-15 (reshaped)",
+      "max_abs_difference": 1.8067657947540283e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-16",
+      "max_abs_difference": 2.4028122425079346e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-16 (reshaped)",
+      "max_abs_difference": 2.4028122425079346e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-17",
+      "max_abs_difference": 2.2631138563156128e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-17 (reshaped)",
+      "max_abs_difference": 2.2631138563156128e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-18",
+      "max_abs_difference": 1.5459954738616943e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-18 (reshaped)",
+      "max_abs_difference": 1.5459954738616943e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-19",
+      "max_abs_difference": 3.520399332046509e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-19 (reshaped)",
+      "max_abs_difference": 3.520399332046509e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-20",
+      "max_abs_difference": 6.146728992462158e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-20 (reshaped)",
+      "max_abs_difference": 6.146728992462158e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-21",
+      "max_abs_difference": 2.2631138563156128e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-21 (reshaped)",
+      "max_abs_difference": 2.2631138563156128e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-22",
+      "max_abs_difference": 4.172325134277344e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-22 (reshaped)",
+      "max_abs_difference": 4.172325134277344e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-23",
+      "max_abs_difference": 4.991888999938965e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-23 (reshaped)",
+      "max_abs_difference": 4.991888999938965e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-24",
+      "max_abs_difference": 7.189810276031494e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-24 (reshaped)",
+      "max_abs_difference": 7.189810276031494e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-25",
+      "max_abs_difference": 1.1436641216278076e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-25 (reshaped)",
+      "max_abs_difference": 1.1436641216278076e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-26",
+      "max_abs_difference": 4.991888999938965e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-26 (reshaped)",
+      "max_abs_difference": 4.991888999938965e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-27",
+      "max_abs_difference": 6.509944796562195e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-27 (reshaped)",
+      "max_abs_difference": 6.509944796562195e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-28",
+      "max_abs_difference": 4.470348358154297e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-28 (reshaped)",
+      "max_abs_difference": 4.470348358154297e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-29",
+      "max_abs_difference": 7.078051567077637e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-29 (reshaped)",
+      "max_abs_difference": 7.078051567077637e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-30",
+      "max_abs_difference": 1.6130506992340088e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-30 (reshaped)",
+      "max_abs_difference": 1.6130506992340088e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-31",
+      "max_abs_difference": 1.4528632164001465e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-31 (reshaped)",
+      "max_abs_difference": 1.4528632164001465e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-32",
+      "max_abs_difference": 2.4400651454925537e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-32 (reshaped)",
+      "max_abs_difference": 2.4400651454925537e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-33",
+      "max_abs_difference": 8.754432201385498e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-33 (reshaped)",
+      "max_abs_difference": 8.754432201385498e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-34",
+      "max_abs_difference": 2.041459083557129e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-34 (reshaped)",
+      "max_abs_difference": 2.041459083557129e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-35",
+      "max_abs_difference": 9.238719940185547e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-35 (reshaped)",
+      "max_abs_difference": 9.238719940185547e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-36",
+      "max_abs_difference": 1.5050172805786133e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-36 (reshaped)",
+      "max_abs_difference": 1.5050172805786133e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-37",
+      "max_abs_difference": 1.0281801223754883e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-37 (reshaped)",
+      "max_abs_difference": 1.0281801223754883e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-38",
+      "max_abs_difference": 7.012858986854553e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-38 (reshaped)",
+      "max_abs_difference": 7.012858986854553e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-39",
+      "max_abs_difference": 2.1532177925109863e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-39 (reshaped)",
+      "max_abs_difference": 2.1532177925109863e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-40",
+      "max_abs_difference": 9.331852197647095e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-40 (reshaped)",
+      "max_abs_difference": 9.331852197647095e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-41",
+      "max_abs_difference": 7.934868335723877e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-41 (reshaped)",
+      "max_abs_difference": 7.934868335723877e-07
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-42",
+      "max_abs_difference": 1.3057142496109009e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-42 (reshaped)",
+      "max_abs_difference": 1.3057142496109009e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-43",
+      "max_abs_difference": 2.648681402206421e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-43 (reshaped)",
+      "max_abs_difference": 2.648681402206421e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-44",
+      "max_abs_difference": 1.1166557669639587e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-44 (reshaped)",
+      "max_abs_difference": 1.1166557669639587e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-45",
+      "max_abs_difference": 2.5909394025802612e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-45 (reshaped)",
+      "max_abs_difference": 2.5909394025802612e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-46",
+      "max_abs_difference": 3.3043324947357178e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-46 (reshaped)",
+      "max_abs_difference": 3.3043324947357178e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-47",
+      "max_abs_difference": 1.4081597328186035e-06
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "name": "ffn_moe_probs-47 (reshaped)",
+      "max_abs_difference": 1.4081597328186035e-06
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-0",
+      "max_abs_difference": 7.450580596923828e-09
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-0 (reshaped)",
+      "max_abs_difference": 7.450580596923828e-09
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-1",
+      "max_abs_difference": 7.450580596923828e-09
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-1 (reshaped)",
+      "max_abs_difference": 7.450580596923828e-09
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-2",
+      "max_abs_difference": 1.1175870895385742e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-2 (reshaped)",
+      "max_abs_difference": 1.1175870895385742e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-3",
+      "max_abs_difference": 1.0244548320770264e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-3 (reshaped)",
+      "max_abs_difference": 1.0244548320770264e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-4",
+      "max_abs_difference": 5.4016709327697754e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-4 (reshaped)",
+      "max_abs_difference": 5.4016709327697754e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-5",
+      "max_abs_difference": 5.21540641784668e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-5 (reshaped)",
+      "max_abs_difference": 5.21540641784668e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-6",
+      "max_abs_difference": 4.0978193283081055e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-6 (reshaped)",
+      "max_abs_difference": 4.0978193283081055e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-7",
+      "max_abs_difference": 5.587935447692871e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-7 (reshaped)",
+      "max_abs_difference": 5.587935447692871e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-8",
+      "max_abs_difference": 2.8870999813079834e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-8 (reshaped)",
+      "max_abs_difference": 2.8870999813079834e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-9",
+      "max_abs_difference": 4.284083843231201e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-9 (reshaped)",
+      "max_abs_difference": 4.284083843231201e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-10",
+      "max_abs_difference": 4.6566128730773926e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-10 (reshaped)",
+      "max_abs_difference": 4.6566128730773926e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-11",
+      "max_abs_difference": 3.259629011154175e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-11 (reshaped)",
+      "max_abs_difference": 3.259629011154175e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-12",
+      "max_abs_difference": 7.264316082000732e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-12 (reshaped)",
+      "max_abs_difference": 7.264316082000732e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-13",
+      "max_abs_difference": 5.587935447692871e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-13 (reshaped)",
+      "max_abs_difference": 5.587935447692871e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-14",
+      "max_abs_difference": 9.406358003616333e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-14 (reshaped)",
+      "max_abs_difference": 9.406358003616333e-08
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-15",
+      "max_abs_difference": 2.1886080503463745e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-15 (reshaped)",
+      "max_abs_difference": 2.1886080503463745e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-16",
+      "max_abs_difference": 3.166496753692627e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-16 (reshaped)",
+      "max_abs_difference": 3.166496753692627e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-17",
+      "max_abs_difference": 2.0116567611694336e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-17 (reshaped)",
+      "max_abs_difference": 2.0116567611694336e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-18",
+      "max_abs_difference": 2.2165477275848389e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-18 (reshaped)",
+      "max_abs_difference": 2.2165477275848389e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-19",
+      "max_abs_difference": 3.725290298461914e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-19 (reshaped)",
+      "max_abs_difference": 3.725290298461914e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-20",
+      "max_abs_difference": 4.861503839492798e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-20 (reshaped)",
+      "max_abs_difference": 4.861503839492798e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-21",
+      "max_abs_difference": 7.003545761108398e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-21 (reshaped)",
+      "max_abs_difference": 7.003545761108398e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-22",
+      "max_abs_difference": 4.172325134277344e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-22 (reshaped)",
+      "max_abs_difference": 4.172325134277344e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-23",
+      "max_abs_difference": 1.4677643775939941e-06
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-23 (reshaped)",
+      "max_abs_difference": 1.4677643775939941e-06
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-24",
+      "max_abs_difference": 1.1473894119262695e-06
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-24 (reshaped)",
+      "max_abs_difference": 1.1473894119262695e-06
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-25",
+      "max_abs_difference": 1.2032687664031982e-06
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-25 (reshaped)",
+      "max_abs_difference": 1.2032687664031982e-06
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-26",
+      "max_abs_difference": 7.301568984985352e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-26 (reshaped)",
+      "max_abs_difference": 7.301568984985352e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-27",
+      "max_abs_difference": 4.3958425521850586e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-27 (reshaped)",
+      "max_abs_difference": 4.3958425521850586e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-28",
+      "max_abs_difference": 6.258487701416016e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-28 (reshaped)",
+      "max_abs_difference": 6.258487701416016e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-29",
+      "max_abs_difference": 6.845220923423767e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-29 (reshaped)",
+      "max_abs_difference": 6.845220923423767e-07
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-29",
+      "max_abs_difference": 225,
+      "different_selection_sets": true,
+      "single": [
+        343,
+        53,
+        387,
+        290,
+        463,
+        488,
+        112,
+        123,
+        377,
+        34
+      ],
+      "two": [
+        343,
+        53,
+        387,
+        290,
+        463,
+        488,
+        112,
+        123,
+        377,
+        259
+      ]
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-30",
+      "max_abs_difference": 0.0014420337975025177
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-30 (reshaped)",
+      "max_abs_difference": 0.0014420337975025177
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-30",
+      "max_abs_difference": 135,
+      "different_selection_sets": true,
+      "single": [
+        82,
+        436,
+        424,
+        471,
+        212,
+        138,
+        156,
+        470,
+        173,
+        241
+      ],
+      "two": [
+        82,
+        436,
+        424,
+        471,
+        212,
+        156,
+        138,
+        470,
+        173,
+        106
+      ]
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-31",
+      "max_abs_difference": 0.0015379153192043304
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-31 (reshaped)",
+      "max_abs_difference": 0.0015379153192043304
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-31",
+      "max_abs_difference": 86,
+      "different_selection_sets": true,
+      "single": [
+        351,
+        494,
+        501,
+        6,
+        432,
+        209,
+        410,
+        224,
+        490,
+        346
+      ],
+      "two": [
+        351,
+        494,
+        501,
+        6,
+        410,
+        209,
+        346,
+        224,
+        436,
+        432
+      ]
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-32",
+      "max_abs_difference": 0.003950819373130798
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-32 (reshaped)",
+      "max_abs_difference": 0.003950819373130798
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-32",
+      "max_abs_difference": 262,
+      "different_selection_sets": false,
+      "single": [
+        92,
+        277,
+        480,
+        429,
+        228,
+        392,
+        130,
+        487,
+        243,
+        320
+      ],
+      "two": [
+        92,
+        277,
+        480,
+        429,
+        228,
+        130,
+        392,
+        243,
+        487,
+        320
+      ]
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-33",
+      "max_abs_difference": 0.003326103091239929
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-33 (reshaped)",
+      "max_abs_difference": 0.003326103091239929
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-33",
+      "max_abs_difference": 68,
+      "different_selection_sets": false,
+      "single": [
+        160,
+        299,
+        363,
+        105,
+        136,
+        68,
+        194,
+        347,
+        221,
+        209
+      ],
+      "two": [
+        160,
+        299,
+        363,
+        68,
+        105,
+        136,
+        194,
+        347,
+        221,
+        209
+      ]
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-34",
+      "max_abs_difference": 0.00394207239151001
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-34 (reshaped)",
+      "max_abs_difference": 0.00394207239151001
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-34",
+      "max_abs_difference": 308,
+      "different_selection_sets": false,
+      "single": [
+        194,
+        464,
+        85,
+        504,
+        196,
+        116,
+        185,
+        501,
+        340,
+        441
+      ],
+      "two": [
+        194,
+        464,
+        85,
+        196,
+        504,
+        185,
+        116,
+        501,
+        340,
+        441
+      ]
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-35",
+      "max_abs_difference": 0.0017563886940479279
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-35 (reshaped)",
+      "max_abs_difference": 0.0017563886940479279
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-35",
+      "max_abs_difference": 311,
+      "different_selection_sets": true,
+      "single": [
+        434,
+        372,
+        288,
+        221,
+        30,
+        343,
+        342,
+        31,
+        324,
+        226
+      ],
+      "two": [
+        434,
+        372,
+        288,
+        221,
+        30,
+        343,
+        31,
+        342,
+        226,
+        127
+      ]
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-36",
+      "max_abs_difference": 0.0024523651227355003
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-36 (reshaped)",
+      "max_abs_difference": 0.0024523651227355003
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-36",
+      "max_abs_difference": 375,
+      "different_selection_sets": false,
+      "single": [
+        258,
+        451,
+        76,
+        497,
+        73,
+        323,
+        25,
+        325,
+        265,
+        210
+      ],
+      "two": [
+        258,
+        76,
+        451,
+        497,
+        73,
+        323,
+        325,
+        25,
+        265,
+        210
+      ]
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-37",
+      "max_abs_difference": 0.0012266319245100021
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-37 (reshaped)",
+      "max_abs_difference": 0.0012266319245100021
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-37",
+      "max_abs_difference": 327,
+      "different_selection_sets": false,
+      "single": [
+        43,
+        189,
+        3,
+        98,
+        257,
+        393,
+        104,
+        377,
+        488,
+        161
+      ],
+      "two": [
+        43,
+        189,
+        3,
+        98,
+        257,
+        393,
+        104,
+        488,
+        161,
+        377
+      ]
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-38",
+      "max_abs_difference": 0.0029769279062747955
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-38 (reshaped)",
+      "max_abs_difference": 0.0029769279062747955
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-38",
+      "max_abs_difference": 169,
+      "different_selection_sets": true,
+      "single": [
+        165,
+        276,
+        461,
+        426,
+        483,
+        112,
+        150,
+        348,
+        471,
+        394
+      ],
+      "two": [
+        165,
+        276,
+        461,
+        426,
+        483,
+        150,
+        112,
+        179,
+        348,
+        471
+      ]
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-39",
+      "max_abs_difference": 0.0013216910883784294
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-39 (reshaped)",
+      "max_abs_difference": 0.0013216910883784294
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-39",
+      "max_abs_difference": 291,
+      "different_selection_sets": true,
+      "single": [
+        67,
+        49,
+        356,
+        120,
+        39,
+        470,
+        100,
+        391,
+        0,
+        174
+      ],
+      "two": [
+        67,
+        49,
+        356,
+        120,
+        39,
+        470,
+        391,
+        100,
+        14,
+        62
+      ]
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-40",
+      "max_abs_difference": 0.0036621876060962677
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-40 (reshaped)",
+      "max_abs_difference": 0.0036621876060962677
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-40",
+      "max_abs_difference": 307,
+      "different_selection_sets": true,
+      "single": [
+        398,
+        425,
+        337,
+        328,
+        373,
+        69,
+        87,
+        393,
+        141,
+        86
+      ],
+      "two": [
+        425,
+        337,
+        398,
+        328,
+        373,
+        69,
+        141,
+        87,
+        341,
+        393
+      ]
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-41",
+      "max_abs_difference": 0.0028657689690589905
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-41 (reshaped)",
+      "max_abs_difference": 0.0028657689690589905
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-41",
+      "max_abs_difference": 264,
+      "different_selection_sets": true,
+      "single": [
+        283,
+        99,
+        501,
+        53,
+        158,
+        422,
+        325,
+        261,
+        113,
+        364
+      ],
+      "two": [
+        283,
+        99,
+        501,
+        53,
+        422,
+        158,
+        325,
+        261,
+        113,
+        270
+      ]
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-42",
+      "max_abs_difference": 0.0027839001268148422
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-42 (reshaped)",
+      "max_abs_difference": 0.0027839001268148422
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-42",
+      "max_abs_difference": 416,
+      "different_selection_sets": true,
+      "single": [
+        55,
+        426,
+        56,
+        83,
+        225,
+        113,
+        3,
+        418,
+        396,
+        49
+      ],
+      "two": [
+        55,
+        56,
+        426,
+        83,
+        225,
+        113,
+        3,
+        418,
+        49,
+        465
+      ]
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-43",
+      "max_abs_difference": 0.0030701495707035065
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-43 (reshaped)",
+      "max_abs_difference": 0.0030701495707035065
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-43",
+      "max_abs_difference": 235,
+      "different_selection_sets": false,
+      "single": [
+        300,
+        156,
+        391,
+        159,
+        175,
+        302,
+        357,
+        113,
+        243,
+        21
+      ],
+      "two": [
+        300,
+        391,
+        156,
+        159,
+        175,
+        302,
+        357,
+        113,
+        243,
+        21
+      ]
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-44",
+      "max_abs_difference": 0.0036146696656942368
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-44 (reshaped)",
+      "max_abs_difference": 0.0036146696656942368
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-44",
+      "max_abs_difference": 329,
+      "different_selection_sets": false,
+      "single": [
+        119,
+        79,
+        33,
+        145,
+        384,
+        466,
+        258,
+        503,
+        479,
+        150
+      ],
+      "two": [
+        119,
+        79,
+        145,
+        33,
+        384,
+        503,
+        466,
+        258,
+        150,
+        479
+      ]
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-45",
+      "max_abs_difference": 0.0011535100638866425
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-45 (reshaped)",
+      "max_abs_difference": 0.0011535100638866425
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-45",
+      "max_abs_difference": 187,
+      "different_selection_sets": false,
+      "single": [
+        452,
+        280,
+        86,
+        363,
+        172,
+        24,
+        125,
+        267,
+        80,
+        324
+      ],
+      "two": [
+        452,
+        280,
+        86,
+        363,
+        172,
+        24,
+        267,
+        80,
+        125,
+        324
+      ]
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-46",
+      "max_abs_difference": 0.0009650480933487415
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-46 (reshaped)",
+      "max_abs_difference": 0.0009650480933487415
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-46",
+      "max_abs_difference": 502,
+      "different_selection_sets": false,
+      "single": [
+        196,
+        425,
+        407,
+        122,
+        17,
+        348,
+        7,
+        509,
+        121,
+        435
+      ],
+      "two": [
+        196,
+        425,
+        407,
+        122,
+        17,
+        348,
+        509,
+        7,
+        121,
+        435
+      ]
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-47",
+      "max_abs_difference": 0.0015107672661542892
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_probs-47 (reshaped)",
+      "max_abs_difference": 0.0015107672661542892
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "name": "ffn_moe_topk-47",
+      "max_abs_difference": 302,
+      "different_selection_sets": true,
+      "single": [
+        88,
+        8,
+        265,
+        391,
+        89,
+        403,
+        188,
+        357,
+        302,
+        415
+      ],
+      "two": [
+        88,
+        8,
+        265,
+        188,
+        391,
+        403,
+        89,
+        357,
+        302,
+        404
+      ]
+    }
+  ]
+}
