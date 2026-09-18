@@ -30,25 +30,29 @@ WHY THIS EXISTS
     interact, so there is no coordination cost waiting to reappear at scale --
     but "expect" is not "measured", and this tool exists to measure.
 
-    THE DRIVER MUST NOT RUN ON A HOST UNDER TEST. Measured 2026-09-18 on two
-    identical GB10s: a benchmark client sharing a box with the server it is
-    measuring steals the CPU llama.cpp needs to feed the GPU, and the effect
-    grows with stream count.
+    PUT THE DRIVER ON A HOST THAT IS NOT UNDER TEST -- as hygiene, not because
+    it was shown to matter. On a GB10 Spark it was measured and it costs almost
+    nothing:
 
-        both clients on asus1:   asus2 (remote) 18.7 tok/s
-                                 asus1 (local)  10.5 tok/s   <- same hardware
+        streams    client on another box    client on the box itself
+             8              56.4 tok/s               58.0 tok/s
+            16              73.4                     76.8
+            32              92.0                     96.4
 
-    It is not client serialisation -- two wholly independent processes
-    reproduce it (29.2 vs 29.4 tok/s). The bias direction depends on WHICH
-    host hosts the driver:
+    The colocated figures are slightly HIGHER, so on that hardware a local
+    client was not depressing the single-server baseline at all.
 
-        driver on the host you compare AGAINST   splitting looks BAD
-        driver on the host you are ADDING        splitting looks GOOD
+    THIS DOES NOT TRANSFER TO A SMALLER HOST UNTESTED. The Mac mini has 10
+    cores, 4 of them performance, against a GB10's; llama.cpp's CPU demand to
+    feed the GPU does not scale with either in a way anyone here has measured.
+    The 1.17x above was driven from the Mini, which is one of its two hosts, so
+    for THAT pair the question is open in both directions: unmeasured, not
+    condemned and not cleared.
 
-    which is how two people measuring the same technique the same afternoon got
-    opposite signs. The 1.17x above was driven from the Mini, which is one of
-    its two hosts, so it is a FLOOR rather than a figure. Put the driver on a
-    box that serves nothing.
+    What IS unexplained, on the Sparks, with the client remote: asus1 alone at
+    4 streams gives 37.1 tok/s, and two boxes at 4 streams each give 29.2 TOTAL
+    where ~74 was expected. Not client CPU -- the table above rules that out.
+    Something slows both boxes when both are busy at once.
 
     ALSO, NOT IN THE NUMBERS ABOVE: add the second host as OVERFLOW once the
     first is at its knee. Round-robin HALVES each host's batch and puts both
