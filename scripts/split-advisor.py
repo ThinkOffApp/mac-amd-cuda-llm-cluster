@@ -19,7 +19,11 @@ WHY THIS EXISTS
         M5 alone                          1077 tok/s
         request split, measured CONCURRENTLY  1261 tok/s     1.17x
 
-    THE MODEL MATTERS AND THIS ONE IS A TOY. On the same day, a mechanism
+    THE MODEL MATTERS AND THIS ONE IS BOTH A TOY AND AN OBSOLETE ONE. gemma-3
+    was several generations behind the current Gemma when this was measured, and
+    it was chosen for no reason beyond an existing harness -- which is exactly
+    how an old version survives. If a small model is the right tool it still has
+    to be a CURRENT small model. On the same day, a mechanism
     concluded from GPT-2 was wrong about Qwen3.8-27B: per-call time looked flat
     against batch size on the toy and the real model turned out partly
     work-bound (32x work -> 5.4x time). So treat the 1.17x as a result ABOUT
