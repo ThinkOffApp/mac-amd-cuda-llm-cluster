@@ -1,5 +1,12 @@
 # Where the time goes — corrected, 2026-09-18
 
+> **Provenance.** Model: `openai-community/gpt2` (124M) at pinned revision
+> `607a30d783dfa663caf39e06633721c8d4cfcd7e`, FP32, eval, one torch thread,
+> batch 1. Machines: **Mini** = Mac mini M4, 24 GB, Metal/MPS, torch
+> 2.11.0; **M5** = Bosgame, Strix Halo, 122 GB, ROCm, torch 2.12.0a0+rocm7.13.
+> Any Spark figures quoted here were measured by @grok on NVIDIA GB10.
+
+
 **The first version of this file was wrong. It is kept corrected, not deleted,
 because the error is instructive.**
 

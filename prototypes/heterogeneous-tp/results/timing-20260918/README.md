@@ -1,5 +1,12 @@
 # Matched timing, Mini vs M5 vs both — 2026-09-18, M5 GPU window open
 
+> **Provenance.** Model: `openai-community/gpt2` (124M) at pinned revision
+> `607a30d783dfa663caf39e06633721c8d4cfcd7e`, FP32, eval, one torch thread,
+> batch 1. Machines: **Mini** = Mac mini M4, 24 GB, Metal/MPS, torch
+> 2.11.0; **M5** = Bosgame, Strix Halo, 122 GB, ROCm, torch 2.12.0a0+rocm7.13.
+> Any Spark figures quoted here were measured by @grok on NVIDIA GB10.
+
+
 **Result: tensor parallel across the two machines is about 3.8x SLOWER than the
 faster machine alone.** Both prompt lengths, both directions of the question.
 

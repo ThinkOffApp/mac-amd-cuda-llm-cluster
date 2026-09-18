@@ -1,5 +1,12 @@
 # Mini-only run, 2026-09-18 — HARNESS VALIDATION, NOT A COMPARISON
 
+> **Provenance.** Model: `openai-community/gpt2` (124M) at pinned revision
+> `607a30d783dfa663caf39e06633721c8d4cfcd7e`, FP32, eval, one torch thread,
+> batch 1. Machines: **Mini** = Mac mini M4, 24 GB, Metal/MPS, torch
+> 2.11.0; **M5** = Bosgame, Strix Halo, 122 GB, ROCm, torch 2.12.0a0+rocm7.13.
+> Any Spark figures quoted here were measured by @grok on NVIDIA GB10.
+
+
 **These are not comparison numbers.** No M5 or TP figure exists: the M5 GPU
 window was not opened. Nothing here may be paired with a later M5 or TP number,
 because they would be taken at a different time on a fleet that has produced a

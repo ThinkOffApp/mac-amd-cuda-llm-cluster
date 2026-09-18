@@ -1,5 +1,13 @@
 # Model-size sweep and copy-cost sweep — 2026-09-18
 
+> **Provenance.** Model: `openai-community/gpt2` (124M) at pinned revision
+> `607a30d783dfa663caf39e06633721c8d4cfcd7e`, FP32, eval, one torch thread,
+> batch 1. The size sweep additionally uses
+> `gpt2-medium` (355M, rev `6dcaa7a9`) and `gpt2-large` (774M, rev `32b71b12`). Machines: **Mini** = Mac mini M4, 24 GB, Metal/MPS, torch
+> 2.11.0; **M5** = Bosgame, Strix Halo, 122 GB, ROCm, torch 2.12.0a0+rocm7.13.
+> Any Spark figures quoted here were measured by @grok on NVIDIA GB10.
+
+
 Two measurements that between them close both payload-level optimisation levers.
 
 ## 1. Staging share barely moves with model size
