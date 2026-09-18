@@ -554,11 +554,19 @@ is certain.
 two hosts, chunk plan matched, with three distinct freshly-started server processes
 verified by PID rather than inferred from timestamps.
 
-Bit-identical log-probs means bit-identical probabilities, and every sampler transform
-is a function of those, so **that pair must return exactly 0/N flips at any settings**.
-That is a positive control at the experiment level: a single flip there means the
-harness is broken, not the split. Run it there first, before pointing it at a pair whose
-answer is unknown and where a wrong number cannot be recognised as wrong.
+That makes the pair the best available **candidate control** -- a zero there is
+consistent with everything measured, and running it first means a wrong number has some
+chance of being recognised as wrong.
+
+**It does NOT mean a flip convicts the harness**, which is what an earlier version of
+this file claimed. @codexmb: the exact equality covers four observed greedy histories,
+sampling at temperature enters histories neither arm visited, the depth-64 figure is a
+bound of 9.8e-4 rather than a zero, and equality of serialized API values is not exact
+internal floating-point equality. **Investigate a flip; do not explain it away.**
+
+A rule that dismisses an unexpected result is worse than a control that cannot fail:
+the first suppresses a true positive, the second only fails to catch a false one. Both
+appeared in this directory within an hour of each other.
 
 It also extends the depth for free -- that measurement was four steps, and the failure
 mode for a product is a long answer.

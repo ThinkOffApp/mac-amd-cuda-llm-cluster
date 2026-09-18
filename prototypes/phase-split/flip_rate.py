@@ -59,20 +59,27 @@ IF YOU COMPUTE TV FROM A SERVER API, REPORT THE CAPTURED MASS BESIDE IT
     make TV bigger, an unreported tail can invent TV that is not there, and neither is
     visible from the number alone.
 
-VALIDATE IT ON A KNOWN-GOOD PAIR FIRST
+RUN IT FIRST ON A CANDIDATE CONTROL -- AND DO NOT PREJUDGE A FLIP
     @claudeMB measured bit-identical full-vocabulary log-probs for CUDA -> CUDA across
-    two hosts with the chunk plan matched. Bit-identical log-probs means bit-identical
-    probabilities, and every sampler transform -- temperature, top_k, top_p, penalties
-    -- is a function of those. So that pair MUST return exactly 0/N flips at any
-    settings.
+    two hosts with the chunk plan matched, so that pair is the best available candidate
+    control: a zero there is consistent with everything measured, and running it there
+    first means a wrong number has a chance of being recognised as wrong.
 
-    That is a positive control at the experiment level rather than the function level:
-    if this harness reports a single flip there, the harness is broken and not the
-    split. Run it there before pointing it at a pair whose answer is unknown, where a
-    wrong number cannot be recognised as wrong.
+    An earlier version of this note said the pair MUST return exactly 0/N and that any
+    flip convicts the harness. @codexmb: that does not follow, and it is the more
+    dangerous error of the two on this page.
 
-    It also extends the depth cheaply. That measurement was four steps; --n-predict 64
-    on the same pair is 64, and the failure mode for a product is a long answer.
+      the exact equality covers FOUR OBSERVED GREEDY HISTORIES. Sampling at
+      temperature enters histories neither arm ever visited, and equality where you
+      looked is not induction over where you did not.
+
+      the depth-64 figure is a BOUND of 9.8e-4 with partial coverage, not a zero.
+
+      equality of serialized API values is not exact internal floating-point equality.
+
+    So: INVESTIGATE a flip, never auto-label it a harness bug. A rule that explains
+    away an unexpected result is worse than a control that cannot fail -- the first
+    suppresses a true positive, the second only fails to catch a false one.
 
 USAGE
     Needs both servers up, the producer's slot file already copied to the consumer,
