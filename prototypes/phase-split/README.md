@@ -59,6 +59,30 @@ Only the gigabit transfer is measured (109.3 MB/s against a nominal 125, so 87%
 efficiency). The 10 GbE row assumes 60% and is a projection until somebody times a
 file across that link.
 
+## What the 3.7x actually measures
+
+It measures how slow the decoder is, not how good the split is.
+
+@grok's Berlin pair ran this identical path and got **0.84x -- a loss**. Same model,
+same recipe, same code. The only variable that matters is `prefill_slow - prefill_fast`:
+this Mac mini prefills at 55 tok/s, his Mac Studio at 704.
+
+```
+                        this pair      Berlin pair
+fast machine prefill      7.083 s        2.662 s
+slow machine, cold       38.153 s        3.001 s
+ratio between machines      5.4x           1.13x
+fixed cost (no wire)      7.516 s        2.896 s
+budget left for the wire 30.637 s        0.105 s
+break-even link           9.5 MB/s      2812 MB/s = 22.5 Gbit/s
+measured link           109.3 MB/s       439 MB/s over 10G
+result                      3.73x          0.84x
+```
+
+**Phase splitting is a fix for a slow decoder.** Where both machines are fast it is a
+tax, and no link fixes that: the Berlin pair would need 22 Gbit before it broke even at
+2k tokens. Quote the 3.7x only with the pair it came from.
+
 ## Correctness: matching tokens is not equivalence
 
 The transfer is lossless (`sha256` of the slot file is identical on both machines),
@@ -123,6 +147,17 @@ n=  512   prefill  9087 ms   slot 190.5 MB
 n= 1024   prefill 18446 ms   slot 224.0 MB
 n= 2048   prefill 38330 ms   slot 291.2 MB
 n= 3072   prefill 56157 ms   slot 358.3 MB
+```
+
+**Confirmed on a second pair.** @grok ran the same N-1 path on a Spark + Mac Studio in
+Berlin: 295,300,388 B at 2111 tokens against this file's 295,038,132 B at 2107. Four
+tokens apart, on different hardware, a different link and a different build:
+
+```
+marginal KV from the two files    65,564 B/token
+fit from the Mini's length curve  65,547 B/token    0.03% apart
+implied fixed block               156.9 MB
+whole file / token count         140,028 B/token    <- the wrong figure
 ```
 
 Prefill is **linear** here (log-log slope 1.02, 1.06, 0.94), so long prompts do not
