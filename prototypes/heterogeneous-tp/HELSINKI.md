@@ -203,6 +203,37 @@ config.json        0daed7749b4f02b8f76240d5444551d7b08712dab4d0adb8239c56ba823bb
 
 Setup and download sit outside any timed path, and nothing here is timed.
 
+## Benchmark harness: written, validated, NOT RUN
+
+`bench.py` + `run_bench.sh` measure Mini-solo (MPS) against M5-solo (ROCm)
+against Mini+M5 tensor parallel, same revision, tokenizer, FP32, eval, one torch
+thread, same KV cache and the same greedy/EOS policy in all three.
+
+**Solo runs the FULL model on its own GPU** — a `NullCollective` makes
+`all_reduce` the identity over one rank, so the arithmetic path is the same and
+only the sharding differs. Never a half shard, never CPU.
+
+**The correctness gate runs before any timing and the timings are withheld if it
+fails.** Load, tokenize, hash and the reference check sit outside every timed
+region, and the reference uses its own KV cache rather than recomputing the
+prefix, so it is not doing different work from the thing being measured.
+
+Instrumentation: each stamp is taken **when a token becomes available**, after a
+GPU sync, so `stamps[0]` is exactly TTFT and `stamps[-1] - stamps[0]` spans
+`len(out) - 1` tokens. An earlier version stamped after the following forward
+pass, which quietly misaligned both numbers.
+
+`run_bench.sh` **interleaves the three configurations per repetition** instead of
+running them in three blocks, so a machine drifting over the session perturbs all
+three equally. This fleet has already produced a 15% drift on a Mac across one
+evening, which is larger than the effect being measured.
+
+**It has not been run, and it refuses to run.** Its preflight aborts unless
+`/tmp/m5-gpu-window.open` exists, because `llm-server.service` (Flash-Next) is
+serving on the M5 and `~/m5-gpu-window.sh open` stops both it and the room agent.
+Timing GPT-2 against a contended GPU produces numbers that would need more
+disclaimer than they are worth.
+
 ## Not done
 
 No timing. No trained checkpoint, tokenizer or real text. Single toy dimensions
