@@ -1,0 +1,51 @@
+building caches, one per feeding pattern:
+  built one-shot       cuts=[2106]
+  built half           cuts=[1107, 2106]
+  built quarter-steps  cuts=[512, 1024, 1536, 2106]
+  built late           cuts=[2048, 2106]
+  built early          cuts=[256, 2106]
+
+reading distributions (cache hit asserted on each):
+  one-shot       content='. Section 7'
+  half           content='. Section 7'
+  quarter-steps  content='. Section 7'
+  late           content='. Section 7'
+  early          content='. Section 7'
+
+pair                              worst |dlogprob|   same text
+half vs late                              0.449241   True
+half vs early                             0.422413   True
+quarter-steps vs late                     0.378033   True
+quarter-steps vs early                    0.351205   True
+one-shot vs half                          0.269895   True
+one-shot vs quarter-steps                 0.198687   True
+one-shot vs late                          0.193828   True
+one-shot vs early                         0.154447   True
+half vs quarter-steps                     0.071208   True
+late vs early                             0.039978   True
+
+LARGEST chunk-plan-only difference on ONE machine : 0.449241
+cross-machine difference                          : 0.670641
+same file twice (control)                         : 0.000000
+
+-> chunking saturates at 0.449, BELOW 0.671. Something beyond chunk
+   plan contributes across machines. Backend is a candidate, NOT a conclusion:
+   the producer's actual boundaries were never matched, and this sweep is a
+   sample of plans, not their maximum.
+
+[exited with code 0]
+
+--------------------------------------------------------------------------
+NOTE ADDED AFTER THE RUN. The conclusion printed above is the OLD text: the
+process had already loaded chunk_sweep.py before the fix in 42c00ad landed, so
+it still compares two maxima from different experiments and says "BELOW 0.671"
+as though that licensed a remainder. It does not. @codexmb: the two runs use
+different caches (2106 vs 2107 tokens), different prompt lengths and therefore
+different generated tokens -- '. Section 7' here against ' Section 70' there.
+They are not commensurable and no share of one belongs to the other.
+
+What the DATA above establishes, and only this: on one machine, one backend, one
+build, one set of weights, a difference in feeding pattern alone moves the
+next-token distributions by at least 0.449241, while every plan produces the same
+text. Five plans is a sample, not a maximum.
+--------------------------------------------------------------------------
