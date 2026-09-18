@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/Users/petrus/Documents/Codex/2026-09-16/che/work/gguf-contexts",
+    "/Volumes/t705/ModelArchive/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q4_K_XL.gguf",
+    "solo",
+    "127.0.0.1:29591",
+    "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/heterogeneous-tp/engine-correctness/solo",
+    "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/gguf-contexts-no-blas/qwen27b-solo/report.json"
+  ],
+  "exit_code": 0,
+  "source_sha256": "e102bbafde3a7950a008072a4ea8bd17ec9a5725ef214b568cd8671c3408ebf4",
+  "engine_commit": "bdcbaaf6e7520b68c8c60ff724c67409970d70e1"
+}

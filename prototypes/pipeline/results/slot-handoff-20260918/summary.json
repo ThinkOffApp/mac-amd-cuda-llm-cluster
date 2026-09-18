@@ -1,0 +1,41 @@
+[
+  {
+    "model": "gemma4",
+    "fresh_process_tokens_valid": true,
+    "state_bytes": 55598700,
+    "restored_cache_n": 2111,
+    "restored_prompt_n": 1,
+    "matched_prefill_full_logits_valid": true,
+    "matched_max_error": 0.00498199462890625,
+    "unmatched_prefill_full_logits_valid": false,
+    "unmatched_max_error": 0.12962067127227783,
+    "prefill_chunk_ends": [
+      512,
+      1024,
+      1536,
+      2048,
+      2111,
+      2112
+    ]
+  },
+  {
+    "model": "qwen27b",
+    "fresh_process_tokens_valid": true,
+    "state_bytes": 295300388,
+    "restored_cache_n": 2111,
+    "restored_prompt_n": 1,
+    "matched_prefill_full_logits_valid": true,
+    "matched_max_error": 0.0,
+    "unmatched_prefill_full_logits_valid": false,
+    "unmatched_max_error": 1.0368022918701172,
+    "prefill_chunk_ends": [
+      512,
+      1024,
+      1536,
+      1599,
+      2107,
+      2111,
+      2112
+    ]
+  }
+]

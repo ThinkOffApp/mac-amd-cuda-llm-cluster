@@ -1,7 +1,7 @@
-"""FP32 sharded MLP correctness harness. Launch using torchrun, including on Mac.
+"""FP32 sharded MLP correctness harness. Gloo via torchrun, TCP via rank env.
 
 Full CPU weights are retained for validation; this is not a model-serving engine.
-GPU math is local; every Gloo collective receives CPU tensors explicitly.
+GPU math is local; every collective receives CPU tensors explicitly.
 """
 import argparse
 from datetime import timedelta
@@ -18,6 +18,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--device", default=os.environ.get("TP_DEVICE", "cpu"),
                         choices=["cpu", "mps", "cuda", "rocm"])
+    parser.add_argument("--transport", choices=["gloo", "tcp"], default="gloo")
     args = parser.parse_args()
     if args.device == "mps" and not torch.backends.mps.is_available():
         parser.error("MPS was requested but is unavailable")
@@ -29,9 +30,14 @@ def main():
         torch.cuda.set_device(int(os.environ.get("LOCAL_RANK", "0")))
     device = torch.device("cuda" if args.device == "rocm" else args.device)
     torch.set_num_threads(1)
-    dist.init_process_group("gloo", timeout=timedelta(seconds=60))
+    if args.transport == "tcp":
+        from tcp_collectives import TCPCollectives
+        collective = TCPCollectives()
+    else:
+        dist.init_process_group("gloo", timeout=timedelta(seconds=60))
+        collective = dist
     try:
-        rank, world = dist.get_rank(), dist.get_world_size()
+        rank, world = collective.get_rank(), collective.get_world_size()
         dim, hidden = 64, 128
         if world < 2 or hidden % world:
             raise ValueError("Use >=2 ranks, with rank count dividing 128")
@@ -42,7 +48,7 @@ def main():
         def shared(shape, scale=1.0):
             value = (torch.randn(shape, generator=generator) * scale
                      if rank == 0 else torch.empty(shape))
-            dist.broadcast(value, src=0)
+            collective.broadcast(value, src=0)
             return value
 
         with torch.inference_mode():
@@ -58,7 +64,7 @@ def main():
                 x = shared((tokens, dim))
                 partial = (F.gelu(x.to(device) @ local_w1 + local_b1)
                            @ local_w2).to("cpu").contiguous()
-                dist.all_reduce(partial, op=dist.ReduceOp.SUM)
+                collective.all_reduce(partial, op=dist.ReduceOp.SUM)
                 # Output bias must be added once, after the sum.
                 result = partial + b2
                 reference = F.gelu(x @ w1 + b1) @ w2 + b2
@@ -71,16 +77,16 @@ def main():
                   "cuda": torch.version.cuda, "host": platform.node(),
                   "cases": cases}
         reports = [None] * world
-        dist.all_gather_object(reports, report)
+        collective.all_gather_object(reports, report)
         success = all(c["passed"] for r in reports for c in r["cases"])
         if rank == 0:
-            print(json.dumps({"passed": success, "transport": "CPU Gloo",
+            print(json.dumps({"passed": success, "transport": "CPU " + args.transport,
                               "dtype": "float32", "atol": 2e-5, "rtol": 2e-4,
                               "ranks": reports}, indent=2), flush=True)
         if not success:
             raise SystemExit(1)
     finally:
-        dist.destroy_process_group()
+        collective.destroy_process_group()
 
 
 if __name__ == "__main__":

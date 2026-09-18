@@ -1,0 +1,5 @@
+[mc1_shared_cache_across_layers] exit=1 FAILED AS REQUIRED -- both layers write into ONE kv cache
+[mc2_layer0_weights_twice] exit=1 FAILED AS REQUIRED -- sharded path applies layer 0 weights to both blocks
+[mc3_offbyone_future] exit=1 FAILED AS REQUIRED -- causal mask offset +1
+[mc4_norm_weight_dropped] exit=1 FAILED AS REQUIRED -- RMSNorm weight omitted from sharded path only
+[mc5_missing_cache] exit=1 FAILED AS REQUIRED -- K cache overwritten instead of appended

@@ -1,0 +1,12 @@
+{
+  "command": [
+    "build-probe/bin/test-llama-archs",
+    "-a",
+    "qwen4exp",
+    "-s",
+    "1234",
+    "-v",
+    "1"
+  ],
+  "exit_code": -6
+}

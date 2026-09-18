@@ -1,0 +1,42 @@
+[
+  {
+    "path": "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/slot-restore-probe/gemma4/slots/before-final-prompt-token.bin",
+    "bytes": 55598700,
+    "sha256": "583d931f4313b0b238d2703c9c9d4b6aaaabf9856da023a1f6c6c5b3b33aeb87"
+  },
+  {
+    "path": "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/slot-restore-probe/gemma4/slots/after-generation.bin",
+    "bytes": 55664300,
+    "sha256": "e8897799c05245be3459ab107a63641d5a5e3ff49caa4039c017610773e44ccd"
+  },
+  {
+    "path": "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/slot-restore-probe/qwen27b/slots/before-final-prompt-token.bin",
+    "bytes": 295300388,
+    "sha256": "119215ecb22f78bed42b5c17d157bb3dad6526e38dc615a449d035cce4f91f67"
+  },
+  {
+    "path": "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/slot-restore-probe/qwen27b/slots/after-generation.bin",
+    "bytes": 295562644,
+    "sha256": "de657a4d703e231ee89597086f9ac9c8e135e2c2ef6a73fac276a60576fe62bf"
+  },
+  {
+    "path": "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/slot-restore-full-swa/gemma4/slots/before-final-prompt-token.bin",
+    "bytes": 55598700,
+    "sha256": "a5ecb8fcdc87895525dd90f98402ede147720809f87353330221fda4cfce49b1"
+  },
+  {
+    "path": "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/slot-restore-full-swa/gemma4/slots/after-generation.bin",
+    "bytes": 55664300,
+    "sha256": "24979b2d3231ca0ffc0758ff2162372af89aec6ab6428efd5cf50d12b7b05e5b"
+  },
+  {
+    "path": "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/slot-fresh/gemma4/slots/before-final-prompt-token.bin",
+    "bytes": 55598700,
+    "sha256": "a5ecb8fcdc87895525dd90f98402ede147720809f87353330221fda4cfce49b1"
+  },
+  {
+    "path": "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/slot-fresh/qwen27b/slots/before-final-prompt-token.bin",
+    "bytes": 295300388,
+    "sha256": "119215ecb22f78bed42b5c17d157bb3dad6526e38dc615a449d035cce4f91f67"
+  }
+]

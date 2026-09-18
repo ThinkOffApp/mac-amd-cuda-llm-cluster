@@ -1,0 +1,5 @@
+{
+  "source_sha256": "09c94b10304b973d434b9311112de21b010100c2d7ae52cb01e63b3ed2d8b05f",
+  "binary_sha256": "86bb822767dc6a6c07cac5b478e1d5d52d4f6cd3d2a757c91718d9116ce44bd7",
+  "scope": "diagnostic callbacks read routing tensors for prompt 0 steps 0 through 3; no writes or forced experts"
+}

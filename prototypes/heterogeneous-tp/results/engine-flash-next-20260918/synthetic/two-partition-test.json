@@ -1,0 +1,13 @@
+{
+  "command": [
+    "build-probe/bin/test-llama-archs",
+    "-a",
+    "qwen4exp",
+    "-s",
+    "1234",
+    "-v",
+    "1"
+  ],
+  "exit_code": 0,
+  "scope": "two Metal partitions on one physical GPU, synthetic model"
+}

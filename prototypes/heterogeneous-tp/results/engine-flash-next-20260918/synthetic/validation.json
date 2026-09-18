@@ -1,0 +1,52 @@
+{
+  "engine_commit": "bdcbaaf6e7520b68c8c60ff724c67409970d70e1",
+  "scope": "Synthetic architectures; one physical M5 Max; Meta-local-2 duplicates Metal device for two partitions. Not RPC or physical pair. Architecture opt-in confined to diagnostic macro.",
+  "patch_sha256": "f69e596fdf313c45a24eaf476444d6f3eb6379d60c0893a4015dbf199efef9b6",
+  "tests": [
+    {
+      "arch": "qwen4exp",
+      "seed": 1,
+      "exit_code": 0,
+      "command": [
+        "build-probe/bin/test-llama-archs",
+        "-a",
+        "qwen4exp",
+        "-s",
+        "1",
+        "-v",
+        "1"
+      ],
+      "log": "host-view-qwen4exp-seed1.log"
+    },
+    {
+      "arch": "qwen4exp",
+      "seed": 42,
+      "exit_code": 0,
+      "command": [
+        "build-probe/bin/test-llama-archs",
+        "-a",
+        "qwen4exp",
+        "-s",
+        "42",
+        "-v",
+        "1"
+      ],
+      "log": "host-view-qwen4exp-seed42.log"
+    },
+    {
+      "arch": "qwen35",
+      "seed": 1234,
+      "exit_code": 0,
+      "command": [
+        "build-probe/bin/test-llama-archs",
+        "-a",
+        "qwen35",
+        "-s",
+        "1234",
+        "-v",
+        "1"
+      ],
+      "log": "host-view-qwen35-seed1234.log"
+    }
+  ]
+}

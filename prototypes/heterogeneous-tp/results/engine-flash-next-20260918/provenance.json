@@ -1,0 +1,8 @@
+{
+  "engine_commit": "bdcbaaf6e7520b68c8c60ff724c67409970d70e1",
+  "engine_patch_sha256": "fe248de4bd40979f7275de4cf0d161777dac9587856acf4102106456d7eeb7ad",
+  "helper_sha256": "5042cab72f1782424605b15981d7b37002d929da6a1b3818cf5ec88470976950",
+  "binary_sha256": "ba617457dd5f21e11a563864818c499f192ad2ad7b47c681471d98ecb3d37aea",
+  "scope": "Actual Flash-Next IQ4_XS; tensor-local uses two backend instances on same M5 Max. No RPC or physical-pair claim. Full model hashes recorded in model-sha256.json.",
+  "model_hash_manifest": "model-sha256.json"
+}

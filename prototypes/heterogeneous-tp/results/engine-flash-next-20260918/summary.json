@@ -1,0 +1,11 @@
+{
+  "valid": false,
+  "token_choices": 48,
+  "all_tokens_match": true,
+  "max_abs_logit_error": 1.4703989028930664,
+  "scope": "two partitions, one physical M5 Max, actual IQ4_XS weights; not RPC/performance",
+  "single_partition_control": "48/48 choices, exact logits",
+  "first_divergence": "prompt 0 step 3 layer 29 near-tied expert selection",
+  "diagnostic_intervention": "first failing step error 1.209365 -> 0.000764847; later failure remains",
+  "next_work": "Unmodified RPC/physical pair validation and timing; communication profiling; routing sensitivity remains documented failure"
+}

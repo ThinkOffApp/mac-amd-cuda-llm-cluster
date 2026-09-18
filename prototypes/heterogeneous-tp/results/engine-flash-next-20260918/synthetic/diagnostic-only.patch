@@ -1,0 +1,14 @@
+diff --git a/src/llama-arch.cpp b/src/llama-arch.cpp
+index 03b7951..e9d5fd8 100644
+--- a/src/llama-arch.cpp
++++ b/src/llama-arch.cpp
+@@ -1158,7 +1158,9 @@ bool llm_arch_supports_sm_tensor(const llm_arch & arch) {
+         case LLM_ARCH_BAILINGMOE3:
+         case LLM_ARCH_KIMI_K3:
+         case LLM_ARCH_QWEN3TTS:
++#ifndef LOCAL_QWEN4EXP_TP_PROBE
+         case LLM_ARCH_QWEN4EXP:   // TODO: fix test-llama-archs
++#endif
+             return false;
+         default:
+             return true;

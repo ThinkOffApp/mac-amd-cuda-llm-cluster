@@ -1,0 +1,306 @@
+{
+  "valid": true,
+  "weight_sha256": "248dfc3911869ec493c76e65bf2fcf7f615828b0254c12b473182f0f81d3a707",
+  "source_sha256": "87aa6d61f0439dc6290cb5797db490677846da244601da02366d37d690ceaf0f",
+  "config": {
+    "device": "cpu",
+    "schedule": "rolling",
+    "batch": 4,
+    "chunks": 2,
+    "split": 6,
+    "prompt_tokens": 12,
+    "new_tokens": 4,
+    "warmups": 1,
+    "runs": 2,
+    "out": "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/rolling-pipeline/eos.json"
+  },
+  "prompt_ids": [
+    [
+      15,
+      25,
+      383,
+      3139,
+      286,
+      4881,
+      318,
+      657,
+      25,
+      383,
+      3139,
+      286
+    ],
+    [
+      16,
+      25,
+      554,
+      257,
+      14702,
+      4917,
+      11,
+      5519,
+      5071,
+      352,
+      25,
+      554
+    ],
+    [
+      17,
+      25,
+      825,
+      751,
+      7,
+      64,
+      11,
+      275,
+      2599,
+      362,
+      25,
+      825
+    ],
+    [
+      18,
+      25,
+      383,
+      2106,
+      286,
+      262,
+      7993,
+      13735,
+      6140,
+      513,
+      25,
+      383
+    ]
+  ],
+  "reference_ids": [
+    [
+      4881,
+      50256
+    ],
+    [
+      257,
+      14702,
+      4917,
+      11
+    ],
+    [
+      751,
+      7,
+      64,
+      11
+    ],
+    [
+      2106,
+      286,
+      262,
+      7993
+    ]
+  ],
+  "all_run_checks": [
+    true,
+    true,
+    true,
+    true
+  ],
+  "runs": [
+    {
+      "valid": true,
+      "produced_ids": [
+        [
+          4881,
+          50256
+        ],
+        [
+          257,
+          14702,
+          4917,
+          11
+        ],
+        [
+          751,
+          7,
+          64,
+          11
+        ],
+        [
+          2106,
+          286,
+          262,
+          7993
+        ]
+      ],
+      "generated_tokens": 14,
+      "decode_tokens": 10,
+      "ttft_s": 0.024162083020200953,
+      "decode_wall_s": 0.046611124998889863,
+      "total_wall_s": 0.07077320801909082,
+      "host_event_order": [
+        [
+          "send",
+          0,
+          0
+        ],
+        [
+          "send",
+          1,
+          0
+        ],
+        [
+          "recv",
+          0,
+          0
+        ],
+        [
+          "send",
+          0,
+          1
+        ],
+        [
+          "recv",
+          1,
+          0
+        ],
+        [
+          "send",
+          1,
+          1
+        ],
+        [
+          "recv",
+          0,
+          1
+        ],
+        [
+          "send",
+          0,
+          2
+        ],
+        [
+          "recv",
+          1,
+          1
+        ],
+        [
+          "send",
+          1,
+          2
+        ],
+        [
+          "recv",
+          0,
+          2
+        ],
+        [
+          "recv",
+          1,
+          2
+        ]
+      ],
+      "aggregate_decode_tokens_per_s": 214.54105645890695,
+      "end_to_end_tokens_per_s": 197.81496970186163
+    },
+    {
+      "valid": true,
+      "produced_ids": [
+        [
+          4881,
+          50256
+        ],
+        [
+          257,
+          14702,
+          4917,
+          11
+        ],
+        [
+          751,
+          7,
+          64,
+          11
+        ],
+        [
+          2106,
+          286,
+          262,
+          7993
+        ]
+      ],
+      "generated_tokens": 14,
+      "decode_tokens": 10,
+      "ttft_s": 0.024983584007713944,
+      "decode_wall_s": 0.04715695799677633,
+      "total_wall_s": 0.07214054200449027,
+      "host_event_order": [
+        [
+          "send",
+          0,
+          0
+        ],
+        [
+          "send",
+          1,
+          0
+        ],
+        [
+          "recv",
+          0,
+          0
+        ],
+        [
+          "send",
+          0,
+          1
+        ],
+        [
+          "recv",
+          1,
+          0
+        ],
+        [
+          "send",
+          1,
+          1
+        ],
+        [
+          "recv",
+          0,
+          1
+        ],
+        [
+          "send",
+          0,
+          2
+        ],
+        [
+          "recv",
+          1,
+          1
+        ],
+        [
+          "send",
+          1,
+          2
+        ],
+        [
+          "recv",
+          0,
+          2
+        ],
+        [
+          "recv",
+          1,
+          2
+        ]
+      ],
+      "aggregate_decode_tokens_per_s": 212.0577837248027,
+      "end_to_end_tokens_per_s": 194.06563370605937
+    }
+  ],
+  "invalid_runs": [],
+  "limits": [
+    "host_event_order proves submission order, not GPU overlap",
+    "fixed computation budget retains finished EOS lanes; output/counts freeze at EOS",
+    "no GPU utilization claims; decode wall includes scheduling, transfer and compute",
+    "GPT2 algorithm gate only; not evidence for larger-model speedup"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "engine_commit": "bdcbaaf6e7520b68c8c60ff724c67409970d70e1",
+  "patch_sha256": "7530acb4b908e211985aa21b8bf01ca1ee1c304b4288115d803e89e3c959c1e4",
+  "env_on": {
+    "GGML_META_PROFILE": "1"
+  },
+  "env_off": {
+    "GGML_META_PROFILE": "0"
+  },
+  "model_sha256": "3f227079003add2511437e5b1e94812e363385225bf6a9b47b0054a72bc8b01e"
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "case": "corruption",
+    "exit_codes": [
+      1,
+      1
+    ],
+    "passed": true
+  },
+  {
+    "case": "eos",
+    "exit_codes": [
+      0,
+      0
+    ],
+    "passed": true
+  },
+  {
+    "case": "one-token",
+    "exit_codes": [
+      0,
+      0
+    ],
+    "passed": true
+  },
+  {
+    "case": "wide",
+    "exit_codes": [
+      0,
+      0
+    ],
+    "passed": true
+  },
+  {
+    "case": "metal",
+    "exit_codes": [
+      0,
+      0
+    ],
+    "passed": true
+  }
+]

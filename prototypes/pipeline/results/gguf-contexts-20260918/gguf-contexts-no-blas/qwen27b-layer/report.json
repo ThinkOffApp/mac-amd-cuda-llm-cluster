@@ -1,0 +1,4746 @@
+{
+  "model": "/Volumes/t705/ModelArchive/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q4_K_XL.gguf",
+  "mode": "layer",
+  "blas_disabled": true,
+  "device_caps_before_rpc": [
+    {
+      "name": "MTL0",
+      "type": 1,
+      "async": true,
+      "events": true
+    },
+    {
+      "name": "CPU",
+      "type": 0,
+      "async": false,
+      "events": false
+    }
+  ],
+  "contexts": 3,
+  "valid": true,
+  "runs": [
+    {
+      "schedule": "serial",
+      "warmup": true,
+      "valid": true,
+      "wall_s": 2.1613592500216328,
+      "chosen_ids": [
+        [
+          11751,
+          13,
+          198,
+          760,
+          6511,
+          314,
+          9564,
+          369,
+          19241,
+          13,
+          198,
+          760,
+          6511,
+          314,
+          14898,
+          369
+        ],
+        [
+          264,
+          491,
+          44483,
+          5365,
+          303,
+          279,
+          17415,
+          13,
+          1049,
+          557,
+          8826,
+          303,
+          1141,
+          1765,
+          24284,
+          11
+        ],
+        [
+          198,
+          262,
+          460,
+          264,
+          478,
+          292,
+          271,
+          727,
+          1146,
+          2784,
+          11,
+          292,
+          1590,
+          198,
+          262,
+          460
+        ]
+      ],
+      "generated_tokens": 48,
+      "max_abs_logit_error": 0.0,
+      "outside_tolerance": 0,
+      "events": [
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 0,
+          "start_s": 3.3300602808594704e-07,
+          "end_s": 0.05469716701190919
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 0,
+          "start_s": 0.05469995801104233,
+          "ready_s": 0.09517416701419279,
+          "end_s": 0.0953112080169376
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 0,
+          "start_s": 0.09531808301107958,
+          "end_s": 0.15544529200997204
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 0,
+          "start_s": 0.15544829200371169,
+          "ready_s": 0.21152070802054368,
+          "end_s": 0.21165379200829193
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 0,
+          "start_s": 0.21165854201535694,
+          "end_s": 0.26296250001178123
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 0,
+          "start_s": 0.26296566700330004,
+          "ready_s": 0.3099858750065323,
+          "end_s": 0.3101176670170389
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 1,
+          "start_s": 0.31012141701648943,
+          "end_s": 0.33039420802379027
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 1,
+          "start_s": 0.3303967080137227,
+          "ready_s": 0.35271820801426657,
+          "end_s": 0.35284908302128315
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 1,
+          "start_s": 0.35285258301883005,
+          "end_s": 0.37271645801956765
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 1,
+          "start_s": 0.3727197920088656,
+          "ready_s": 0.3945423750265036,
+          "end_s": 0.39467337500536814
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 1,
+          "start_s": 0.3946775000076741,
+          "end_s": 0.4147136250103358
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 1,
+          "start_s": 0.41471608300344087,
+          "ready_s": 0.43651991701335646,
+          "end_s": 0.43665108300046995
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 2,
+          "start_s": 0.4366549580008723,
+          "end_s": 0.4554885420075152
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 2,
+          "start_s": 0.45549091702559963,
+          "ready_s": 0.4772810830036178,
+          "end_s": 0.47741562500596046
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 2,
+          "start_s": 0.4774200830142945,
+          "end_s": 0.49644575000274926
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 2,
+          "start_s": 0.49644820802495815,
+          "ready_s": 0.5176395419985056,
+          "end_s": 0.5177710830175783
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 2,
+          "start_s": 0.5177749170106836,
+          "end_s": 0.5366365420049988
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 2,
+          "start_s": 0.5366394580050837,
+          "ready_s": 0.5580561670067254,
+          "end_s": 0.5581907080195379
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 3,
+          "start_s": 0.5581950830237474,
+          "end_s": 0.577057042013621
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 3,
+          "start_s": 0.5770597500086296,
+          "ready_s": 0.5983960000157822,
+          "end_s": 0.5985271670215297
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 3,
+          "start_s": 0.5985313749988563,
+          "end_s": 0.6176643750222865
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 3,
+          "start_s": 0.6176671250141226,
+          "ready_s": 0.6390070420166012,
+          "end_s": 0.6391468750080094
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 3,
+          "start_s": 0.639150958013488,
+          "end_s": 0.6586007920268457
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 3,
+          "start_s": 0.6586030000180472,
+          "ready_s": 0.679825333005283,
+          "end_s": 0.6799567080161069
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 4,
+          "start_s": 0.6799607920111157,
+          "end_s": 0.6988209999981336
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 4,
+          "start_s": 0.6988240000209771,
+          "ready_s": 0.720081833016593,
+          "end_s": 0.7202123330207542
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 4,
+          "start_s": 0.7202163750189357,
+          "end_s": 0.7389883330033626
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 4,
+          "start_s": 0.7389909580233507,
+          "ready_s": 0.7613282079983037,
+          "end_s": 0.7614625830028672
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 4,
+          "start_s": 0.7614666250010487,
+          "end_s": 0.7807520830247086
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 4,
+          "start_s": 0.7807546670082957,
+          "ready_s": 0.8028694170061499,
+          "end_s": 0.803004042012617
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 5,
+          "start_s": 0.803007875016192,
+          "end_s": 0.8218874580052216
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 5,
+          "start_s": 0.8218899170169607,
+          "ready_s": 0.8436774580040947,
+          "end_s": 0.843812583014369
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 5,
+          "start_s": 0.8438170830195304,
+          "end_s": 0.8626960830006283
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 5,
+          "start_s": 0.8626994170190301,
+          "ready_s": 0.884526250010822,
+          "end_s": 0.8846570830210112
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 5,
+          "start_s": 0.8846609580214135,
+          "end_s": 0.9035004580218811
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 5,
+          "start_s": 0.9035028330108617,
+          "ready_s": 0.9250841250177473,
+          "end_s": 0.9252357500081416
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 6,
+          "start_s": 0.925239958014572,
+          "end_s": 0.9445104170008563
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 6,
+          "start_s": 0.9445131670217961,
+          "ready_s": 0.9659693330177106,
+          "end_s": 0.9661012500000652
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 6,
+          "start_s": 0.9661051250004675,
+          "end_s": 0.9853664170077536
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 6,
+          "start_s": 0.9853691250027623,
+          "ready_s": 1.0066572920186445,
+          "end_s": 1.0067878750269301
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 6,
+          "start_s": 1.0067917920241598,
+          "end_s": 1.0261835420096759
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 6,
+          "start_s": 1.0261857920268085,
+          "ready_s": 1.047480250010267,
+          "end_s": 1.0476123750268016
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 7,
+          "start_s": 1.047616542025935,
+          "end_s": 1.0670425000134856
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 7,
+          "start_s": 1.0670448750024661,
+          "ready_s": 1.088375375024043,
+          "end_s": 1.0885074580146465
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 7,
+          "start_s": 1.0885114170087036,
+          "end_s": 1.1073958330089226
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 7,
+          "start_s": 1.1073984170216136,
+          "ready_s": 1.1286725829995703,
+          "end_s": 1.1288032500015106
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 7,
+          "start_s": 1.1288075420015957,
+          "end_s": 1.147702250018483
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 7,
+          "start_s": 1.14770483301254,
+          "ready_s": 1.1698991250013933,
+          "end_s": 1.1700294580077752
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 8,
+          "start_s": 1.1700334580091294,
+          "end_s": 1.1891157080244739
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 8,
+          "start_s": 1.1891182080144063,
+          "ready_s": 1.2110714580048807,
+          "end_s": 1.2111968329991214
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 8,
+          "start_s": 1.2112007079995237,
+          "end_s": 1.230155042023398
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 8,
+          "start_s": 1.2301572920114268,
+          "ready_s": 1.251965208008187,
+          "end_s": 1.2521000420092605
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 8,
+          "start_s": 1.252103167003952,
+          "end_s": 1.2708831670170184
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 8,
+          "start_s": 1.2708858330151998,
+          "ready_s": 1.2931655000138562,
+          "end_s": 1.2932957500161137
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 9,
+          "start_s": 1.2932995420123916,
+          "end_s": 1.3122700829990208
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 9,
+          "start_s": 1.3122727920126636,
+          "ready_s": 1.3339809169992805,
+          "end_s": 1.3341118750104215
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 9,
+          "start_s": 1.3341155830130447,
+          "end_s": 1.3531435420154594
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 9,
+          "start_s": 1.3531457500066608,
+          "ready_s": 1.374515750008868,
+          "end_s": 1.3746566670015454
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 9,
+          "start_s": 1.3746606250060722,
+          "end_s": 1.3938442920043599
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 9,
+          "start_s": 1.3938468330015894,
+          "ready_s": 1.4152600830129813,
+          "end_s": 1.4153957500238903
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 10,
+          "start_s": 1.4153992920182645,
+          "end_s": 1.4340736250160262
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 10,
+          "start_s": 1.434076208010083,
+          "ready_s": 1.4552336670167278,
+          "end_s": 1.4553650419984479
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 10,
+          "start_s": 1.455368750001071,
+          "end_s": 1.474332667014096
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 10,
+          "start_s": 1.4743357920087874,
+          "ready_s": 1.4957325420109555,
+          "end_s": 1.4958630420151167
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 10,
+          "start_s": 1.4958675829984713,
+          "end_s": 1.5152395000040997
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 10,
+          "start_s": 1.5152424170228187,
+          "ready_s": 1.5373334170144517,
+          "end_s": 1.5374622920062393
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 11,
+          "start_s": 1.537466708017746,
+          "end_s": 1.5565568750025705
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 11,
+          "start_s": 1.5565595000225585,
+          "ready_s": 1.5782536250189878,
+          "end_s": 1.578383833024418
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 11,
+          "start_s": 1.5783880420203786,
+          "end_s": 1.5971425000170711
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 11,
+          "start_s": 1.597145083011128,
+          "ready_s": 1.619096458016429,
+          "end_s": 1.619224000023678
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 11,
+          "start_s": 1.619227667019004,
+          "end_s": 1.637960457999725
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 11,
+          "start_s": 1.6379635830235202,
+          "ready_s": 1.6596976250002626,
+          "end_s": 1.6598273330018856
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 12,
+          "start_s": 1.6598316250019707,
+          "end_s": 1.6786049170186743
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 12,
+          "start_s": 1.6786077920114622,
+          "ready_s": 1.700445042020874,
+          "end_s": 1.700577333016554
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 12,
+          "start_s": 1.7005811670096591,
+          "end_s": 1.7195547920127865
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 12,
+          "start_s": 1.7195577080128714,
+          "ready_s": 1.7411947500077076,
+          "end_s": 1.7413279169995803
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 12,
+          "start_s": 1.7413315000012517,
+          "end_s": 1.7605327920173295
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 12,
+          "start_s": 1.7605350830126554,
+          "ready_s": 1.7821291670261417,
+          "end_s": 1.7822680420067627
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 13,
+          "start_s": 1.782272542011924,
+          "end_s": 1.800944625021657
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 13,
+          "start_s": 1.8009470000106376,
+          "ready_s": 1.8225416250061244,
+          "end_s": 1.8226715000055265
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 13,
+          "start_s": 1.8226756670046598,
+          "end_s": 1.84255966701312
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 13,
+          "start_s": 1.8425623750081286,
+          "ready_s": 1.8639772919996176,
+          "end_s": 1.8641069580044132
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 13,
+          "start_s": 1.8641106249997392,
+          "end_s": 1.884149375022389
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 13,
+          "start_s": 1.8841517080145422,
+          "ready_s": 1.905937792005716,
+          "end_s": 1.906068000011146
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 14,
+          "start_s": 1.9060720420093276,
+          "end_s": 1.9259811250085477
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 14,
+          "start_s": 1.9259837080026045,
+          "ready_s": 1.947581833024742,
+          "end_s": 1.9477125000266824
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 14,
+          "start_s": 1.9477161670220084,
+          "end_s": 1.967738958017435
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 14,
+          "start_s": 1.9677413330064155,
+          "ready_s": 1.9892822500260081,
+          "end_s": 1.9894133330089971
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 14,
+          "start_s": 1.989423708000686,
+          "end_s": 2.0091400830133352
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 14,
+          "start_s": 2.009142916998826,
+          "ready_s": 2.0307460420008283,
+          "end_s": 2.0309015000239015
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 15,
+          "start_s": 2.0309053329983726,
+          "end_s": 2.0512025420030113
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 15,
+          "start_s": 2.051205250027124,
+          "ready_s": 2.073502292012563,
+          "end_s": 2.0736874580034055
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 15,
+          "start_s": 2.0736921670031734,
+          "end_s": 2.094481167005142
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 15,
+          "start_s": 2.0944840000011027,
+          "ready_s": 2.117960417002905,
+          "end_s": 2.1181229170178995
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 15,
+          "start_s": 2.11812712502433,
+          "end_s": 2.1382985420059413
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 15,
+          "start_s": 2.138301583006978,
+          "ready_s": 2.1611773330077995,
+          "end_s": 2.161354708019644
+        }
+      ]
+    },
+    {
+      "schedule": "deferred",
+      "warmup": true,
+      "valid": true,
+      "wall_s": 3.3179076249944046,
+      "chosen_ids": [
+        [
+          11751,
+          13,
+          198,
+          760,
+          6511,
+          314,
+          9564,
+          369,
+          19241,
+          13,
+          198,
+          760,
+          6511,
+          314,
+          14898,
+          369
+        ],
+        [
+          264,
+          491,
+          44483,
+          5365,
+          303,
+          279,
+          17415,
+          13,
+          1049,
+          557,
+          8826,
+          303,
+          1141,
+          1765,
+          24284,
+          11
+        ],
+        [
+          198,
+          262,
+          460,
+          264,
+          478,
+          292,
+          271,
+          727,
+          1146,
+          2784,
+          11,
+          292,
+          1590,
+          198,
+          262,
+          460
+        ]
+      ],
+      "generated_tokens": 48,
+      "max_abs_logit_error": 0.0,
+      "outside_tolerance": 0,
+      "events": [
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 0,
+          "start_s": 2.0899460650980473e-07,
+          "end_s": 0.05296845900011249
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 0,
+          "start_s": 0.05297170899575576,
+          "end_s": 0.1665602090070024
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 0,
+          "start_s": 0.16656262500328012,
+          "end_s": 0.30575249998946674
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 0,
+          "start_s": 0.30575516700628214,
+          "ready_s": 0.37704791699070483,
+          "end_s": 0.37718099998892285
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 1,
+          "start_s": 0.37718516698805615,
+          "end_s": 0.40087666700128466
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 0,
+          "start_s": 0.40088408399606124,
+          "ready_s": 0.4255494590033777,
+          "end_s": 0.425683959008893
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 1,
+          "start_s": 0.42568791698431596,
+          "end_s": 0.4485605839872733
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 0,
+          "start_s": 0.4485631249845028,
+          "ready_s": 0.47343320900108665,
+          "end_s": 0.47356629199930467
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 1,
+          "start_s": 0.47356954199494794,
+          "end_s": 0.49692120900726877
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 1,
+          "start_s": 0.49692391700227745,
+          "ready_s": 0.5217250419955235,
+          "end_s": 0.5218570840079337
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 2,
+          "start_s": 0.5218614999903366,
+          "end_s": 0.5431771249859594
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 1,
+          "start_s": 0.5431804590043612,
+          "ready_s": 0.5672942500095814,
+          "end_s": 0.5674300419923384
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 2,
+          "start_s": 0.5674340839905199,
+          "end_s": 0.5894973340036813
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 1,
+          "start_s": 0.5894999169977382,
+          "ready_s": 0.6143298340030015,
+          "end_s": 0.6144618339894805
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 2,
+          "start_s": 0.6144652089860756,
+          "end_s": 0.6366547920042649
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 2,
+          "start_s": 0.6366573749983218,
+          "ready_s": 0.6615712920029182,
+          "end_s": 0.6617068339837715
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 3,
+          "start_s": 0.6617102090094704,
+          "end_s": 0.6829463340109214
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 2,
+          "start_s": 0.6829492500110064,
+          "ready_s": 0.7077631670108531,
+          "end_s": 0.7078981669910718
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 3,
+          "start_s": 0.7079025839921087,
+          "end_s": 0.7301482500042766
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 2,
+          "start_s": 0.730150416988181,
+          "ready_s": 0.7550572089967318,
+          "end_s": 0.7551920000114478
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 3,
+          "start_s": 0.7551957500108983,
+          "end_s": 0.777101291983854
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 3,
+          "start_s": 0.7771041250089183,
+          "ready_s": 0.8020660000038333,
+          "end_s": 0.8022144999995362
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 4,
+          "start_s": 0.8022183339926414,
+          "end_s": 0.8238375840010121
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 3,
+          "start_s": 0.8238405839947518,
+          "ready_s": 0.8493708340101875,
+          "end_s": 0.8495032500068191
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 4,
+          "start_s": 0.849507334001828,
+          "end_s": 0.8723478750034701
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 3,
+          "start_s": 0.8723504999943543,
+          "ready_s": 0.8982152089884039,
+          "end_s": 0.898360541992588
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 4,
+          "start_s": 0.8983646249980666,
+          "end_s": 0.9215299169882201
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 4,
+          "start_s": 0.9215322920063045,
+          "ready_s": 0.947999333991902,
+          "end_s": 0.9481310420087539
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 5,
+          "start_s": 0.948134874983225,
+          "end_s": 0.971572374983225
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 4,
+          "start_s": 0.9715749169990886,
+          "ready_s": 0.9983622499858029,
+          "end_s": 0.9984963340102695
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 5,
+          "start_s": 0.9985003749898169,
+          "end_s": 1.0222268750076182
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 4,
+          "start_s": 1.0222288749937434,
+          "ready_s": 1.0492157920089085,
+          "end_s": 1.0493480000004638
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 5,
+          "start_s": 1.0493517919967417,
+          "end_s": 1.0739569999859668
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 5,
+          "start_s": 1.073960417008493,
+          "ready_s": 1.102608416986186,
+          "end_s": 1.1027377920108847
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 6,
+          "start_s": 1.1027412500116043,
+          "end_s": 1.1270739169849548
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 5,
+          "start_s": 1.1270763339998666,
+          "ready_s": 1.1568323750107083,
+          "end_s": 1.1569647500000428
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 6,
+          "start_s": 1.1569686669972725,
+          "end_s": 1.1840397089836188
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 5,
+          "start_s": 1.1840417089988478,
+          "ready_s": 1.2155258340062574,
+          "end_s": 1.21565624998766
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 6,
+          "start_s": 1.215660541987745,
+          "end_s": 1.2435822089901194
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 6,
+          "start_s": 1.2435847090091556,
+          "ready_s": 1.2752660420082975,
+          "end_s": 1.2753986250027083
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 7,
+          "start_s": 1.2754021669970825,
+          "end_s": 1.304325750010321
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 6,
+          "start_s": 1.3043279589910526,
+          "ready_s": 1.3372935419902205,
+          "end_s": 1.337432333995821
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 7,
+          "start_s": 1.3374360000016168,
+          "end_s": 1.3656751670059748
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 6,
+          "start_s": 1.3656777500000317,
+          "ready_s": 1.3982337089837529,
+          "end_s": 1.3983700000098906
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 7,
+          "start_s": 1.398373250005534,
+          "end_s": 1.4283918750006706
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 7,
+          "start_s": 1.4283944999915548,
+          "ready_s": 1.4605303340067621,
+          "end_s": 1.4606741669995245
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 8,
+          "start_s": 1.4606782920018304,
+          "end_s": 1.4966182920034043
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 7,
+          "start_s": 1.496621291997144,
+          "ready_s": 1.5422658339957707,
+          "end_s": 1.5424646669998765
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 8,
+          "start_s": 1.542469500011066,
+          "end_s": 1.5881656249985099
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 7,
+          "start_s": 1.5881689169909805,
+          "ready_s": 1.6407348749926314,
+          "end_s": 1.6408682919864077
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 8,
+          "start_s": 1.6408720840117894,
+          "end_s": 1.6834177919954527
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 8,
+          "start_s": 1.6834202499885578,
+          "ready_s": 1.7219017919851467,
+          "end_s": 1.7220330419950187
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 9,
+          "start_s": 1.7220373339951038,
+          "end_s": 1.7546269169833977
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 8,
+          "start_s": 1.7546293339983094,
+          "ready_s": 1.7898997500014957,
+          "end_s": 1.7900459170050453
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 9,
+          "start_s": 1.7900498750095721,
+          "end_s": 1.8212224589951802
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 8,
+          "start_s": 1.8212251249933615,
+          "ready_s": 1.8558737499988638,
+          "end_s": 1.8560064589837566
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 9,
+          "start_s": 1.8560098340094555,
+          "end_s": 1.8850290839909576
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 9,
+          "start_s": 1.885031749989139,
+          "ready_s": 1.9199879590014461,
+          "end_s": 1.9201201249961741
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 10,
+          "start_s": 1.9201238339883275,
+          "end_s": 1.9491949169896543
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 9,
+          "start_s": 1.9491970000090078,
+          "ready_s": 1.9833913749898784,
+          "end_s": 1.9835232500045095
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 10,
+          "start_s": 1.9835276670055464,
+          "end_s": 2.0140382919926196
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 9,
+          "start_s": 2.014040959009435,
+          "ready_s": 2.0477885419968516,
+          "end_s": 2.047919875010848
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 10,
+          "start_s": 2.0479234170052223,
+          "end_s": 2.0786183750024065
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 10,
+          "start_s": 2.0786211249942426,
+          "ready_s": 2.1191575420089066,
+          "end_s": 2.119290792004904
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 11,
+          "start_s": 2.1192954999860376,
+          "end_s": 2.1581962920026854
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 10,
+          "start_s": 2.1581995419983286,
+          "ready_s": 2.196529417007696,
+          "end_s": 2.1968184169963934
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 11,
+          "start_s": 2.196825249993708,
+          "end_s": 2.231352959002834
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 10,
+          "start_s": 2.231357124983333,
+          "ready_s": 2.270173375000013,
+          "end_s": 2.2705869170022197
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 11,
+          "start_s": 2.2705969589878805,
+          "end_s": 2.3055739589908626
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 11,
+          "start_s": 2.3055805419862736,
+          "ready_s": 2.344305209000595,
+          "end_s": 2.3447664999985136
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 12,
+          "start_s": 2.3447747089958284,
+          "end_s": 2.378654041996924
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 11,
+          "start_s": 2.3786599169834517,
+          "ready_s": 2.416636334004579,
+          "end_s": 2.417059083993081
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 12,
+          "start_s": 2.4170674170018174,
+          "end_s": 2.4502096670039464
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 11,
+          "start_s": 2.4502159589901567,
+          "ready_s": 2.4890907919907477,
+          "end_s": 2.4893122499925084
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 12,
+          "start_s": 2.4893176250043325,
+          "end_s": 2.5234402919886634
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 12,
+          "start_s": 2.5234446249960456,
+          "ready_s": 2.5644939999911003,
+          "end_s": 2.564916750008706
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 13,
+          "start_s": 2.564924834005069,
+          "end_s": 2.6015776669955812
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 12,
+          "start_s": 2.6015839999890886,
+          "ready_s": 2.6432385419902857,
+          "end_s": 2.6436639169987757
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 13,
+          "start_s": 2.643675291998079,
+          "end_s": 2.6799011249968316
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 12,
+          "start_s": 2.6799062920035794,
+          "ready_s": 2.7224383339926135,
+          "end_s": 2.722765167010948
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 13,
+          "start_s": 2.72277204200509,
+          "end_s": 2.762226999999257
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 13,
+          "start_s": 2.7622337919892743,
+          "ready_s": 2.805562708992511,
+          "end_s": 2.805808083998272
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 14,
+          "start_s": 2.8058133340091445,
+          "end_s": 2.8436518340022303
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 13,
+          "start_s": 2.84365620900644,
+          "ready_s": 2.8878301669901703,
+          "end_s": 2.888095834001433
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 14,
+          "start_s": 2.888104374986142,
+          "end_s": 2.9282338339835405
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 13,
+          "start_s": 2.9282380839867983,
+          "ready_s": 2.9741346669907216,
+          "end_s": 2.9745596249995288
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 14,
+          "start_s": 2.974568250006996,
+          "end_s": 3.0179150420008227
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 14,
+          "start_s": 3.0179217499971855,
+          "ready_s": 3.064867917011725,
+          "end_s": 3.06509829199058
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 15,
+          "start_s": 3.065104417008115,
+          "end_s": 3.1059907499875408
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 14,
+          "start_s": 3.105995374993654,
+          "ready_s": 3.1501895840046927,
+          "end_s": 3.150528291997034
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 15,
+          "start_s": 3.1505360000010114,
+          "end_s": 3.189619209006196
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 14,
+          "start_s": 3.1896255419997033,
+          "ready_s": 3.2334544170007575,
+          "end_s": 3.2337024589942303
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 15,
+          "start_s": 3.2337087499909103,
+          "end_s": 3.2725733749975916
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 15,
+          "start_s": 3.272578000003705,
+          "ready_s": 3.317180791986175,
+          "end_s": 3.3174158339970745
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 15,
+          "start_s": 3.317421833984554,
+          "ready_s": 3.317446500004735,
+          "end_s": 3.3176709589897655
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 15,
+          "start_s": 3.317674124991754,
+          "ready_s": 3.317684667010326,
+          "end_s": 3.317903833987657
+        }
+      ]
+    },
+    {
+      "schedule": "serial",
+      "warmup": false,
+      "valid": true,
+      "wall_s": 3.8895571249886416,
+      "chosen_ids": [
+        [
+          11751,
+          13,
+          198,
+          760,
+          6511,
+          314,
+          9564,
+          369,
+          19241,
+          13,
+          198,
+          760,
+          6511,
+          314,
+          14898,
+          369
+        ],
+        [
+          264,
+          491,
+          44483,
+          5365,
+          303,
+          279,
+          17415,
+          13,
+          1049,
+          557,
+          8826,
+          303,
+          1141,
+          1765,
+          24284,
+          11
+        ],
+        [
+          198,
+          262,
+          460,
+          264,
+          478,
+          292,
+          271,
+          727,
+          1146,
+          2784,
+          11,
+          292,
+          1590,
+          198,
+          262,
+          460
+        ]
+      ],
+      "generated_tokens": 48,
+      "max_abs_logit_error": 0.0,
+      "outside_tolerance": 0,
+      "events": [
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 0,
+          "start_s": 3.3300602808594704e-07,
+          "end_s": 0.10036683300859295
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 0,
+          "start_s": 0.10037245799321681,
+          "ready_s": 0.19551087499712594,
+          "end_s": 0.19574762499541976
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 0,
+          "start_s": 0.19575499999336898,
+          "end_s": 0.3518440419866238
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 0,
+          "start_s": 0.3518500420032069,
+          "ready_s": 0.4946339580055792,
+          "end_s": 0.49504999999771826
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 0,
+          "start_s": 0.4950617080030497,
+          "end_s": 0.6197350829897914
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 0,
+          "start_s": 0.6197432499902789,
+          "ready_s": 0.7296544999990147,
+          "end_s": 0.7300697079917882
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 1,
+          "start_s": 0.7300791250017937,
+          "end_s": 0.7643969579949044
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 1,
+          "start_s": 0.7644028329814319,
+          "ready_s": 0.7992198749852832,
+          "end_s": 0.7994621669931803
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 1,
+          "start_s": 0.799467792006908,
+          "end_s": 0.8313919999927748
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 1,
+          "start_s": 0.8313991249888204,
+          "ready_s": 0.8658228330023121,
+          "end_s": 0.8660804170067422
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 1,
+          "start_s": 0.866086207999615,
+          "end_s": 0.897881166980369
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 1,
+          "start_s": 0.8978861249925103,
+          "ready_s": 0.9319265829981305,
+          "end_s": 0.9321398329921067
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 2,
+          "start_s": 0.9321451249998063,
+          "end_s": 0.962143249984365
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 2,
+          "start_s": 0.9621475419844501,
+          "ready_s": 0.9953459579846822,
+          "end_s": 0.9956283329811413
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 2,
+          "start_s": 0.9956347919942345,
+          "end_s": 1.0237382499908563
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 2,
+          "start_s": 1.023742166988086,
+          "ready_s": 1.0585097500006668,
+          "end_s": 1.0589408749947324
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 2,
+          "start_s": 1.0589497500041034,
+          "end_s": 1.0895032919943333
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 2,
+          "start_s": 1.0895073330029845,
+          "ready_s": 1.124080707988469,
+          "end_s": 1.1244502920017112
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 3,
+          "start_s": 1.124458375008544,
+          "end_s": 1.1556969999801368
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 3,
+          "start_s": 1.1557026249938644,
+          "ready_s": 1.1905537080019712,
+          "end_s": 1.190984666987788
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 3,
+          "start_s": 1.1909928329987451,
+          "end_s": 1.2230180829938035
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 3,
+          "start_s": 1.2230223329970613,
+          "ready_s": 1.2586166249820963,
+          "end_s": 1.259036457980983
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 3,
+          "start_s": 1.2590445420064498,
+          "end_s": 1.290089749993058
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 3,
+          "start_s": 1.2900937079975847,
+          "ready_s": 1.3257485420035664,
+          "end_s": 1.3259652499982622
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 4,
+          "start_s": 1.325971166981617,
+          "end_s": 1.3580979169928469
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 4,
+          "start_s": 1.3581042499863543,
+          "ready_s": 1.3948752080032136,
+          "end_s": 1.3953251669881865
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 4,
+          "start_s": 1.3953349170042202,
+          "end_s": 1.428544416994555
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 4,
+          "start_s": 1.4285477079974953,
+          "ready_s": 1.4646639580023475,
+          "end_s": 1.4650904999871273
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 4,
+          "start_s": 1.4650990829977673,
+          "end_s": 1.4969911249936558
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 4,
+          "start_s": 1.4969938749854919,
+          "ready_s": 1.5342664170020726,
+          "end_s": 1.5344770829833578
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 5,
+          "start_s": 1.534483374998672,
+          "end_s": 1.5679900829854887
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 5,
+          "start_s": 1.5679940420086496,
+          "ready_s": 1.607634957996197,
+          "end_s": 1.6080461670062505
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 5,
+          "start_s": 1.608054832991911,
+          "end_s": 1.6433802079991437
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 5,
+          "start_s": 1.6433859999815468,
+          "ready_s": 1.681106208008714,
+          "end_s": 1.6815709999937098
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 5,
+          "start_s": 1.6815796250011772,
+          "end_s": 1.7156708749826066
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 5,
+          "start_s": 1.7156774580071215,
+          "ready_s": 1.7558514999982435,
+          "end_s": 1.75627479198738
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 6,
+          "start_s": 1.7562834169948474,
+          "end_s": 1.790616999991471
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 6,
+          "start_s": 1.7906212499947287,
+          "ready_s": 1.8273977499920875,
+          "end_s": 1.8276805829955265
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 6,
+          "start_s": 1.8276868329849094,
+          "end_s": 1.861173291981686
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 6,
+          "start_s": 1.8611827499989886,
+          "ready_s": 1.8991604170005303,
+          "end_s": 1.8995916669955477
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 6,
+          "start_s": 1.899601166980574,
+          "end_s": 1.9322814169863705
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 6,
+          "start_s": 1.932285499991849,
+          "ready_s": 1.9709195829927921,
+          "end_s": 1.9714149579813238
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 7,
+          "start_s": 1.9714260830078274,
+          "end_s": 2.0057739169860724
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 7,
+          "start_s": 2.0057811249862425,
+          "ready_s": 2.043576166994171,
+          "end_s": 2.0437894169881474
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 7,
+          "start_s": 2.0437947919999715,
+          "end_s": 2.076067082991358
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 7,
+          "start_s": 2.076073500007624,
+          "ready_s": 2.1106719999806955,
+          "end_s": 2.1108862920082174
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 7,
+          "start_s": 2.1108916669909377,
+          "end_s": 2.1409087920037564
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 7,
+          "start_s": 2.1409120419993997,
+          "ready_s": 2.178470582992304,
+          "end_s": 2.178894416982075
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 8,
+          "start_s": 2.178903749998426,
+          "end_s": 2.2104182500042953
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 8,
+          "start_s": 2.210424457996851,
+          "ready_s": 2.2478672080032993,
+          "end_s": 2.2482997920014895
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 8,
+          "start_s": 2.248308874986833,
+          "end_s": 2.281252582994057
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 8,
+          "start_s": 2.2812590829853434,
+          "ready_s": 2.3197596670070197,
+          "end_s": 2.31996925000567
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 8,
+          "start_s": 2.3199751249921974,
+          "end_s": 2.3511674579931423
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 8,
+          "start_s": 2.3511739170062356,
+          "ready_s": 2.387623666989384,
+          "end_s": 2.38804412499303
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 9,
+          "start_s": 2.3880522079998627,
+          "end_s": 2.420963332988322
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 9,
+          "start_s": 2.42097179198754,
+          "ready_s": 2.456850749993464,
+          "end_s": 2.457274332991801
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 9,
+          "start_s": 2.4572835419967305,
+          "end_s": 2.488992166996468
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 9,
+          "start_s": 2.488999666995369,
+          "ready_s": 2.5245625829847995,
+          "end_s": 2.524776042002486
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 9,
+          "start_s": 2.5247814999893308,
+          "end_s": 2.5556065829878207
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 9,
+          "start_s": 2.5556114579958376,
+          "ready_s": 2.5904221249802504,
+          "end_s": 2.5908612920029555
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 10,
+          "start_s": 2.590870416985126,
+          "end_s": 2.6222729999863077
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 10,
+          "start_s": 2.6222776669892482,
+          "ready_s": 2.656336874992121,
+          "end_s": 2.6567192079965025
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 10,
+          "start_s": 2.6567292499821633,
+          "end_s": 2.6882373749976978
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 10,
+          "start_s": 2.688243999989936,
+          "ready_s": 2.7230428330076393,
+          "end_s": 2.723469832999399
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 10,
+          "start_s": 2.72347916700528,
+          "end_s": 2.755211416981183
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 10,
+          "start_s": 2.7552166669920553,
+          "ready_s": 2.7889907920034602,
+          "end_s": 2.7893474999873433
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 11,
+          "start_s": 2.7893572920002043,
+          "end_s": 2.8221686669858173
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 11,
+          "start_s": 2.822174792003352,
+          "ready_s": 2.8592079170048237,
+          "end_s": 2.859620667004492
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 11,
+          "start_s": 2.8596271669957787,
+          "end_s": 2.890462999988813
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 11,
+          "start_s": 2.890467332996195,
+          "ready_s": 2.9272722080058884,
+          "end_s": 2.9275609999895096
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 11,
+          "start_s": 2.927567832986824,
+          "end_s": 2.964128999999957
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 11,
+          "start_s": 2.964133542001946,
+          "ready_s": 3.0008379579812754,
+          "end_s": 3.0012610830017366
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 12,
+          "start_s": 3.0012707919813693,
+          "end_s": 3.033336833002977
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 12,
+          "start_s": 3.0333427079895046,
+          "ready_s": 3.0713710419950075,
+          "end_s": 3.071786082990002
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 12,
+          "start_s": 3.0717950830003247,
+          "end_s": 3.106257374980487
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 12,
+          "start_s": 3.1062639169977047,
+          "ready_s": 3.145490458002314,
+          "end_s": 3.1460043329861946
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 12,
+          "start_s": 3.1460136249952484,
+          "end_s": 3.1787083329982124
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 12,
+          "start_s": 3.178712666995125,
+          "ready_s": 3.2160538749885745,
+          "end_s": 3.216332167008659
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 13,
+          "start_s": 3.21633875000407,
+          "end_s": 3.2498187079909258
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 13,
+          "start_s": 3.2498243330046535,
+          "ready_s": 3.288685167004587,
+          "end_s": 3.289115541992942
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 13,
+          "start_s": 3.289123833004851,
+          "end_s": 3.32361883300473
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 13,
+          "start_s": 3.323622833006084,
+          "ready_s": 3.363710582983913,
+          "end_s": 3.3639201250043698
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 13,
+          "start_s": 3.3639255419839174,
+          "end_s": 3.397689542005537
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 13,
+          "start_s": 3.3976962080050725,
+          "ready_s": 3.4383607500058133,
+          "end_s": 3.4386986669851467
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 14,
+          "start_s": 3.4387058329884894,
+          "end_s": 3.4730598329915665
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 14,
+          "start_s": 3.4730641249916516,
+          "ready_s": 3.512622999987798,
+          "end_s": 3.51290908298688
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 14,
+          "start_s": 3.51291720799054,
+          "end_s": 3.5474743329978082
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 14,
+          "start_s": 3.5474788330029696,
+          "ready_s": 3.588795207993826,
+          "end_s": 3.5892173750035
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 14,
+          "start_s": 3.589226249983767,
+          "end_s": 3.6248041249928065
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 14,
+          "start_s": 3.624808041990036,
+          "ready_s": 3.665520791982999,
+          "end_s": 3.6659574169898406
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 15,
+          "start_s": 3.66597966698464,
+          "end_s": 3.701320583000779
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 15,
+          "start_s": 3.7013249169976916,
+          "ready_s": 3.7393300420080777,
+          "end_s": 3.7396122079808265
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 15,
+          "start_s": 3.739618583000265,
+          "end_s": 3.774452791985823
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 15,
+          "start_s": 3.7744594579853583,
+          "ready_s": 3.8150297079992015,
+          "end_s": 3.815471999987494
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 15,
+          "start_s": 3.8154823329823557,
+          "end_s": 3.8507138330023736
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 15,
+          "start_s": 3.850717666995479,
+          "ready_s": 3.889137166988803,
+          "end_s": 3.8895484170061536
+        }
+      ]
+    },
+    {
+      "schedule": "deferred",
+      "warmup": false,
+      "valid": true,
+      "wall_s": 3.992628792009782,
+      "chosen_ids": [
+        [
+          11751,
+          13,
+          198,
+          760,
+          6511,
+          314,
+          9564,
+          369,
+          19241,
+          13,
+          198,
+          760,
+          6511,
+          314,
+          14898,
+          369
+        ],
+        [
+          264,
+          491,
+          44483,
+          5365,
+          303,
+          279,
+          17415,
+          13,
+          1049,
+          557,
+          8826,
+          303,
+          1141,
+          1765,
+          24284,
+          11
+        ],
+        [
+          198,
+          262,
+          460,
+          264,
+          478,
+          292,
+          271,
+          727,
+          1146,
+          2784,
+          11,
+          292,
+          1590,
+          198,
+          262,
+          460
+        ]
+      ],
+      "generated_tokens": 48,
+      "max_abs_logit_error": 0.0,
+      "outside_tolerance": 0,
+      "events": [
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 0,
+          "start_s": 1.2500095181167126e-07,
+          "end_s": 0.09739999999874271
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 0,
+          "start_s": 0.09740458300802857,
+          "end_s": 0.3100355420028791
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 0,
+          "start_s": 0.3100379579991568,
+          "end_s": 0.5570484579948243
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 0,
+          "start_s": 0.5570513330167159,
+          "ready_s": 0.6668959580129012,
+          "end_s": 0.6670302920101676
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 1,
+          "start_s": 0.6670341250137426,
+          "end_s": 0.6989508330007084
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 0,
+          "start_s": 0.6989537920162547,
+          "ready_s": 0.7336301250034012,
+          "end_s": 0.7337631669943221
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 1,
+          "start_s": 0.7337669580010697,
+          "end_s": 0.7653932080138475
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 0,
+          "start_s": 0.7653957919974346,
+          "ready_s": 0.7991141249949578,
+          "end_s": 0.7992462080146652
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 1,
+          "start_s": 0.7992502080160193,
+          "end_s": 0.8309398330166005
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 1,
+          "start_s": 0.8309425420011394,
+          "ready_s": 0.8649077500158455,
+          "end_s": 0.8650402500061318
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 2,
+          "start_s": 0.8650441250065342,
+          "end_s": 0.8955646670074202
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 1,
+          "start_s": 0.8955672080046497,
+          "ready_s": 0.9294490000174847,
+          "end_s": 0.9295810000039637
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 2,
+          "start_s": 0.9295844169973861,
+          "end_s": 0.95879012500518
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 1,
+          "start_s": 0.958792541990988,
+          "ready_s": 0.9924880829930771,
+          "end_s": 0.9926209580153227
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 2,
+          "start_s": 0.9926246670074761,
+          "end_s": 1.0225234999961685
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 2,
+          "start_s": 1.0225260829902254,
+          "ready_s": 1.0560532920062542,
+          "end_s": 1.0561857080028858
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 3,
+          "start_s": 1.056189541995991,
+          "end_s": 1.0842314999899827
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 2,
+          "start_s": 1.0842345830169506,
+          "ready_s": 1.1176561250176746,
+          "end_s": 1.1177923330105841
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 3,
+          "start_s": 1.1177960420027375,
+          "end_s": 1.1483095420117024
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 2,
+          "start_s": 1.1483121670025866,
+          "ready_s": 1.1831045830040239,
+          "end_s": 1.183239500009222
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 3,
+          "start_s": 1.183243958017556,
+          "end_s": 1.2143684170150664
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 3,
+          "start_s": 1.214370792004047,
+          "ready_s": 1.249157667014515,
+          "end_s": 1.2492901670048013
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 4,
+          "start_s": 1.2492942080134526,
+          "end_s": 1.2805717500159517
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 3,
+          "start_s": 1.2805741670017596,
+          "ready_s": 1.3160815830051433,
+          "end_s": 1.3162171670119278
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 4,
+          "start_s": 1.3162215829943307,
+          "end_s": 1.3481670829933137
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 3,
+          "start_s": 1.3481697920069564,
+          "ready_s": 1.3845696249918547,
+          "end_s": 1.3847015830106102
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 4,
+          "start_s": 1.3847054580110125,
+          "end_s": 1.4166802919935435
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 4,
+          "start_s": 1.416683000017656,
+          "ready_s": 1.4533027920115273,
+          "end_s": 1.4534352500049863
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 5,
+          "start_s": 1.4534397500101477,
+          "end_s": 1.4848965000128374
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 4,
+          "start_s": 1.4848990830068942,
+          "ready_s": 1.5230391249933746,
+          "end_s": 1.5231710830121301
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 5,
+          "start_s": 1.5231747080106288,
+          "end_s": 1.5565032500016969
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 4,
+          "start_s": 1.556506332999561,
+          "ready_s": 1.5954105420096312,
+          "end_s": 1.5955412499897648
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 5,
+          "start_s": 1.5955450829933397,
+          "end_s": 1.6271739169897046
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 5,
+          "start_s": 1.6271773749904241,
+          "ready_s": 1.6666182499902789,
+          "end_s": 1.6667488749953918
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 6,
+          "start_s": 1.6667524579970632,
+          "end_s": 1.7001304579898715
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 5,
+          "start_s": 1.7001330420025624,
+          "ready_s": 1.7383061670116149,
+          "end_s": 1.738454542006366
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 6,
+          "start_s": 1.7384582500089891,
+          "end_s": 1.7715810000081547
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 5,
+          "start_s": 1.7715832919930108,
+          "ready_s": 1.8087762919894885,
+          "end_s": 1.8089069169946015
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 6,
+          "start_s": 1.8089106249972247,
+          "end_s": 1.841700832999777
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 6,
+          "start_s": 1.8417035000165924,
+          "ready_s": 1.878553207992809,
+          "end_s": 1.8786868329916615
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 7,
+          "start_s": 1.8786902080173604,
+          "end_s": 1.9105989999952726
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 6,
+          "start_s": 1.910601375013357,
+          "ready_s": 1.9475462500122376,
+          "end_s": 1.9476787500025239
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 7,
+          "start_s": 1.9476826250029262,
+          "end_s": 1.9818172919913195
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 6,
+          "start_s": 1.981820000015432,
+          "ready_s": 2.020422708010301,
+          "end_s": 2.020568292005919
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 7,
+          "start_s": 2.020573332993081,
+          "end_s": 2.0538091670023277
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 7,
+          "start_s": 2.053811624995433,
+          "ready_s": 2.0903013329952955,
+          "end_s": 2.0904354999947827
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 8,
+          "start_s": 2.090439499996137,
+          "end_s": 2.122547000006307
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 7,
+          "start_s": 2.12254933299846,
+          "ready_s": 2.1590498329896946,
+          "end_s": 2.1591852080018725
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 8,
+          "start_s": 2.159189250000054,
+          "end_s": 2.1896020419953857
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 7,
+          "start_s": 2.1896047920163255,
+          "ready_s": 2.2260673330165446,
+          "end_s": 2.2262002080096863
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 8,
+          "start_s": 2.226204250007868,
+          "end_s": 2.2600645830098074
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 8,
+          "start_s": 2.260066832997836,
+          "ready_s": 2.297754792001797,
+          "end_s": 2.2978868749924004
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 9,
+          "start_s": 2.29789079198963,
+          "end_s": 2.3295219170104247
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 8,
+          "start_s": 2.3295242919994052,
+          "ready_s": 2.3665249579935335,
+          "end_s": 2.366663291992154
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 9,
+          "start_s": 2.3666673749976326,
+          "end_s": 2.39976470801048
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 8,
+          "start_s": 2.3997669579985086,
+          "ready_s": 2.4377227500081062,
+          "end_s": 2.4378549579996616
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 9,
+          "start_s": 2.4378586249949876,
+          "end_s": 2.4686377920152154
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 9,
+          "start_s": 2.4686403750092722,
+          "ready_s": 2.506766250007786,
+          "end_s": 2.5069014170148876
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 10,
+          "start_s": 2.5069049579906277,
+          "end_s": 2.5404360000102315
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 9,
+          "start_s": 2.540438374999212,
+          "ready_s": 2.5793181250046473,
+          "end_s": 2.5794510830019135
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 10,
+          "start_s": 2.5794553330051713,
+          "end_s": 2.6138344579958357
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 9,
+          "start_s": 2.6138372920104302,
+          "ready_s": 2.6553256250044797,
+          "end_s": 2.655460625013802
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 10,
+          "start_s": 2.6554652920167428,
+          "end_s": 2.690540500014322
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 10,
+          "start_s": 2.690543125005206,
+          "ready_s": 2.7318648750078864,
+          "end_s": 2.7320089169952553
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 11,
+          "start_s": 2.732013458007714,
+          "end_s": 2.769251332996646
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 10,
+          "start_s": 2.7692550829960965,
+          "ready_s": 2.8114455830072984,
+          "end_s": 2.811596457991982
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 11,
+          "start_s": 2.811601541994605,
+          "end_s": 2.8481637919903733
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 10,
+          "start_s": 2.8481661670084577,
+          "ready_s": 2.892216667009052,
+          "end_s": 2.892365375009831
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 11,
+          "start_s": 2.892369957990013,
+          "end_s": 2.931104791990947
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 11,
+          "start_s": 2.9311076250160113,
+          "ready_s": 2.977389875013614,
+          "end_s": 2.977541750005912
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 12,
+          "start_s": 2.977546167006949,
+          "end_s": 3.0162826669984497
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 11,
+          "start_s": 3.016286083002342,
+          "ready_s": 3.0635992079915013,
+          "end_s": 3.0637508330109995
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 12,
+          "start_s": 3.0637560000177473,
+          "end_s": 3.1025135419913568
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 11,
+          "start_s": 3.1025164579914417,
+          "ready_s": 3.147949875012273,
+          "end_s": 3.148101750004571
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 12,
+          "start_s": 3.1481056670018006,
+          "end_s": 3.188117667014012
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 12,
+          "start_s": 3.188120417005848,
+          "ready_s": 3.232347083016066,
+          "end_s": 3.2325011670181993
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 13,
+          "start_s": 3.2325054579996504,
+          "end_s": 3.271654333017068
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 12,
+          "start_s": 3.2716571250057314,
+          "ready_s": 3.3157030000002123,
+          "end_s": 3.3158634999999776
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 13,
+          "start_s": 3.315867541998159,
+          "end_s": 3.3567627079901285
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 12,
+          "start_s": 3.35676558301202,
+          "ready_s": 3.4003486669971608,
+          "end_s": 3.400496624992229
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 13,
+          "start_s": 3.400501041993266,
+          "end_s": 3.441401666990714
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 13,
+          "start_s": 3.441404542012606,
+          "ready_s": 3.4847670829913113,
+          "end_s": 3.484923500014702
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 14,
+          "start_s": 3.484928541991394,
+          "end_s": 3.5247606670018286
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 13,
+          "start_s": 3.5247633749968372,
+          "ready_s": 3.5704964169999585,
+          "end_s": 3.570662292011548
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 14,
+          "start_s": 3.5706667920167092,
+          "end_s": 3.6100325000006706
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 13,
+          "start_s": 3.6100354169902857,
+          "ready_s": 3.655465624993667,
+          "end_s": 3.6556240000063553
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 14,
+          "start_s": 3.6556286250124685,
+          "end_s": 3.694397792016389
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 14,
+          "start_s": 3.694400750013301,
+          "ready_s": 3.7386574580159504,
+          "end_s": 3.738815707998583
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 15,
+          "start_s": 3.738820750004379,
+          "end_s": 3.7771081250102725
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 14,
+          "start_s": 3.7771111670008395,
+          "ready_s": 3.8202472919947468,
+          "end_s": 3.820407499995781
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 15,
+          "start_s": 3.820412083005067,
+          "end_s": 3.859883750003064
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 14,
+          "start_s": 3.8598864579980727,
+          "ready_s": 3.906519208016107,
+          "end_s": 3.9066739169938955
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 15,
+          "start_s": 3.906677958002547,
+          "end_s": 3.946722916996805
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 15,
+          "start_s": 3.9467263749975245,
+          "ready_s": 3.9921301669965032,
+          "end_s": 3.9922912500042003
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 15,
+          "start_s": 3.9922960000112653,
+          "ready_s": 3.9923049170174636,
+          "end_s": 3.9924613749899436
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 15,
+          "start_s": 3.992462666996289,
+          "ready_s": 3.992471375007881,
+          "end_s": 3.9926264169916976
+        }
+      ]
+    },
+    {
+      "schedule": "deferred",
+      "warmup": false,
+      "valid": true,
+      "wall_s": 4.433307125000283,
+      "chosen_ids": [
+        [
+          11751,
+          13,
+          198,
+          760,
+          6511,
+          314,
+          9564,
+          369,
+          19241,
+          13,
+          198,
+          760,
+          6511,
+          314,
+          14898,
+          369
+        ],
+        [
+          264,
+          491,
+          44483,
+          5365,
+          303,
+          279,
+          17415,
+          13,
+          1049,
+          557,
+          8826,
+          303,
+          1141,
+          1765,
+          24284,
+          11
+        ],
+        [
+          198,
+          262,
+          460,
+          264,
+          478,
+          292,
+          271,
+          727,
+          1146,
+          2784,
+          11,
+          292,
+          1590,
+          198,
+          262,
+          460
+        ]
+      ],
+      "generated_tokens": 48,
+      "max_abs_logit_error": 0.0,
+      "outside_tolerance": 0,
+      "events": [
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 0,
+          "start_s": 1.66997779160738e-07,
+          "end_s": 0.11325241698068567
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 0,
+          "start_s": 0.11325524997664616,
+          "end_s": 0.3824621669773478
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 0,
+          "start_s": 0.3824654579802882,
+          "end_s": 0.684857332991669
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 0,
+          "start_s": 0.6848601249803323,
+          "ready_s": 0.81345245798002,
+          "end_s": 0.8136079579999205
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 1,
+          "start_s": 0.8136126669996884,
+          "end_s": 0.8504454999929294
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 0,
+          "start_s": 0.8504491669882555,
+          "ready_s": 0.8899225829809438,
+          "end_s": 0.8900681669765618
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 1,
+          "start_s": 0.8900724169798195,
+          "end_s": 0.9251731669937726
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 0,
+          "start_s": 0.9251758329919539,
+          "ready_s": 0.9641059169953223,
+          "end_s": 0.9642487079836428
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 1,
+          "start_s": 0.9642530829878524,
+          "end_s": 0.9994653750036377
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 1,
+          "start_s": 0.9994687919970602,
+          "ready_s": 1.0380864999897312,
+          "end_s": 1.0382328749983571
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 2,
+          "start_s": 1.0382365419936832,
+          "end_s": 1.0714557500032242
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 1,
+          "start_s": 1.071458291989984,
+          "ready_s": 1.1093002499837894,
+          "end_s": 1.1094509169925004
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 2,
+          "start_s": 1.1094564579834696,
+          "end_s": 1.1415994169947226
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 1,
+          "start_s": 1.1416024169884622,
+          "ready_s": 1.1798637920001056,
+          "end_s": 1.1800141249841545
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 2,
+          "start_s": 1.180018207989633,
+          "end_s": 1.21279224997852
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 2,
+          "start_s": 1.2127953750023153,
+          "ready_s": 1.2492863749794196,
+          "end_s": 1.249429624993354
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 3,
+          "start_s": 1.2494336249947082,
+          "end_s": 1.2818141249881592
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 2,
+          "start_s": 1.281817291979678,
+          "ready_s": 1.3209900420042686,
+          "end_s": 1.3211364999879152
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 3,
+          "start_s": 1.3211415419937111,
+          "end_s": 1.355445791996317
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 2,
+          "start_s": 1.355448874994181,
+          "ready_s": 1.394978208001703,
+          "end_s": 1.3951270419929642
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 3,
+          "start_s": 1.3951324579829816,
+          "end_s": 1.4287785420019645
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 3,
+          "start_s": 1.4287812919938006,
+          "ready_s": 1.4693120000010822,
+          "end_s": 1.4694625829870347
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 4,
+          "start_s": 1.4694666669820435,
+          "end_s": 1.505070249986602
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 3,
+          "start_s": 1.505073457985418,
+          "ready_s": 1.5456963749893475,
+          "end_s": 1.545847707981011
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 4,
+          "start_s": 1.5458514579804614,
+          "end_s": 1.5809837499982677
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 3,
+          "start_s": 1.5809869579970837,
+          "ready_s": 1.622320624999702,
+          "end_s": 1.6224682919855695
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 4,
+          "start_s": 1.6224722919869237,
+          "end_s": 1.657341499987524
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 4,
+          "start_s": 1.6573444999812637,
+          "ready_s": 1.6979598749894649,
+          "end_s": 1.6981080829864368
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 5,
+          "start_s": 1.6981124169833492,
+          "end_s": 1.7339149999897927
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 4,
+          "start_s": 1.733917957986705,
+          "ready_s": 1.7739108329988085,
+          "end_s": 1.7740580829849932
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 5,
+          "start_s": 1.7740620419790503,
+          "end_s": 1.8111725829949137
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 4,
+          "start_s": 1.8111756249854807,
+          "ready_s": 1.8527478750038426,
+          "end_s": 1.8529041669971775
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 5,
+          "start_s": 1.852909124980215,
+          "end_s": 1.8902831669838633
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 5,
+          "start_s": 1.890286332985852,
+          "ready_s": 1.9319994169927668,
+          "end_s": 1.9321492919989396
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 6,
+          "start_s": 1.9321538749791216,
+          "end_s": 1.9690672919969074
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 5,
+          "start_s": 1.9690698749909643,
+          "ready_s": 2.011406999983592,
+          "end_s": 2.0115583750011865
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 6,
+          "start_s": 2.0115626670012716,
+          "end_s": 2.047502000001259
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 5,
+          "start_s": 2.0475050829991233,
+          "ready_s": 2.090606374986237,
+          "end_s": 2.0907539579784498
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 6,
+          "start_s": 2.090758457983611,
+          "end_s": 2.127181791991461
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 6,
+          "start_s": 2.1271850829944015,
+          "ready_s": 2.1689264999877196,
+          "end_s": 2.1690877499931958
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 7,
+          "start_s": 2.169092249998357,
+          "end_s": 2.206554916978348
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 6,
+          "start_s": 2.2065577500034124,
+          "ready_s": 2.2488882500038017,
+          "end_s": 2.2490365419944283
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 7,
+          "start_s": 2.2490413329796866,
+          "end_s": 2.288233917002799
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 6,
+          "start_s": 2.2882369580038358,
+          "ready_s": 2.3303324169828556,
+          "end_s": 2.3304873329761904
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 7,
+          "start_s": 2.330491417000303,
+          "end_s": 2.3677227919979487
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 7,
+          "start_s": 2.3677258749958128,
+          "ready_s": 2.4111621670017485,
+          "end_s": 2.411455207999097
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 8,
+          "start_s": 2.4114673330041114,
+          "end_s": 2.4483589169976767
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 7,
+          "start_s": 2.4483612919866573,
+          "ready_s": 2.493881624977803,
+          "end_s": 2.4940639169944916
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 8,
+          "start_s": 2.4940687499765772,
+          "end_s": 2.532672832981916
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 7,
+          "start_s": 2.532676167000318,
+          "ready_s": 2.5798374169971794,
+          "end_s": 2.5800060000037774
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 8,
+          "start_s": 2.58001433298341,
+          "end_s": 2.6209514579968527
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 8,
+          "start_s": 2.6209544579905923,
+          "ready_s": 2.6659413329907693,
+          "end_s": 2.6660987499926705
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 9,
+          "start_s": 2.6661033749987837,
+          "end_s": 2.707041624991689
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 8,
+          "start_s": 2.7070449579914566,
+          "ready_s": 2.753398999979254,
+          "end_s": 2.7535727079957724
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 9,
+          "start_s": 2.7535780829784926,
+          "end_s": 2.7934518749825656
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 8,
+          "start_s": 2.7934552079823334,
+          "ready_s": 2.8386181669775397,
+          "end_s": 2.838785291998647
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 9,
+          "start_s": 2.8387902079848573,
+          "end_s": 2.879286832991056
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 9,
+          "start_s": 2.879290291981306,
+          "ready_s": 2.9235457920003682,
+          "end_s": 2.923710916977143
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 10,
+          "start_s": 2.923715541983256,
+          "end_s": 2.9621820829925127
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 9,
+          "start_s": 2.962184707983397,
+          "ready_s": 3.006914041994605,
+          "end_s": 3.00707845800207
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 10,
+          "start_s": 3.007083167001838,
+          "end_s": 3.045972666994203
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 9,
+          "start_s": 3.045975624991115,
+          "ready_s": 3.0900834999920335,
+          "end_s": 3.0902492919994984
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 10,
+          "start_s": 3.090254457987612,
+          "end_s": 3.13028454198502
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 10,
+          "start_s": 3.130287624982884,
+          "ready_s": 3.176430708001135,
+          "end_s": 3.1765951669949573
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 11,
+          "start_s": 3.1765999170020223,
+          "end_s": 3.2149493749893736
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 10,
+          "start_s": 3.2149529999878723,
+          "ready_s": 3.2605682919966057,
+          "end_s": 3.2607347919838503
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 11,
+          "start_s": 3.260739666991867,
+          "end_s": 3.298546999983955
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 10,
+          "start_s": 3.298550291976426,
+          "ready_s": 3.3442470000009052,
+          "end_s": 3.3444117500039283
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 11,
+          "start_s": 3.3444164999818895,
+          "end_s": 3.3815530829888303
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 11,
+          "start_s": 3.3815564169781283,
+          "ready_s": 3.428795582993189,
+          "end_s": 3.4290032499993686
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 12,
+          "start_s": 3.429008666978916,
+          "end_s": 3.466912042000331
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 11,
+          "start_s": 3.4669153750000987,
+          "ready_s": 3.512396332982462,
+          "end_s": 3.5125609999813605
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 12,
+          "start_s": 3.5125654169823974,
+          "end_s": 3.5493060419976246
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 11,
+          "start_s": 3.549308874993585,
+          "ready_s": 3.5954937920032535,
+          "end_s": 3.595652499992866
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 12,
+          "start_s": 3.595656791992951,
+          "end_s": 3.63233466699603
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 12,
+          "start_s": 3.632337582996115,
+          "ready_s": 3.678076541982591,
+          "end_s": 3.6782341249927413
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 13,
+          "start_s": 3.678238708002027,
+          "end_s": 3.7149528749869205
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 12,
+          "start_s": 3.7149559579847846,
+          "ready_s": 3.7611062499927357,
+          "end_s": 3.7612722920021042
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 13,
+          "start_s": 3.761277166981017,
+          "end_s": 3.798278542002663
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 12,
+          "start_s": 3.7982813749986235,
+          "ready_s": 3.8423145829874557,
+          "end_s": 3.842472791991895
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 13,
+          "start_s": 3.842477666999912,
+          "end_s": 3.8786449169856496
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 13,
+          "start_s": 3.8786484169831965,
+          "ready_s": 3.9234334169887006,
+          "end_s": 3.9235909580020234
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 14,
+          "start_s": 3.923595166997984,
+          "end_s": 3.9623204169911332
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 13,
+          "start_s": 3.9623237079940736,
+          "ready_s": 4.006749916996341,
+          "end_s": 4.00690745798056
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 14,
+          "start_s": 4.006911457981914,
+          "end_s": 4.045461000001524
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 13,
+          "start_s": 4.045464082999388,
+          "ready_s": 4.0899857499753125,
+          "end_s": 4.090210207999917
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 14,
+          "start_s": 4.090215749980416,
+          "end_s": 4.131976292002946
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 14,
+          "start_s": 4.1319787919928785,
+          "ready_s": 4.188009999983478,
+          "end_s": 4.188165917003062
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 15,
+          "start_s": 4.188170041976264,
+          "end_s": 4.228639999986626
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 14,
+          "start_s": 4.228643124981318,
+          "ready_s": 4.273448541993275,
+          "end_s": 4.273604291985976
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 15,
+          "start_s": 4.273608541989233,
+          "end_s": 4.31152179199853
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 14,
+          "start_s": 4.311525333003374,
+          "ready_s": 4.355275541980518,
+          "end_s": 4.355431417003274
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 15,
+          "start_s": 4.355435957986629,
+          "end_s": 4.393128666997654
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 15,
+          "start_s": 4.393131832999643,
+          "ready_s": 4.432794708001893,
+          "end_s": 4.4329495419806335
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 15,
+          "start_s": 4.432953457988333,
+          "ready_s": 4.4329617919866,
+          "end_s": 4.433120457979385
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 15,
+          "start_s": 4.433121666981606,
+          "ready_s": 4.4331318749755155,
+          "end_s": 4.433304499980295
+        }
+      ]
+    },
+    {
+      "schedule": "serial",
+      "warmup": false,
+      "valid": true,
+      "wall_s": 4.265230999997584,
+      "chosen_ids": [
+        [
+          11751,
+          13,
+          198,
+          760,
+          6511,
+          314,
+          9564,
+          369,
+          19241,
+          13,
+          198,
+          760,
+          6511,
+          314,
+          14898,
+          369
+        ],
+        [
+          264,
+          491,
+          44483,
+          5365,
+          303,
+          279,
+          17415,
+          13,
+          1049,
+          557,
+          8826,
+          303,
+          1141,
+          1765,
+          24284,
+          11
+        ],
+        [
+          198,
+          262,
+          460,
+          264,
+          478,
+          292,
+          271,
+          727,
+          1146,
+          2784,
+          11,
+          292,
+          1590,
+          198,
+          262,
+          460
+        ]
+      ],
+      "generated_tokens": 48,
+      "max_abs_logit_error": 0.0,
+      "outside_tolerance": 0,
+      "events": [
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 0,
+          "start_s": 1.66997779160738e-07,
+          "end_s": 0.10536204199888743
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 0,
+          "start_s": 0.10536508401855826,
+          "ready_s": 0.20222158401156776,
+          "end_s": 0.2023779590090271
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 0,
+          "start_s": 0.20238266701926477,
+          "end_s": 0.36371649999637157
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 0,
+          "start_s": 0.36371983401477337,
+          "ready_s": 0.5150086250214372,
+          "end_s": 0.515155708999373
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 0,
+          "start_s": 0.5151601670077071,
+          "end_s": 0.6497077500098385
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 0,
+          "start_s": 0.6497112920042127,
+          "ready_s": 0.7723037920077331,
+          "end_s": 0.7724448340013623
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 1,
+          "start_s": 0.7724490840046201,
+          "end_s": 0.8067341250134632
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 1,
+          "start_s": 0.8067370420030784,
+          "ready_s": 0.8456850000075065,
+          "end_s": 0.8458295419986825
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 1,
+          "start_s": 0.8458338339987677,
+          "end_s": 0.880432625010144
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 1,
+          "start_s": 0.8804361250076909,
+          "ready_s": 0.918447333999211,
+          "end_s": 0.9186016250168905
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 1,
+          "start_s": 0.9186066249967553,
+          "end_s": 0.9528037919953931
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 1,
+          "start_s": 0.9528067090141121,
+          "ready_s": 0.9895082919974811,
+          "end_s": 0.9896512090053875
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 2,
+          "start_s": 0.9896561250207014,
+          "end_s": 1.0221860420133453
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 2,
+          "start_s": 1.022188750008354,
+          "ready_s": 1.0578992920054588,
+          "end_s": 1.0580449170083739
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 2,
+          "start_s": 1.0580497920163907,
+          "end_s": 1.0904624170216266
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 2,
+          "start_s": 1.0904654590121936,
+          "ready_s": 1.1284173750027549,
+          "end_s": 1.1285600000119302
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 2,
+          "start_s": 1.1285654170205817,
+          "end_s": 1.1612404590123333
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 2,
+          "start_s": 1.1612445840146393,
+          "ready_s": 1.198240124998847,
+          "end_s": 1.1983812090184074
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 3,
+          "start_s": 1.198385584022617,
+          "end_s": 1.230843209021259
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 3,
+          "start_s": 1.230846084014047,
+          "ready_s": 1.2689859590027481,
+          "end_s": 1.269185417011613
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 3,
+          "start_s": 1.2691902920196299,
+          "end_s": 1.301788459008094
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 3,
+          "start_s": 1.3017910000053234,
+          "ready_s": 1.3387272090185434,
+          "end_s": 1.3388720000220928
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 3,
+          "start_s": 1.3388759590161499,
+          "end_s": 1.3716883750166744
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 3,
+          "start_s": 1.3716909170034342,
+          "ready_s": 1.4101220839947928,
+          "end_s": 1.410269000014523
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 4,
+          "start_s": 1.4102732920146082,
+          "end_s": 1.4446162499953061
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 4,
+          "start_s": 1.4446195000200532,
+          "ready_s": 1.4825773750199005,
+          "end_s": 1.4827186670154333
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 4,
+          "start_s": 1.4827235420234501,
+          "end_s": 1.5155369169951882
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 4,
+          "start_s": 1.5155402090167627,
+          "ready_s": 1.5541383340023458,
+          "end_s": 1.5542837920074817
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 4,
+          "start_s": 1.5542888340132777,
+          "end_s": 1.5878061249968596
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 4,
+          "start_s": 1.5878088340105023,
+          "ready_s": 1.6267400840006303,
+          "end_s": 1.6268908340134658
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 5,
+          "start_s": 1.6268949170189444,
+          "end_s": 1.6602493750106078
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 5,
+          "start_s": 1.6602516249986365,
+          "ready_s": 1.6981006670102943,
+          "end_s": 1.6982415840029716
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 5,
+          "start_s": 1.698246084008133,
+          "end_s": 1.7318714169960003
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 5,
+          "start_s": 1.7318752919964027,
+          "ready_s": 1.77122862500255,
+          "end_s": 1.7713687090144958
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 5,
+          "start_s": 1.771373042021878,
+          "end_s": 1.8064440000161994
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 5,
+          "start_s": 1.8064467090007383,
+          "ready_s": 1.8475728750054259,
+          "end_s": 1.8477114170091227
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 6,
+          "start_s": 1.8477155420114286,
+          "end_s": 1.8828859589993954
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 6,
+          "start_s": 1.8828889169963077,
+          "ready_s": 1.9222043750050943,
+          "end_s": 1.9223460000066552
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 6,
+          "start_s": 1.9223499590007123,
+          "end_s": 1.958280167018529
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 6,
+          "start_s": 1.958283375017345,
+          "ready_s": 1.9981367920117918,
+          "end_s": 1.9982791250222363
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 6,
+          "start_s": 1.998283209017245,
+          "end_s": 2.0350743340095505
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 6,
+          "start_s": 2.0350773750105873,
+          "ready_s": 2.075611750013195,
+          "end_s": 2.0757599170028698
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 7,
+          "start_s": 2.075764209002955,
+          "end_s": 2.1124637089960743
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 7,
+          "start_s": 2.112466874998063,
+          "ready_s": 2.1547743749979418,
+          "end_s": 2.154924792004749
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 7,
+          "start_s": 2.1549294590076897,
+          "end_s": 2.1927022919990122
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 7,
+          "start_s": 2.192705459019635,
+          "ready_s": 2.2358833750186022,
+          "end_s": 2.236123917013174
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 7,
+          "start_s": 2.2361304170044605,
+          "end_s": 2.273111125017749
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 7,
+          "start_s": 2.2731140420073643,
+          "ready_s": 2.317781375022605,
+          "end_s": 2.3179291670094244
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 8,
+          "start_s": 2.3179335000168066,
+          "end_s": 2.3546027500124183
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 8,
+          "start_s": 2.354606042004889,
+          "ready_s": 2.3984416669991333,
+          "end_s": 2.398588917014422
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 8,
+          "start_s": 2.3985928340116516,
+          "end_s": 2.435572750022402
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 8,
+          "start_s": 2.435575459006941,
+          "ready_s": 2.4804370000201743,
+          "end_s": 2.4805855420127045
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 8,
+          "start_s": 2.480590250022942,
+          "end_s": 2.518258459022036
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 8,
+          "start_s": 2.51826108401292,
+          "ready_s": 2.562285125022754,
+          "end_s": 2.5624364590039477
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 9,
+          "start_s": 2.56244033400435,
+          "end_s": 2.600429959013127
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 9,
+          "start_s": 2.600432917010039,
+          "ready_s": 2.6440311250044033,
+          "end_s": 2.6441801250039134
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 9,
+          "start_s": 2.6441845840017777,
+          "end_s": 2.6819087920011953
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 9,
+          "start_s": 2.681911542022135,
+          "ready_s": 2.7240716250089463,
+          "end_s": 2.724226959020598
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 9,
+          "start_s": 2.724231208994752,
+          "end_s": 2.762044417002471
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 9,
+          "start_s": 2.76204733402119,
+          "ready_s": 2.805156000016723,
+          "end_s": 2.80530941701727
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 10,
+          "start_s": 2.805313542019576,
+          "end_s": 2.843758542003343
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 10,
+          "start_s": 2.8437617089948617,
+          "ready_s": 2.8880367090168875,
+          "end_s": 2.888188250013627
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 10,
+          "start_s": 2.888193084014347,
+          "end_s": 2.9260658340062946
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 10,
+          "start_s": 2.926068333996227,
+          "ready_s": 2.9694878340233117,
+          "end_s": 2.9696378340013325
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 10,
+          "start_s": 2.9696416670049075,
+          "end_s": 3.0060490840114653
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 10,
+          "start_s": 3.0060531250201166,
+          "ready_s": 3.0516312920080964,
+          "end_s": 3.0517835420032497
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 11,
+          "start_s": 3.051788625016343,
+          "end_s": 3.0882778340019286
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 11,
+          "start_s": 3.0882804590219166,
+          "ready_s": 3.13196587501443,
+          "end_s": 3.132122667011572
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 11,
+          "start_s": 3.1321272920176852,
+          "end_s": 3.1695342090097256
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 11,
+          "start_s": 3.1695369170047343,
+          "ready_s": 3.2125182500167284,
+          "end_s": 3.212668374995701
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 11,
+          "start_s": 3.212673417001497,
+          "end_s": 3.249717041995609
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 11,
+          "start_s": 3.249720249994425,
+          "ready_s": 3.290616209007567,
+          "end_s": 3.2907709169958252
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 12,
+          "start_s": 3.2907755420019384,
+          "end_s": 3.3299098340212367
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 12,
+          "start_s": 3.3299128340149764,
+          "ready_s": 3.3721605419996195,
+          "end_s": 3.372306834004121
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 12,
+          "start_s": 3.372311167011503,
+          "end_s": 3.4109407089999877
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 12,
+          "start_s": 3.410943541995948,
+          "ready_s": 3.454923667013645,
+          "end_s": 3.4550699590181466
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 12,
+          "start_s": 3.455074124998646,
+          "end_s": 3.4932422090205364
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 12,
+          "start_s": 3.4932454170193523,
+          "ready_s": 3.5366857920016628,
+          "end_s": 3.5368350420030765
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 13,
+          "start_s": 3.536839125008555,
+          "end_s": 3.573436209000647
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 13,
+          "start_s": 3.573439125000732,
+          "ready_s": 3.617894042021362,
+          "end_s": 3.6180406250059605
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 13,
+          "start_s": 3.6180446250073146,
+          "end_s": 3.6547382500139065
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 13,
+          "start_s": 3.654741209000349,
+          "ready_s": 3.698513625015039,
+          "end_s": 3.6986604170233477
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 13,
+          "start_s": 3.698665375006385,
+          "end_s": 3.736516750010196
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 13,
+          "start_s": 3.736519917001715,
+          "ready_s": 3.77986404200783,
+          "end_s": 3.7800105420174077
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 14,
+          "start_s": 3.7800149170216173,
+          "end_s": 3.818095374997938
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 14,
+          "start_s": 3.818098084011581,
+          "ready_s": 3.8612041670130566,
+          "end_s": 3.861355166998692
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 14,
+          "start_s": 3.861359000002267,
+          "end_s": 3.8984752090182155
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 14,
+          "start_s": 3.8984777920122724,
+          "ready_s": 3.9404058340005577,
+          "end_s": 3.940554750006413
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 14,
+          "start_s": 3.940558542002691,
+          "end_s": 3.979217084008269
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 14,
+          "start_s": 3.9792200420051813,
+          "ready_s": 4.021649917005561,
+          "end_s": 4.021797292021802
+        },
+        {
+          "event": "submit",
+          "context": 0,
+          "step": 15,
+          "start_s": 4.021801292023156,
+          "end_s": 4.059956125012832
+        },
+        {
+          "event": "collect",
+          "context": 0,
+          "step": 15,
+          "start_s": 4.059959500009427,
+          "ready_s": 4.10284354200121,
+          "end_s": 4.102990209008567
+        },
+        {
+          "event": "submit",
+          "context": 1,
+          "step": 15,
+          "start_s": 4.102994875021977,
+          "end_s": 4.139440750004724
+        },
+        {
+          "event": "collect",
+          "context": 1,
+          "step": 15,
+          "start_s": 4.139443667023443,
+          "ready_s": 4.18366820900701,
+          "end_s": 4.183821292011999
+        },
+        {
+          "event": "submit",
+          "context": 2,
+          "step": 15,
+          "start_s": 4.183825625019381,
+          "end_s": 4.221361167001305
+        },
+        {
+          "event": "collect",
+          "context": 2,
+          "step": 15,
+          "start_s": 4.221364500001073,
+          "ready_s": 4.265072459005751,
+          "end_s": 4.265226584015181
+        }
+      ]
+    }
+  ],
+  "scope": "One model shared by three independent contexts; same-GGUF solo full-logit reference. Includes prefill, output copying and host event recording. Diagnostic wall times only, no GPU overlap or physical-pair speedup claim."
+}

@@ -1,0 +1,12 @@
+{
+  "command": [
+    "work/engine-flash-correctness",
+    "/Volumes/t705/ModelArchive/Qwen38-Flash-Next-IQ4_XS/UD-IQ4_XS/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf",
+    "tensor-single",
+    "unused",
+    "outputs/heterogeneous-tp/engine-flash-next/tensor-single",
+    "outputs/heterogeneous-tp/engine-flash-next/solo"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 58.65001916885376
+}

@@ -1,0 +1,87 @@
+diff --git a/ggml/src/ggml-backend-meta.cpp b/ggml/src/ggml-backend-meta.cpp
+index 3ec40fb..e2fda5c 100644
+--- a/ggml/src/ggml-backend-meta.cpp
++++ b/ggml/src/ggml-backend-meta.cpp
+@@ -472,7 +472,24 @@ static ggml_backend_buffer_t ggml_backend_meta_buffer_simple_buffer(ggml_backend
+     return buf_ctx->bufs[index].get();
+ }
+ 
++static bool ggml_backend_meta_is_host_view(const ggml_tensor * tensor) {
++    const bool is_view = tensor->op == GGML_OP_VIEW || tensor->op == GGML_OP_RESHAPE ||
++                         tensor->op == GGML_OP_PERMUTE || tensor->op == GGML_OP_TRANSPOSE;
++    return is_view && tensor->view_src != nullptr && tensor->buffer != nullptr &&
++           !ggml_backend_buffer_is_meta(tensor->buffer) && ggml_backend_buffer_is_host(tensor->buffer) &&
++           ggml_backend_buffer_is_host(tensor->view_src->buffer);
++}
++
+ static struct ggml_tensor * ggml_backend_meta_buffer_simple_tensor(const struct ggml_tensor * tensor, size_t index) {
++    if (!ggml_backend_buffer_is_meta(tensor->buffer)) {
++        fprintf(stderr, "LOCAL META DIAGNOSTIC: name=%s op=%s buffer=%s view=%s\n", tensor->name, ggml_op_name(tensor->op), tensor->buffer ? ggml_backend_buffer_name(tensor->buffer) : "null", tensor->view_src ? tensor->view_src->name : "null");
++        for (int i = 0; i < GGML_MAX_SRC; ++i) {
++            if (tensor->src[i]) {
++                const auto * src = tensor->src[i];
++                fprintf(stderr, "  src[%d] name=%s op=%s buffer=%s\n", i, src->name, ggml_op_name(src->op), src->buffer ? ggml_backend_buffer_name(src->buffer) : "null");
++            }
++        }
++    }
+     GGML_ASSERT(ggml_backend_buffer_is_meta(tensor->buffer));
+     ggml_backend_meta_buffer_context * buf_ctx = (ggml_backend_meta_buffer_context *) tensor->buffer->context;
+     GGML_ASSERT(index < buf_ctx->bufs.size());
+@@ -2010,7 +2027,7 @@ static enum ggml_status ggml_backend_meta_graph_compute(ggml_backend_t backend,
+ 
+             for (int i = 0; i < cgraph->n_nodes; i++) {
+                 ggml_tensor * node = cgraph->nodes[i];
+-                if (node->view_src != nullptr && node->view_src->op == GGML_OP_NONE && ggml_backend_buffer_is_host(node->view_src->buffer)) {
++                if (ggml_backend_meta_is_host_view(node)) {
+                     // FIXME s_copy_main is on the CPU and its view seems to be incorrectly added to the graph nodes.
+                     // For regular usage this doesn't matter since it's a noop but trying to call ggml_backend_meta_buffer_simple_tensor results in a crash.
+                     bcj.nodes[i] = node;
+@@ -2143,7 +2160,7 @@ static enum ggml_status ggml_backend_meta_graph_compute(ggml_backend_t backend,
+                         }
+                     }
+ 
+-                    if (next->view_src != nullptr && next->view_src->op == GGML_OP_NONE && ggml_backend_buffer_is_host(next->view_src->buffer)) {
++                    if (ggml_backend_meta_is_host_view(next)) {
+                         continue;
+                     }
+                     if (ggml_backend_meta_get_split_state(next, false).axis != GGML_BACKEND_SPLIT_AXIS_PARTIAL) {
+@@ -2182,7 +2199,7 @@ static enum ggml_status ggml_backend_meta_graph_compute(ggml_backend_t backend,
+             int i_start = 0;
+             for (int i = 0; i < cgraph->n_nodes; i++) {
+                 ggml_tensor * node = cgraph->nodes[i];
+-                if (node->view_src != nullptr && node->view_src->op == GGML_OP_NONE && ggml_backend_buffer_is_host(node->view_src->buffer)) {
++                if (ggml_backend_meta_is_host_view(node)) {
+                     continue;
+                 }
+                 const ggml_backend_meta_split_state split_state = ggml_backend_meta_get_split_state(node, /*assume_sync =*/ false);
+diff --git a/src/llama-arch.cpp b/src/llama-arch.cpp
+index 03b7951..e9d5fd8 100644
+--- a/src/llama-arch.cpp
++++ b/src/llama-arch.cpp
+@@ -1158,7 +1158,9 @@ bool llm_arch_supports_sm_tensor(const llm_arch & arch) {
+         case LLM_ARCH_BAILINGMOE3:
+         case LLM_ARCH_KIMI_K3:
+         case LLM_ARCH_QWEN3TTS:
++#ifndef LOCAL_QWEN4EXP_TP_PROBE
+         case LLM_ARCH_QWEN4EXP:   // TODO: fix test-llama-archs
++#endif
+             return false;
+         default:
+             return true;
+diff --git a/tests/test-llama-archs.cpp b/tests/test-llama-archs.cpp
+index 568f723..7a89384 100644
+--- a/tests/test-llama-archs.cpp
++++ b/tests/test-llama-archs.cpp
+@@ -707,6 +707,12 @@ static int test_backends(const llm_arch target_arch, const size_t seed, const in
+         }
+ 
+         dev_configs.emplace_back(devices_meta, "Meta", LLAMA_SPLIT_MODE_TENSOR);
++#ifdef LOCAL_QWEN4EXP_TP_PROBE
++        if (devices_meta.size() == 1) {
++            devices_meta.push_back(devices_meta[0]);
++            dev_configs.emplace_back(devices_meta, "Meta-local-2", LLAMA_SPLIT_MODE_TENSOR);
++        }
++#endif
+     }
+ 
+     size_t max_arch_name_length = 0;

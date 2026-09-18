@@ -1,0 +1,24 @@
+main: using seed 1234
+|     Model arch.|      Device|Config|   NMSE vs. CPU|Roundtrip|
+|----------------|------------|------|---------------|---------|
+|        qwen4exp|Apple M5 Max|   MoE|  [1;32mOK[0m (2.14e-07)|       [1;32mOK[0m|
+|        qwen4exp|  Accelerate|   MoE|  [1;32mOK[0m (0.00e+00)|       [1;32mOK[0m|
+|        qwen4exp|Apple M5 Max|   MoE|  [1;32mOK[0m (9.59e-14)|       [1;32mOK[0m|
+|        qwen4exp|        Meta|   MoE|LOCAL META DIAGNOSTIC: name=model.input_embed (reshaped) op=RESHAPE buffer=CPU view=model.input_embed
+  src[0] name=model.input_embed op=GET_ROWS buffer=CPU
+/Users/petrus/Documents/Codex/2026-09-16/che/work/llama-flash-tp/ggml/src/ggml-backend-meta.cpp:485: GGML_ASSERT(ggml_backend_buffer_is_meta(tensor->buffer)) failed
+WARNING: Using native backtrace. Set GGML_BACKTRACE_LLDB for more info.
+WARNING: GGML_BACKTRACE_LLDB may cause native MacOS Terminal.app to crash.
+See: https://github.com/ggml-org/llama.cpp/pull/17869
+0   libggml-base.0.24.0.dylib           0x0000000100ced380 ggml_print_backtrace + 276
+1   libggml-base.0.24.0.dylib           0x0000000100ced56c ggml_abort + 156
+2   libggml-base.0.24.0.dylib           0x0000000100d17b0c _ZL38ggml_backend_meta_buffer_simple_tensorPK11ggml_tensorm + 1216
+3   libggml-base.0.24.0.dylib           0x0000000100d1d434 _ZL31ggml_backend_meta_graph_computeP12ggml_backendP11ggml_cgraph + 1184
+4   libggml-base.0.24.0.dylib           0x0000000100d0ecc8 ggml_backend_sched_graph_compute_async + 2644
+5   libllama.0.4.1.dylib                0x0000000100f20c58 _ZN13llama_context13graph_computeEP11ggml_cgraphb + 164
+6   libllama.0.4.1.dylib                0x0000000100f20788 _ZN13llama_context14process_ubatchERK12llama_ubatch14llm_graph_typeP22llama_memory_context_iR11ggml_status + 516
+7   libllama.0.4.1.dylib                0x0000000100f2239c _ZN13llama_context6decodeERK11llama_batch + 2448
+8   libllama.0.4.1.dylib                0x0000000100f2788c llama_decode + 20
+9   test-llama-archs                    0x000000010098c018 _ZL10get_logitsP11llama_modelP13llama_contextRKNSt3__16vectorIiNS3_9allocatorIiEEEEb + 300
+10  test-llama-archs                    0x0000000100988c8c main + 6412
+11  dyld                                0x00000001809f84e4 start + 6992

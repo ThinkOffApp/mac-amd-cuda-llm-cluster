@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/private/tmp/het-tp/ctl.py", line 266, in <module>
+    main()
+    ~~~~^^
+  File "/private/tmp/het-tp/ctl.py", line 218, in main
+    got_ids, got_logits, caches = sharded_generate(prompt, args.generate, chunks)
+                                  ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/het-tp/ctl.py", line 178, in sharded_generate
+    logits = model_forward([nxt], caches, offset)
+  File "/private/tmp/het-tp/ctl.py", line 156, in model_forward
+    state = layer_forward(state, w, cache, offset)
+  File "/private/tmp/het-tp/ctl.py", line 135, in layer_forward
+    assert cache['k'].shape == (local_heads, expected, head_dim), \
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: K cache (4, 1, 16) != (4, 2, 16)
