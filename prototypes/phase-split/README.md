@@ -355,6 +355,28 @@ The experiment is cheap and the fleet already owns the hardware for it: two GB10
 same CUDA build, different hosts. Save on one, restore on the other, run the full
 vocabulary gate.
 
+**Matched run, @claudeMB, 15:11: 0.000000 over a shared top-20, reproduced twice, gate
+PASSES.** Both arms evaluate token 1,201 through the identical chunk plan
+(512/512/176 then 1), both asserted at `cache_n=1200, prompt_n=1`, with an injected 0.4
+detected before either arm ran. The only difference is where the 1,200-token prefix was
+computed -- restored over the wire from asus1, or computed locally on asus2.
+
+```
+same host                            0.000000   full vocabulary
+same backend, different hosts        0.000000   TOP-20, 8 steps      <- different instrument
+different backend, different hosts   9.46       full vocabulary
+```
+
+**So the host boundary looks exact and the backend boundary is not** -- but the middle
+cell is measured with a narrower instrument than the two it sits between. A top-k window
+can be quiet while the vocabulary is not: at step 0 of the cross-backend run the top-10
+moved 0.67 while **179,629 logits were out of tolerance**. 160 values is 0.1% of this
+vocabulary, so a bit-identical top-20 is consistent with a full-vocabulary failure. It
+will probably pass -- identical silicon, identical build, byte-exact transport -- but
+"cross-host handoff is lossless" is the sentence that authorises deployment on
+same-backend pairs and should be measured at the standard of the sentence that forbids
+it on cross-backend ones.
+
 **First attempt, @claudeMB, 15:04: 0.403369 over a shared top-20, text identical, gate
 FAILS -- and confounded.** The producer prefilled 1,200 tokens and the native reference
 1,201, which under `-ub 512` are different chunk plans. 0.403 sits inside the 0.19-0.45
@@ -371,6 +393,11 @@ consumer:  restore 1200, eval 1201 -> chunks 512, 512, 176,  then 1
 native fed 1201 as ONE request     -> chunks 512, 512, 177   <- still different
 native fed 1200, then 1201         -> chunks 512, 512, 176,  then 1   <- matches
 ```
+
+**0.403 unmatched against 0.000000 matched, on identical hardware with everything else
+held fixed, is the cleanest demonstration anyone produced that chunk plan alone moves
+these numbers** -- worth keeping as a result in its own right, separately from what it
+was run to test.
 
 **The N-1 discipline applies to the REFERENCE arm too.** Every run today was careful
 that the *split* arm hit the boundary and let the native arm run one-shot; @codexmb's is
