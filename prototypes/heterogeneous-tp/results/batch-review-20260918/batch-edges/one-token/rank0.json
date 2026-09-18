@@ -1,0 +1,472 @@
+{
+  "ranks": [
+    {
+      "rank": 0,
+      "world": 2,
+      "host": "Petruss-MBP.box",
+      "mode": "tp",
+      "device": "cpu",
+      "torch": "2.14.0",
+      "hip": null,
+      "model": "openai-community/gpt2",
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+      "weight_sha256": "248dfc3911869ec493c76e65bf2fcf7f615828b0254c12b473182f0f81d3a707",
+      "source_sha256": "7fe13e2f2abdee8cfca8885389e7d7a60112e30932ffef6a86b2aeea14091afa",
+      "batch": 4,
+      "prompt_tokens": 12,
+      "prompt_ids": [
+        [
+          383,
+          2106,
+          286,
+          14492,
+          318,
+          257,
+          890,
+          1621,
+          546,
+          661,
+          508,
+          2227
+        ],
+        [
+          554,
+          262,
+          3726,
+          262,
+          9151,
+          373,
+          6565,
+          290,
+          262,
+          6766,
+          2029,
+          340
+        ],
+        [
+          1375,
+          4721,
+          262,
+          3420,
+          6364,
+          780,
+          262,
+          23959,
+          1657,
+          550,
+          587,
+          5445
+        ],
+        [
+          3887,
+          1430,
+          326,
+          468,
+          1683,
+          587,
+          3194,
+          4909,
+          379,
+          1551,
+          530,
+          7457
+        ]
+      ],
+      "new_tokens": 1,
+      "layers": 12,
+      "warmups": 1,
+      "threads": 1,
+      "generation_head": "last-root",
+      "reference_ids": [
+        [
+          284
+        ],
+        [
+          373
+        ],
+        [
+          13
+        ],
+        [
+          13
+        ]
+      ],
+      "initial_ids": [
+        [
+          284
+        ],
+        [
+          373
+        ],
+        [
+          13
+        ],
+        [
+          13
+        ]
+      ],
+      "correctness_checked": true,
+      "valid": true,
+      "all_sequences_match_reference": true,
+      "runs": [
+        {
+          "run_index": 0,
+          "produced_ids": [
+            [
+              284
+            ],
+            [
+              373
+            ],
+            [
+              13
+            ],
+            [
+              13
+            ]
+          ],
+          "total_wall_s": 0.021545916999457404,
+          "generated_tokens_total": 4,
+          "end_to_end_tokens_per_s": 185.65002362632015,
+          "decode_tokens_total": 0,
+          "decode_elapsed_s": 0.0,
+          "aggregate_decode_tokens_per_s": null,
+          "per_sequence": [
+            {
+              "generated_tokens": 1,
+              "ttft_s": 0.02153591701062396,
+              "latency_s": 0.02153591701062396,
+              "decode_tokens": 0,
+              "decode_s": 0.0,
+              "decode_tokens_per_s": null
+            },
+            {
+              "generated_tokens": 1,
+              "ttft_s": 0.02153591701062396,
+              "latency_s": 0.02153591701062396,
+              "decode_tokens": 0,
+              "decode_s": 0.0,
+              "decode_tokens_per_s": null
+            },
+            {
+              "generated_tokens": 1,
+              "ttft_s": 0.02153591701062396,
+              "latency_s": 0.02153591701062396,
+              "decode_tokens": 0,
+              "decode_s": 0.0,
+              "decode_tokens_per_s": null
+            },
+            {
+              "generated_tokens": 1,
+              "ttft_s": 0.02153591701062396,
+              "latency_s": 0.02153591701062396,
+              "decode_tokens": 0,
+              "decode_s": 0.0,
+              "decode_tokens_per_s": null
+            }
+          ],
+          "reduction_counters": {
+            "collectives": 24,
+            "payload_bytes": 3538944
+          }
+        },
+        {
+          "run_index": 1,
+          "produced_ids": [
+            [
+              284
+            ],
+            [
+              373
+            ],
+            [
+              13
+            ],
+            [
+              13
+            ]
+          ],
+          "total_wall_s": 0.022130541008664295,
+          "generated_tokens_total": 4,
+          "end_to_end_tokens_per_s": 180.7456943069745,
+          "decode_tokens_total": 0,
+          "decode_elapsed_s": 0.0,
+          "aggregate_decode_tokens_per_s": null,
+          "per_sequence": [
+            {
+              "generated_tokens": 1,
+              "ttft_s": 0.022117125015938655,
+              "latency_s": 0.022117125015938655,
+              "decode_tokens": 0,
+              "decode_s": 0.0,
+              "decode_tokens_per_s": null
+            },
+            {
+              "generated_tokens": 1,
+              "ttft_s": 0.022117125015938655,
+              "latency_s": 0.022117125015938655,
+              "decode_tokens": 0,
+              "decode_s": 0.0,
+              "decode_tokens_per_s": null
+            },
+            {
+              "generated_tokens": 1,
+              "ttft_s": 0.022117125015938655,
+              "latency_s": 0.022117125015938655,
+              "decode_tokens": 0,
+              "decode_s": 0.0,
+              "decode_tokens_per_s": null
+            },
+            {
+              "generated_tokens": 1,
+              "ttft_s": 0.022117125015938655,
+              "latency_s": 0.022117125015938655,
+              "decode_tokens": 0,
+              "decode_s": 0.0,
+              "decode_tokens_per_s": null
+            }
+          ],
+          "reduction_counters": {
+            "collectives": 24,
+            "payload_bytes": 3538944
+          }
+        }
+      ],
+      "invalid_runs": []
+    },
+    {
+      "rank": 1,
+      "world": 2,
+      "host": "Petruss-MBP.box",
+      "mode": "tp",
+      "device": "cpu",
+      "torch": "2.14.0",
+      "hip": null,
+      "model": "openai-community/gpt2",
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+      "weight_sha256": "248dfc3911869ec493c76e65bf2fcf7f615828b0254c12b473182f0f81d3a707",
+      "source_sha256": "7fe13e2f2abdee8cfca8885389e7d7a60112e30932ffef6a86b2aeea14091afa",
+      "batch": 4,
+      "prompt_tokens": 12,
+      "prompt_ids": [
+        [
+          383,
+          2106,
+          286,
+          14492,
+          318,
+          257,
+          890,
+          1621,
+          546,
+          661,
+          508,
+          2227
+        ],
+        [
+          554,
+          262,
+          3726,
+          262,
+          9151,
+          373,
+          6565,
+          290,
+          262,
+          6766,
+          2029,
+          340
+        ],
+        [
+          1375,
+          4721,
+          262,
+          3420,
+          6364,
+          780,
+          262,
+          23959,
+          1657,
+          550,
+          587,
+          5445
+        ],
+        [
+          3887,
+          1430,
+          326,
+          468,
+          1683,
+          587,
+          3194,
+          4909,
+          379,
+          1551,
+          530,
+          7457
+        ]
+      ],
+      "new_tokens": 1,
+      "layers": 12,
+      "warmups": 1,
+      "threads": 1,
+      "generation_head": "last-root",
+      "reference_ids": [
+        [
+          284
+        ],
+        [
+          373
+        ],
+        [
+          13
+        ],
+        [
+          13
+        ]
+      ],
+      "initial_ids": [
+        [
+          284
+        ],
+        [
+          373
+        ],
+        [
+          13
+        ],
+        [
+          13
+        ]
+      ],
+      "correctness_checked": true,
+      "valid": true,
+      "all_sequences_match_reference": true,
+      "runs": [
+        {
+          "run_index": 0,
+          "produced_ids": [
+            [
+              284
+            ],
+            [
+              373
+            ],
+            [
+              13
+            ],
+            [
+              13
+            ]
+          ],
+          "total_wall_s": 0.021561833011219278,
+          "generated_tokens_total": 4,
+          "end_to_end_tokens_per_s": 185.5129848152835,
+          "decode_tokens_total": 0,
+          "decode_elapsed_s": 0.0,
+          "aggregate_decode_tokens_per_s": null,
+          "per_sequence": [
+            {
+              "generated_tokens": 1,
+              "ttft_s": 0.021549750003032386,
+              "latency_s": 0.021549750003032386,
+              "decode_tokens": 0,
+              "decode_s": 0.0,
+              "decode_tokens_per_s": null
+            },
+            {
+              "generated_tokens": 1,
+              "ttft_s": 0.021549750003032386,
+              "latency_s": 0.021549750003032386,
+              "decode_tokens": 0,
+              "decode_s": 0.0,
+              "decode_tokens_per_s": null
+            },
+            {
+              "generated_tokens": 1,
+              "ttft_s": 0.021549750003032386,
+              "latency_s": 0.021549750003032386,
+              "decode_tokens": 0,
+              "decode_s": 0.0,
+              "decode_tokens_per_s": null
+            },
+            {
+              "generated_tokens": 1,
+              "ttft_s": 0.021549750003032386,
+              "latency_s": 0.021549750003032386,
+              "decode_tokens": 0,
+              "decode_s": 0.0,
+              "decode_tokens_per_s": null
+            }
+          ],
+          "reduction_counters": {
+            "collectives": 24,
+            "payload_bytes": 3538944
+          }
+        },
+        {
+          "run_index": 1,
+          "produced_ids": [
+            [
+              284
+            ],
+            [
+              373
+            ],
+            [
+              13
+            ],
+            [
+              13
+            ]
+          ],
+          "total_wall_s": 0.02213579200906679,
+          "generated_tokens_total": 4,
+          "end_to_end_tokens_per_s": 180.7028182394199,
+          "decode_tokens_total": 0,
+          "decode_elapsed_s": 0.0,
+          "aggregate_decode_tokens_per_s": null,
+          "per_sequence": [
+            {
+              "generated_tokens": 1,
+              "ttft_s": 0.02211920899571851,
+              "latency_s": 0.02211920899571851,
+              "decode_tokens": 0,
+              "decode_s": 0.0,
+              "decode_tokens_per_s": null
+            },
+            {
+              "generated_tokens": 1,
+              "ttft_s": 0.02211920899571851,
+              "latency_s": 0.02211920899571851,
+              "decode_tokens": 0,
+              "decode_s": 0.0,
+              "decode_tokens_per_s": null
+            },
+            {
+              "generated_tokens": 1,
+              "ttft_s": 0.02211920899571851,
+              "latency_s": 0.02211920899571851,
+              "decode_tokens": 0,
+              "decode_s": 0.0,
+              "decode_tokens_per_s": null
+            },
+            {
+              "generated_tokens": 1,
+              "ttft_s": 0.02211920899571851,
+              "latency_s": 0.02211920899571851,
+              "decode_tokens": 0,
+              "decode_s": 0.0,
+              "decode_tokens_per_s": null
+            }
+          ],
+          "reduction_counters": {
+            "collectives": 24,
+            "payload_bytes": 3538944
+          }
+        }
+      ],
+      "invalid_runs": []
+    }
+  ]
+}

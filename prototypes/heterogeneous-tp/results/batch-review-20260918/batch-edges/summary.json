@@ -1,0 +1,26 @@
+[
+  {
+    "case": "timed-corruption",
+    "exit_codes": [
+      1,
+      1
+    ],
+    "passed": true
+  },
+  {
+    "case": "early-eos",
+    "exit_codes": [
+      0,
+      0
+    ],
+    "passed": true
+  },
+  {
+    "case": "one-token",
+    "exit_codes": [
+      0,
+      0
+    ],
+    "passed": true
+  }
+]
