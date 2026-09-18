@@ -1,0 +1,154 @@
+[
+  {
+    "variant": "gguf-contexts",
+    "case": "gemma4-layer",
+    "valid": true,
+    "choices_per_run": 46,
+    "runs": 6,
+    "max_logit_error": 0,
+    "enabled_contexts": 0,
+    "diagnostic_wall_s": {
+      "serial": [
+        0.5930737500020768,
+        0.5684638750099111
+      ],
+      "deferred": [
+        0.5852919579774607,
+        0.5829426670097746
+      ]
+    }
+  },
+  {
+    "variant": "gguf-contexts",
+    "case": "qwen27b-layer",
+    "valid": true,
+    "choices_per_run": 48,
+    "runs": 6,
+    "max_logit_error": 0,
+    "enabled_contexts": 0,
+    "diagnostic_wall_s": {
+      "serial": [
+        2.1908669999975245,
+        2.331594834016869
+      ],
+      "deferred": [
+        2.341769791004481,
+        2.4072239999950398
+      ]
+    }
+  },
+  {
+    "variant": "gguf-contexts",
+    "case": "qwen27b-solo",
+    "valid": true,
+    "choices_per_run": 48,
+    "runs": 6,
+    "max_logit_error": 0,
+    "enabled_contexts": 0,
+    "diagnostic_wall_s": {
+      "serial": [
+        2.098402082978282,
+        2.204431708989432
+      ],
+      "deferred": [
+        2.0075228750065435,
+        1.9979757080145646
+      ]
+    }
+  },
+  {
+    "variant": "gguf-contexts",
+    "case": "gemma4-solo",
+    "valid": true,
+    "choices_per_run": 46,
+    "runs": 6,
+    "max_logit_error": 0,
+    "enabled_contexts": 0,
+    "diagnostic_wall_s": {
+      "serial": [
+        0.553426958998898,
+        0.493285750009818
+      ],
+      "deferred": [
+        0.37423391701304354,
+        0.3904645829752553
+      ]
+    }
+  },
+  {
+    "variant": "gguf-contexts-no-blas",
+    "case": "gemma4-layer",
+    "valid": true,
+    "choices_per_run": 46,
+    "runs": 6,
+    "max_logit_error": 0,
+    "enabled_contexts": 3,
+    "diagnostic_wall_s": {
+      "serial": [
+        0.6087199999892619,
+        0.9599142920051236
+      ],
+      "deferred": [
+        0.6261218749859836,
+        0.960896541015245
+      ]
+    }
+  },
+  {
+    "variant": "gguf-contexts-no-blas",
+    "case": "qwen27b-layer",
+    "valid": true,
+    "choices_per_run": 48,
+    "runs": 6,
+    "max_logit_error": 0,
+    "enabled_contexts": 3,
+    "diagnostic_wall_s": {
+      "serial": [
+        3.8895571249886416,
+        4.265230999997584
+      ],
+      "deferred": [
+        3.992628792009782,
+        4.433307125000283
+      ]
+    }
+  },
+  {
+    "variant": "gguf-contexts-no-blas",
+    "case": "qwen27b-solo",
+    "valid": true,
+    "choices_per_run": 48,
+    "runs": 6,
+    "max_logit_error": 0,
+    "enabled_contexts": 0,
+    "diagnostic_wall_s": {
+      "serial": [
+        4.653239334002137,
+        4.679211040987866
+      ],
+      "deferred": [
+        4.5408688750176225,
+        4.4833453750179615
+      ]
+    }
+  },
+  {
+    "variant": "gguf-contexts-no-blas",
+    "case": "gemma4-solo",
+    "valid": true,
+    "choices_per_run": 46,
+    "runs": 6,
+    "max_logit_error": 0,
+    "enabled_contexts": 0,
+    "diagnostic_wall_s": {
+      "serial": [
+        0.5719667499943171,
+        0.5660576660011429
+      ],
+      "deferred": [
+        0.37735583301400766,
+        0.37650412498624064
+      ]
+    }
+  }
+]

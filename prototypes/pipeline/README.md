@@ -74,4 +74,5 @@ python validate_edges.py --model-dir /model/gpt2 --out /tmp/rolling-edges
 ```
 
 The edge runner includes a Metal case and therefore requires a Metal-capable host.
-A modern GGUF-model arm still needs implementation and correctness/overlap checks.
+The modern GGUF-model diagnostic is described in [GGUF_CONTEXTS.md](GGUF_CONTEXTS.md).
+Physical-pair overlap and performance remain to be measured.
