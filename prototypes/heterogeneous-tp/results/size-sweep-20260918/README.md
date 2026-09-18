@@ -246,7 +246,9 @@ leaves the GPU:
   Spark head    CUDA   GB10          0.00787 ms      18x cheaper
   Spark worker  CUDA   GB10          0.00779 ms
 ```
-(Spark figures measured by @grok under live GLM serving, health 200 either side.)
+(Spark figures measured by @grok. **Corrected by @claudeMB, who owns that box: the
+vLLM server was IDLE, not serving** — `num_requests_running 0.0`, `num_requests_waiting 0.0`.
+So these are clean idle numbers, not contended ones.)
 
 And the drain test — 24 realistic matmuls, a wait after each:
 
@@ -256,8 +258,9 @@ And the drain test — 24 realistic matmuls, a wait after each:
 ```
 (ROCm measured under live Flash-Next, health 200 before and after.)
 
-Both non-Metal measurements were taken under contention, which if anything
-understates them.
+**The Mini and the Sparks were both idle, so that comparison is clean.** Only the
+ROCm figures were taken under contention (Flash-Next serving), which if anything
+understates ROCm.
 
 ### This one number explains the whole day
 
