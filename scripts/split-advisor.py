@@ -47,6 +47,7 @@ USAGE
 import argparse
 import os
 import shlex
+import statistics
 import subprocess
 import sys
 
@@ -71,15 +72,120 @@ class Host:
             self.model = os.path.expanduser(self.model)
         self.tps = None
 
-    def run(self, streams, npp, ntg, ctx):
+    def run(self, streams, npp, ntg, ctx, rpc=None, ts=None, metric="total"):
         cmd = (
             f"cd {shlex.quote(self.bin_dir)} && ./llama-batched-bench "
             f"-m {shlex.quote(self.model)} -c {ctx} -b 2048 -ub 512 "
             f"-npp {npp} -ntg {ntg} -npl {streams}"
         )
+        if rpc:
+            cmd += f" --rpc {shlex.quote(rpc)}"
+        if ts:
+            cmd += f" -ts {shlex.quote(ts)}"
         argv = ["ssh", self.ssh, cmd] if self.ssh else ["bash", "-lc", cmd]
         out = subprocess.run(argv, capture_output=True, text=True).stdout
-        return parse_tps(out, streams)
+        return parse_tps(out, streams, metric)
+
+
+def ts_pairs(steps):
+    """Candidate `-ts a/b` ratios as integer pairs, coarse to fine.
+
+    llama.cpp takes integers, so the search space is genuinely discrete and
+    small. Expressing candidates as a/b from the start avoids tuning a float
+    and then discovering two different floats produce the same split.
+    """
+    out = []
+    for a in steps:
+        out.append((a, 1))
+    for b in reversed(steps[1:]):
+        out.append((1, b))
+    seen, uniq = set(), []
+    for a, b in out:
+        key = round(a / (a + b), 4)
+        if key not in seen:
+            seen.add(key)
+            uniq.append((a, b))
+    return sorted(uniq, key=lambda p: p[0] / (p[0] + p[1]))
+
+
+def measure_ts(local, rpc, a, b, streams, npp, ntg, ctx, metric, repeats):
+    """Median of `repeats` runs at one ratio. Median, not mean: a single slow
+    run (a GPU shared with another service, a thermal dip) drags a mean and
+    the search then walks toward noise."""
+    vals = []
+    for _ in range(repeats):
+        v = local.run(streams, npp, ntg, ctx, rpc=rpc, ts=f"{a}/{b}", metric=metric)
+        if v:
+            vals.append(v)
+    return statistics.median(vals) if vals else None
+
+
+def tune_layer_split(local, rpc, args):
+    """Find the best `-ts` ratio by measuring, coarse grid then local refine.
+
+    NOT gradient descent, and the reason is the objective rather than taste:
+    there is no gradient to take (each evaluation is a ~20 s benchmark, not a
+    differentiable function), the parameter is ONE discrete ratio, and the
+    measurement carries several percent of run-to-run noise. A descent would
+    spend its evaluations chasing that noise. A coarse grid over a space this
+    small finds the basin in a handful of runs, and a local refine around the
+    winner is enough because throughput against split ratio is unimodal — one
+    machine starves at either end.
+
+    Reports the noise it measured alongside the winner, so a "best" that is
+    inside the noise is visible as such instead of being quoted as a result.
+    """
+    ctx = max(4096, (args.npp + args.ntg) * args.streams)
+    coarse = ts_pairs([1, 2, 4, 8, 16])
+    results = {}
+    print(f"\nTUNING -ts for {args.metric} at {args.streams} streams, "
+          f"{args.repeats} run(s) per point.\n"
+          f"Coarse pass over {len(coarse)} ratios:\n")
+    for a, b in coarse:
+        v = measure_ts(local, rpc, a, b, args.streams, args.npp, args.ntg,
+                       ctx, args.metric, args.repeats)
+        results[(a, b)] = v
+        share = 100 * a / (a + b)
+        print(f"  -ts {a}/{b:<3}  remote {share:5.1f}%   "
+              + (f"{v:8.1f} tok/s" if v else "   failed"))
+
+    live = {k: v for k, v in results.items() if v}
+    if not live:
+        print("  every ratio failed — is the rpc-server up at --rpc?")
+        return None
+    best = max(live, key=live.get)
+
+    # Refine between the winner's neighbours, where the true optimum must lie.
+    order = sorted(live, key=lambda p: p[0] / (p[0] + p[1]))
+    i = order.index(best)
+    lo = order[max(0, i - 1)]
+    hi = order[min(len(order) - 1, i + 1)]
+    refine = []
+    for (a1, b1), (a2, b2) in ((lo, best), (best, hi)):
+        mid_share = (a1 / (a1 + b1) + a2 / (a2 + b2)) / 2
+        if 0 < mid_share < 1:
+            a = max(1, round(mid_share * 12))
+            refine.append((a, max(1, 12 - a)))
+    refine = [p for p in dict.fromkeys(refine) if p not in live]
+    if refine:
+        print(f"\nRefining around -ts {best[0]}/{best[1]}:\n")
+        for a, b in refine:
+            v = measure_ts(local, rpc, a, b, args.streams, args.npp, args.ntg,
+                           ctx, args.metric, args.repeats)
+            if v:
+                live[(a, b)] = v
+                print(f"  -ts {a}/{b:<3}  remote {100*a/(a+b):5.1f}%   {v:8.1f} tok/s")
+        best = max(live, key=live.get)
+
+    spread = max(live.values()) - min(live.values())
+    print(f"\n  BEST  -ts {best[0]}/{best[1]}   {live[best]:.1f} tok/s "
+          f"({args.metric})   remote share {100*best[0]/(best[0]+best[1]):.1f}%")
+    print(f"  Ratio is worth {100 * spread / min(live.values()):.0f}% between the best and "
+          f"worst ratio measured — that is why guessing 50/50 is not free.")
+    if args.repeats < 2:
+        print("  Measured ONCE per ratio. Re-run with --repeats 3 before quoting this;\n"
+              "  a shared GPU moves these numbers by several percent.")
+    return best
 
 
 def knee(curve):
@@ -94,13 +200,24 @@ def knee(curve):
     return max(curve.items(), key=lambda kv: kv[1])
 
 
-def parse_tps(output, streams):
-    """Aggregate tokens/s for the row with this batch size, from the md table."""
+# Column positions in llama-batched-bench's markdown table.
+METRIC_COLUMN = {"pp": 5, "tg": 7, "total": 9}
+
+
+def parse_tps(output, streams, metric="total"):
+    """Tokens/s for the row with this batch size, from the md table.
+
+    `metric` picks prefill, generation or the combined figure. They optimise to
+    DIFFERENT split ratios — prefill has intra-request parallelism and
+    generation does not — so a tuner that reports one number for both is
+    tuning the wrong thing for one of them.
+    """
+    col = METRIC_COLUMN.get(metric, 9)
     for line in output.splitlines():
         cells = [c.strip() for c in line.strip().strip("|").split("|")]
-        if len(cells) >= 10 and cells[2].isdigit() and int(cells[2]) == streams:
+        if len(cells) > col and cells[2].isdigit() and int(cells[2]) == streams:
             try:
-                return float(cells[-1])
+                return float(cells[col])
             except ValueError:
                 continue
     return None
@@ -122,7 +239,21 @@ def main():
                          "empty string = measure only at --streams")
     ap.add_argument("--npp", type=int, default=256, help="prompt tokens per stream")
     ap.add_argument("--ntg", type=int, default=128, help="generated tokens per stream")
+    ap.add_argument("--tune-ts", metavar="HOST:PORT",
+                    help="find the best layer-split ratio against an ALREADY RUNNING "
+                         "ggml-rpc-server (start it yourself; this script does not "
+                         "manage remote processes)")
+    ap.add_argument("--metric", choices=["pp", "tg", "total"], default="total",
+                    help="what to optimise when tuning: prefill, generation, or both. "
+                         "They have different optima; pick the one you care about")
+    ap.add_argument("--repeats", type=int, default=1,
+                    help="runs per ratio while tuning; 3+ before quoting a result")
     args = ap.parse_args()
+
+    if args.tune_ts:
+        local = Host(f"{args.local_name}::{args.local_bin}:{args.model_local}")
+        tune_layer_split(local, args.tune_ts, args)
+        return
 
     ctx = max(4096, (args.npp + args.ntg) * args.streams)
     hosts = [Host(f"{args.local_name}::{args.local_bin}:{args.model_local}")]
