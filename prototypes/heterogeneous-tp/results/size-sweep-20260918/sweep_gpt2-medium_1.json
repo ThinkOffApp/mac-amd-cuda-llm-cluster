@@ -1,0 +1,230 @@
+{
+  "mode": "solo",
+  "rank": 0,
+  "world": 1,
+  "host": "Petruss-Mini",
+  "device": "mps",
+  "requested": "mps",
+  "torch": "2.11.0",
+  "hip": null,
+  "libraries": {
+    "transformers": "5.16.1",
+    "tokenizers": "0.23.2"
+  },
+  "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+  "weights_sha256_prefix": "fc5a354a19255ad4",
+  "prompt_tokens": 128,
+  "new_tokens": 32,
+  "warmups": 1,
+  "runs": 1,
+  "batch": 1,
+  "torch_threads": 1,
+  "config": "solo-staged",
+  "cpu_staged": true,
+  "dtype": "float32",
+  "generation_head": "baseline",
+  "source_sha256": {
+    "bench.py": "63bf2a9a42d7939206808f0b85d2388137cccc215a4891df52ca5ab0182b87b8",
+    "phase_profile.py": "3fc059ff106901ca68be7aa3895d23403eb3e7e14914105a6adc8e4869512589",
+    "tcp_collectives.py": "c3a9e28a76f0c65d3e79d76fdba0cd798e1403f09f12a4b17b222bc3b2551602"
+  },
+  "profile_enabled": true,
+  "profile_note": "Diagnostic only. Extra synchronization changes scheduling. Collective time includes waiting for peer compute, serialization, socket I/O and reduction, not just network traffic. Socket send/receive are nested within collective/broadcast times; do not add them twice or sum times across ranks. Payload bytes exclude frame headers. Use unprofiled runs for speed comparisons.",
+  "correctness_gate_passed": true,
+  "both_ranks_correct": true,
+  "all_timed_runs_matched_reference": true,
+  "this_rank_invalid_run_count": 0,
+  "this_rank_invalid_run_reasons": [],
+  "valid": true,
+  "validity_note": "valid is the GLOBAL verdict: a timed divergence on either rank invalidates both reports and both exit codes. Per-rank invalid-run diagnostics are kept even when timings are withheld.",
+  "scope": "Compares THIS GPT-2 adapter, GPU-resident solo against two-host TP. Not a comparison against the fastest available inference engine, and no such claim follows from it.",
+  "generated_ids": [
+    4179,
+    373,
+    13,
+    220,
+    383,
+    2106,
+    286,
+    14492,
+    318,
+    257,
+    2106,
+    286,
+    661,
+    2111,
+    284,
+    787,
+    8217,
+    466,
+    34768,
+    5443,
+    621,
+    484,
+    714,
+    466,
+    340,
+    2405,
+    13,
+    3887,
+    5270,
+    4762,
+    340,
+    550
+  ],
+  "reference_ids": [
+    4179,
+    373,
+    13,
+    220,
+    383,
+    2106,
+    286,
+    14492,
+    318,
+    257,
+    2106,
+    286,
+    661,
+    2111,
+    284,
+    787,
+    8217,
+    466,
+    34768,
+    5443,
+    621,
+    484,
+    714,
+    466,
+    340,
+    2405,
+    13,
+    3887,
+    5270,
+    4762,
+    340,
+    550
+  ],
+  "reference_count": 32,
+  "tokenizer_sha256_prefix": "8414cab924d8b9b3",
+  "config_sha256_prefix": "ef1a44d889ad1a0a",
+  "timings": [],
+  "profile_runs": [
+    {
+      "output_matches_reference": true,
+      "generated_count": 32,
+      "prefill_wall_s": 0.09397879199241288,
+      "decode_wall_s": 1.912766624998767,
+      "total_wall_s": 2.0067582500050776,
+      "phases": {
+        "prefill": {
+          "embedding_compute": {
+            "calls": 1,
+            "elapsed_s": 0.0005254160205367953,
+            "payload_bytes": 0
+          },
+          "attention_compute": {
+            "calls": 24,
+            "elapsed_s": 0.023979333927854896,
+            "payload_bytes": 0
+          },
+          "device_to_host": {
+            "calls": 48,
+            "elapsed_s": 0.010136708995560184,
+            "payload_bytes": 0
+          },
+          "collective": {
+            "calls": 48,
+            "elapsed_s": 1.2545031495392323e-05,
+            "payload_bytes": 25165824
+          },
+          "host_to_device": {
+            "calls": 48,
+            "elapsed_s": 0.009440664987778291,
+            "payload_bytes": 0
+          },
+          "mlp_compute": {
+            "calls": 24,
+            "elapsed_s": 0.033836375980172306,
+            "payload_bytes": 0
+          },
+          "residual_compute": {
+            "calls": 24,
+            "elapsed_s": 0.005864332139026374,
+            "payload_bytes": 0
+          },
+          "head_compute_and_copy": {
+            "calls": 1,
+            "elapsed_s": 0.009633790992666036,
+            "payload_bytes": 0
+          },
+          "token_selection": {
+            "calls": 1,
+            "elapsed_s": 5.429101292975247e-05,
+            "payload_bytes": 0
+          },
+          "token_broadcast": {
+            "calls": 1,
+            "elapsed_s": 2.0800507627427578e-07,
+            "payload_bytes": 4
+          }
+        },
+        "decode": {
+          "embedding_compute": {
+            "calls": 31,
+            "elapsed_s": 0.013064713042695075,
+            "payload_bytes": 0
+          },
+          "attention_compute": {
+            "calls": 744,
+            "elapsed_s": 0.6031360407359898,
+            "payload_bytes": 0
+          },
+          "device_to_host": {
+            "calls": 1488,
+            "elapsed_s": 0.29708116457914,
+            "payload_bytes": 0
+          },
+          "collective": {
+            "calls": 1488,
+            "elapsed_s": 0.00037923516356386244,
+            "payload_bytes": 6094848
+          },
+          "host_to_device": {
+            "calls": 1488,
+            "elapsed_s": 0.2687016369018238,
+            "payload_bytes": 0
+          },
+          "mlp_compute": {
+            "calls": 744,
+            "elapsed_s": 0.5149267255037557,
+            "payload_bytes": 0
+          },
+          "residual_compute": {
+            "calls": 744,
+            "elapsed_s": 0.13013323495397344,
+            "payload_bytes": 0
+          },
+          "head_compute_and_copy": {
+            "calls": 31,
+            "elapsed_s": 0.07037400000263005,
+            "payload_bytes": 0
+          },
+          "token_selection": {
+            "calls": 31,
+            "elapsed_s": 0.0020122519053984433,
+            "payload_bytes": 0
+          },
+          "token_broadcast": {
+            "calls": 31,
+            "elapsed_s": 7.584050763398409e-06,
+            "payload_bytes": 124
+          }
+        }
+      }
+    }
+  ],
+  "coordinator_statistic": "rank 0 total_wall_s; per-rank raw timings are kept in ranks[] and not averaged",
+  "note": "Timings are only reported when the correctness gate passes. Load, tokenize, hash and the reference check are outside every timed region. The reference uses its own KV cache."
+}

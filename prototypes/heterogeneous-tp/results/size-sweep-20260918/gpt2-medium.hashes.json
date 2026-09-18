@@ -1,0 +1,35 @@
+{
+  "host": "Petruss-Mini",
+  "repo": "openai-community/gpt2-medium",
+  "revision": "6dcaa7a952f72f9298047fd5137cd6e4f05f41da",
+  "files": {
+    "config.json": {
+      "sha256": "ef1a44d889ad1a0acc7731c78134f1b87d2d222f110e97dd10fd4117331caf22",
+      "bytes": 718
+    },
+    "generation_config.json": {
+      "sha256": "b90eadacf585a743a30ea51e8b5c88b8d282a2a34dc0c7e556d0987cdbd68805",
+      "bytes": 124
+    },
+    "merges.txt": {
+      "sha256": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+      "bytes": 456318
+    },
+    "model.safetensors": {
+      "sha256": "fc5a354a19255ad494f3d71549390baca1ccf61d1d822b9408971705c687c9cd",
+      "bytes": 1519984962
+    },
+    "tokenizer.json": {
+      "sha256": "8414cab924d8b9b33013f0d221c5862f365ee9be39c5c2bfae8a5a9e970478a6",
+      "bytes": 1355256
+    },
+    "tokenizer_config.json": {
+      "sha256": "5e04eb606e3a1583530a42e36c2a6b6615c86f34fe77e44d9ddeb43ff940931f",
+      "bytes": 26
+    },
+    "vocab.json": {
+      "sha256": "196139668be63f3b5d6574427317ae82f612a97c5d1cdaf36ed2256dbf636783",
+      "bytes": 1042301
+    }
+  }
+}
