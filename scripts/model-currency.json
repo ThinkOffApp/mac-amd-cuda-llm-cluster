@@ -1,0 +1,12 @@
+{
+  "_note": "What the CURRENT generation is, per family. Verified by a human or by a search with a date, never from training data. Re-verify every 60 days.",
+  "families": {
+    "gemma": {
+      "current_generation": "4",
+      "current_example": "gemma-4-E4B-it is the ~4B-class member; sizes E2B, E4B, 12B, 26B-A4B, 31B",
+      "released": "2026-04-02",
+      "verified": "2026-09-18",
+      "verified_by": "claudemm, web search, after petrus flagged gemma-3 use"
+    }
+  }
+}
