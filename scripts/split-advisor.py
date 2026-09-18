@@ -342,6 +342,26 @@ def _preflight_models(models, reason, receipt_path):
     import shutil
     import subprocess
 
+    # A model with no recorded origin cannot be checked at all -- you do not know
+    # what it is, only what someone named the file. Measured on the Mini
+    # 2026-09-18: neither GGUF present had any recorded provenance, the HF cache
+    # contained no entry for the gemma that was benchmarked, and the two `hf`
+    # binaries on the box both live in venvs that are not on PATH. So a wrapper
+    # around `hf` would not have caught this download, and nothing records how it
+    # arrived. The file name is the only evidence, which is exactly as strong as
+    # whoever typed it.
+    for m in models:
+        if os.path.exists(os.path.expanduser(m)):
+            side = os.path.expanduser(m) + ".origin"
+            if not os.path.exists(side):
+                raise SystemExit(
+                    f"REFUSING TO BENCHMARK: {os.path.basename(m)} has no origin record.\n"
+                    f"  expected: {side}\n"
+                    "Write where it came from -- url, date, who fetched it, and the\n"
+                    "hash you verified. A file name is not provenance: a model called\n"
+                    "gemma-4 that is actually gemma-3 passes every name-based check\n"
+                    "ever written.")
+
     checker = next((os.path.expanduser(c) for c in MODEL_CHECKERS
                     if os.path.exists(os.path.expanduser(c))), None)
     if checker is None:
