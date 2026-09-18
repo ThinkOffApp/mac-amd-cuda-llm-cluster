@@ -88,6 +88,11 @@ def main():
     ap.add_argument("--warmups", type=int, default=2)
     ap.add_argument("--runs", type=int, default=5)
     ap.add_argument("--out", default=None)
+    ap.add_argument("--profile", action="store_true",
+                    help="Decompose per-token cost into compute / staging / wire / "
+                         "sync. Adds a GPU sync per stage, so it INFLATES absolute "
+                         "time: profiled runs are reported separately and are never "
+                         "presented as throughput.")
     ap.add_argument("--stage", choices=["auto", "cpu", "gpu"], default="auto",
                     help="auto: CPU staging for tp, GPU-resident for solo. "
                          "'cpu' with --mode solo is the STAGED CONTROL, not a "
@@ -168,6 +173,13 @@ def main():
             wte_d, wpe_d = sd["wte.weight"].to(device), sd["wpe.weight"].to(device)
             lnf_w, lnf_b = sd["ln_f.weight"].to(device), sd["ln_f.bias"].to(device)
 
+            prof = {k: 0.0 for k in ('compute', 'to_cpu', 'collective', 'to_device')}
+            prof_n = {'tokens': 0}
+
+            def _t():
+                sync(device)
+                return time.perf_counter()
+
             def block_forward(x, b, cache, offset):
                 h = F.layer_norm(x, (dim,), b["ln1_w"], b["ln1_b"], eps)
                 qkv = h @ b["ca_w"] + b["ca_b"]
@@ -184,18 +196,41 @@ def main():
                 # Solo keeps this on the GPU. Staging it through CPU with no
                 # peer to reduce with would make the single-host baseline slower
                 # than it is, and flatter any TP comparison against it.
-                part = ctx @ b["cp_w"]
-                if stage_cpu:
-                    part = part.to("cpu").contiguous()
-                    collective.all_reduce(part, op=dist.ReduceOp.SUM)
-                    part = part.to(device)
+                if args.profile:
+                    t0 = _t(); part = ctx @ b["cp_w"]; t1 = _t()
+                    prof['compute'] += t1 - t0
+                    if stage_cpu:
+                        part = part.to("cpu").contiguous(); t2 = _t()
+                        collective.all_reduce(part, op=dist.ReduceOp.SUM); t3 = _t()
+                        part = part.to(device); t4 = _t()
+                        prof['to_cpu'] += t2 - t1
+                        prof['collective'] += t3 - t2
+                        prof['to_device'] += t4 - t3
+                else:
+                    part = ctx @ b["cp_w"]
+                    if stage_cpu:
+                        part = part.to("cpu").contiguous()
+                        collective.all_reduce(part, op=dist.ReduceOp.SUM)
+                        part = part.to(device)
                 x = x + (part + b["cp_b"])
                 h = F.layer_norm(x, (dim,), b["ln2_w"], b["ln2_b"], eps)
-                part = gelu_new(h @ b["fc_w"] + b["fc_b"]) @ b["mp_w"]
-                if stage_cpu:
-                    part = part.to("cpu").contiguous()
-                    collective.all_reduce(part, op=dist.ReduceOp.SUM)
-                    part = part.to(device)
+                if args.profile:
+                    t0 = _t()
+                    part = gelu_new(h @ b["fc_w"] + b["fc_b"]) @ b["mp_w"]
+                    t1 = _t(); prof['compute'] += t1 - t0
+                    if stage_cpu:
+                        part = part.to("cpu").contiguous(); t2 = _t()
+                        collective.all_reduce(part, op=dist.ReduceOp.SUM); t3 = _t()
+                        part = part.to(device); t4 = _t()
+                        prof['to_cpu'] += t2 - t1
+                        prof['collective'] += t3 - t2
+                        prof['to_device'] += t4 - t3
+                else:
+                    part = gelu_new(h @ b["fc_w"] + b["fc_b"]) @ b["mp_w"]
+                    if stage_cpu:
+                        part = part.to("cpu").contiguous()
+                        collective.all_reduce(part, op=dist.ReduceOp.SUM)
+                        part = part.to(device)
                 return x + (part + b["mp_b"])
 
             def forward(ids, caches, offset):
@@ -227,6 +262,7 @@ def main():
                     if i < n_new - 1:
                         logits = forward([nxt], caches, offset)
                         offset += 1
+                        prof_n['tokens'] += 1
                 return out
 
             # ---------- correctness gate, BEFORE any timing ----------
@@ -340,7 +376,21 @@ def main():
                 open(os.path.join(MODEL_DIR, "tokenizer.json"), 'rb').read()).hexdigest()[:16],
             "config_sha256_prefix": hashlib.sha256(
                 open(os.path.join(MODEL_DIR, "config.json"), 'rb').read()).hexdigest()[:16],
-            "timings": runs if globally_valid else [],
+            "timings": [] if args.profile else (runs if globally_valid else []),
+            "profiled": bool(args.profile),
+            "stage_breakdown": (None if not args.profile else {
+                "note": ("Per-stage totals across all decode forwards. A GPU sync is "
+                         "taken around every stage, which INFLATES the absolute "
+                         "numbers; read the SHARES, not the totals. Throughput is "
+                         "withheld from profiled runs on purpose."),
+                "decode_forwards": prof_n['tokens'],
+                "collectives_per_token": 2 * n_layer,
+                "totals_s": {k: round(v, 6) for k, v in prof.items()},
+                "per_token_ms": {k: round(1000 * v / max(prof_n['tokens'], 1), 4)
+                                 for k, v in prof.items()},
+                "share_pct": {k: round(100 * v / max(sum(prof.values()), 1e-12), 1)
+                              for k, v in prof.items()},
+            }),
             "coordinator_statistic": ("rank 0 total_wall_s; per-rank raw timings "
                                       "are kept in ranks[] and not averaged"),
             "note": ("Timings are only reported when the correctness gate passes. "
