@@ -64,6 +64,31 @@ IF YOU COMPUTE TV FROM A SERVER API, REPORT THE CAPTURED MASS BESIDE IT
     And only if the captured mass is reported beside it: a bare top-k TV figure is
     uninterpretable.
 
+    THE TAIL TRAP HAS A NOISE FLOOR UNDERNEATH IT. The serialised log-probs do not sum
+    to 1, so (1 - P(S)) is not the tail mass. Measured on one server, per step:
+
+        Z = sum exp(logprob) over all 248,320 entries
+        step 0  1.00161734      step 2  1.00015057
+        step 1  1.00029817      step 3  1.00006331
+
+        captured mass P(S) at top-120,000        0.99902040
+        uncaptured assuming total = 1            9.796e-04
+        uncaptured using measured Z at step 0    2.593e-03    understated 2.65x
+
+    Z is not constant, so there is no single correction to apply, and its deviation
+    from 1 is the SAME ORDER as the tail being bounded. The bound therefore sits on a
+    float32 serialisation noise floor and **capturing more of the head does not tighten
+    it**.
+
+        report P(S), Q(S) AND the per-step Z for each arm
+        never quote a bound tighter than the spread of Z
+        with partial capture Z is not even computable -- you cannot sum what the API
+        did not return -- so the floor cannot be measured away, only acknowledged
+
+    FULL capture is the exception and it is clean: S is the whole vocabulary, both
+    uncaptured terms are identically zero, and with bit-identical log-probs the arms
+    share Z, which cancels in |exp(lp)/Z - exp(lq)/Z|. Z never enters the comparison.
+
     This is the mirror of the truncation finding in metric_ladder.py: truncation can
     make TV bigger, an unreported tail can invent TV that is not there, and neither is
     visible from the number alone.
