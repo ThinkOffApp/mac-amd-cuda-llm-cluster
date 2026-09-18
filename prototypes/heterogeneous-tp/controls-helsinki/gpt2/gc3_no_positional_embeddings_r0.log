@@ -1,0 +1,402 @@
+{
+  "passed": false,
+  "model": "openai-community/gpt2 @ 607a30d783dfa663caf39e06633721c8d4cfcd7e",
+  "transport": "CPU tcp",
+  "dtype": "float32",
+  "declared_logit_atol": 0.02,
+  "declared_logit_rtol": 0.001,
+  "tolerance_note": "fixed in source before the first comparison run",
+  "primary_criterion": "exact token-ID match with the reference sequence",
+  "reference": "transformers GPT2LMHeadModel, fp32, eager, eval, full recompute per step",
+  "note": "No timing here; setup and download are outside any timed path.",
+  "ranks": [
+    {
+      "rank": 0,
+      "device": "cpu",
+      "requested": "cpu",
+      "torch": "2.11.0",
+      "hip": null,
+      "host": "Petruss-Mini",
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+      "weights_sha256": "248dfc3911869ec493c76e65bf2fcf7f615828b0254c12b473182f0f81d3a707",
+      "config_sha256": "0daed7749b4f02b8f76240d5444551d7b08712dab4d0adb8239c56ba823bb7b4",
+      "wte_sha256_prefix": "e182e433b37dbdb4",
+      "layers": 12,
+      "heads": 12,
+      "local_heads": 6,
+      "dim": 768,
+      "collectives_per_token": 25,
+      "collectives_total": 1344,
+      "cases": [
+        {
+          "prompt": "The capital of France is",
+          "chunks": 1,
+          "prompt_tokens": 5,
+          "new_tokens": 4,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "first_divergent_step": 0,
+          "cache_reset_reproducible": true,
+          "eos_emitted": false,
+          "eos_reference": false,
+          "max_abs_logit_error": 106.60600280761719,
+          "min_top1_top2_margin": 0.33252716064453125,
+          "logits_within_declared_tolerance": false,
+          "generated_text": " all all all all",
+          "reference_text": " the capital of the",
+          "generated_ids": [
+            477,
+            477,
+            477,
+            477
+          ],
+          "reference_ids": [
+            262,
+            3139,
+            286,
+            262
+          ]
+        },
+        {
+          "prompt": "The capital of France is",
+          "chunks": 2,
+          "prompt_tokens": 5,
+          "new_tokens": 4,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "first_divergent_step": 0,
+          "cache_reset_reproducible": true,
+          "eos_emitted": false,
+          "eos_reference": false,
+          "max_abs_logit_error": 106.60595703125,
+          "min_top1_top2_margin": 0.33252716064453125,
+          "logits_within_declared_tolerance": false,
+          "generated_text": " all all all all",
+          "reference_text": " the capital of the",
+          "generated_ids": [
+            477,
+            477,
+            477,
+            477
+          ],
+          "reference_ids": [
+            262,
+            3139,
+            286,
+            262
+          ]
+        },
+        {
+          "prompt": "In a shocking finding, scientists discovered",
+          "chunks": 1,
+          "prompt_tokens": 7,
+          "new_tokens": 4,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "first_divergent_step": 0,
+          "cache_reset_reproducible": true,
+          "eos_emitted": false,
+          "eos_reference": false,
+          "max_abs_logit_error": 112.96536254882812,
+          "min_top1_top2_margin": 0.1356201171875,
+          "logits_within_declared_tolerance": false,
+          "generated_text": ", all,,",
+          "reference_text": " that the brain of",
+          "generated_ids": [
+            11,
+            477,
+            11,
+            11
+          ],
+          "reference_ids": [
+            326,
+            262,
+            3632,
+            286
+          ]
+        },
+        {
+          "prompt": "In a shocking finding, scientists discovered",
+          "chunks": 2,
+          "prompt_tokens": 7,
+          "new_tokens": 4,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "first_divergent_step": 0,
+          "cache_reset_reproducible": true,
+          "eos_emitted": false,
+          "eos_reference": false,
+          "max_abs_logit_error": 112.96530151367188,
+          "min_top1_top2_margin": 0.1356201171875,
+          "logits_within_declared_tolerance": false,
+          "generated_text": ", all,,",
+          "reference_text": " that the brain of",
+          "generated_ids": [
+            11,
+            477,
+            11,
+            11
+          ],
+          "reference_ids": [
+            326,
+            262,
+            3632,
+            286
+          ]
+        },
+        {
+          "prompt": "def add(a, b):",
+          "chunks": 1,
+          "prompt_tokens": 7,
+          "new_tokens": 4,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "first_divergent_step": 0,
+          "cache_reset_reproducible": true,
+          "eos_emitted": false,
+          "eos_reference": false,
+          "max_abs_logit_error": 246.7894287109375,
+          "min_top1_top2_margin": 0.46575164794921875,
+          "logits_within_declared_tolerance": false,
+          "generated_text": " all all all all",
+          "reference_text": "\n\nreturn a",
+          "generated_ids": [
+            477,
+            477,
+            477,
+            477
+          ],
+          "reference_ids": [
+            198,
+            198,
+            7783,
+            257
+          ]
+        },
+        {
+          "prompt": "def add(a, b):",
+          "chunks": 2,
+          "prompt_tokens": 7,
+          "new_tokens": 4,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "first_divergent_step": 0,
+          "cache_reset_reproducible": true,
+          "eos_emitted": false,
+          "eos_reference": false,
+          "max_abs_logit_error": 246.7894287109375,
+          "min_top1_top2_margin": 0.46575164794921875,
+          "logits_within_declared_tolerance": false,
+          "generated_text": " all all all all",
+          "reference_text": "\n\nreturn a",
+          "generated_ids": [
+            477,
+            477,
+            477,
+            477
+          ],
+          "reference_ids": [
+            198,
+            198,
+            7783,
+            257
+          ]
+        }
+      ]
+    },
+    {
+      "rank": 1,
+      "device": "cpu",
+      "requested": "cpu",
+      "torch": "2.11.0",
+      "hip": null,
+      "host": "Petruss-Mini",
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+      "weights_sha256": "248dfc3911869ec493c76e65bf2fcf7f615828b0254c12b473182f0f81d3a707",
+      "config_sha256": "0daed7749b4f02b8f76240d5444551d7b08712dab4d0adb8239c56ba823bb7b4",
+      "wte_sha256_prefix": "e182e433b37dbdb4",
+      "layers": 12,
+      "heads": 12,
+      "local_heads": 6,
+      "dim": 768,
+      "collectives_per_token": 25,
+      "collectives_total": 1344,
+      "cases": [
+        {
+          "prompt": "The capital of France is",
+          "chunks": 1,
+          "prompt_tokens": 5,
+          "new_tokens": 4,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "first_divergent_step": 0,
+          "cache_reset_reproducible": true,
+          "eos_emitted": false,
+          "eos_reference": false,
+          "max_abs_logit_error": 106.60600280761719,
+          "min_top1_top2_margin": 0.33252716064453125,
+          "logits_within_declared_tolerance": false,
+          "generated_text": " all all all all",
+          "reference_text": " the capital of the",
+          "generated_ids": [
+            477,
+            477,
+            477,
+            477
+          ],
+          "reference_ids": [
+            262,
+            3139,
+            286,
+            262
+          ]
+        },
+        {
+          "prompt": "The capital of France is",
+          "chunks": 2,
+          "prompt_tokens": 5,
+          "new_tokens": 4,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "first_divergent_step": 0,
+          "cache_reset_reproducible": true,
+          "eos_emitted": false,
+          "eos_reference": false,
+          "max_abs_logit_error": 106.60595703125,
+          "min_top1_top2_margin": 0.33252716064453125,
+          "logits_within_declared_tolerance": false,
+          "generated_text": " all all all all",
+          "reference_text": " the capital of the",
+          "generated_ids": [
+            477,
+            477,
+            477,
+            477
+          ],
+          "reference_ids": [
+            262,
+            3139,
+            286,
+            262
+          ]
+        },
+        {
+          "prompt": "In a shocking finding, scientists discovered",
+          "chunks": 1,
+          "prompt_tokens": 7,
+          "new_tokens": 4,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "first_divergent_step": 0,
+          "cache_reset_reproducible": true,
+          "eos_emitted": false,
+          "eos_reference": false,
+          "max_abs_logit_error": 112.96536254882812,
+          "min_top1_top2_margin": 0.1356201171875,
+          "logits_within_declared_tolerance": false,
+          "generated_text": ", all,,",
+          "reference_text": " that the brain of",
+          "generated_ids": [
+            11,
+            477,
+            11,
+            11
+          ],
+          "reference_ids": [
+            326,
+            262,
+            3632,
+            286
+          ]
+        },
+        {
+          "prompt": "In a shocking finding, scientists discovered",
+          "chunks": 2,
+          "prompt_tokens": 7,
+          "new_tokens": 4,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "first_divergent_step": 0,
+          "cache_reset_reproducible": true,
+          "eos_emitted": false,
+          "eos_reference": false,
+          "max_abs_logit_error": 112.96530151367188,
+          "min_top1_top2_margin": 0.1356201171875,
+          "logits_within_declared_tolerance": false,
+          "generated_text": ", all,,",
+          "reference_text": " that the brain of",
+          "generated_ids": [
+            11,
+            477,
+            11,
+            11
+          ],
+          "reference_ids": [
+            326,
+            262,
+            3632,
+            286
+          ]
+        },
+        {
+          "prompt": "def add(a, b):",
+          "chunks": 1,
+          "prompt_tokens": 7,
+          "new_tokens": 4,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "first_divergent_step": 0,
+          "cache_reset_reproducible": true,
+          "eos_emitted": false,
+          "eos_reference": false,
+          "max_abs_logit_error": 246.7894287109375,
+          "min_top1_top2_margin": 0.46575164794921875,
+          "logits_within_declared_tolerance": false,
+          "generated_text": " all all all all",
+          "reference_text": "\n\nreturn a",
+          "generated_ids": [
+            477,
+            477,
+            477,
+            477
+          ],
+          "reference_ids": [
+            198,
+            198,
+            7783,
+            257
+          ]
+        },
+        {
+          "prompt": "def add(a, b):",
+          "chunks": 2,
+          "prompt_tokens": 7,
+          "new_tokens": 4,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "first_divergent_step": 0,
+          "cache_reset_reproducible": true,
+          "eos_emitted": false,
+          "eos_reference": false,
+          "max_abs_logit_error": 246.7894287109375,
+          "min_top1_top2_margin": 0.46575164794921875,
+          "logits_within_declared_tolerance": false,
+          "generated_text": " all all all all",
+          "reference_text": "\n\nreturn a",
+          "generated_ids": [
+            477,
+            477,
+            477,
+            477
+          ],
+          "reference_ids": [
+            198,
+            198,
+            7783,
+            257
+          ]
+        }
+      ]
+    }
+  ]
+}

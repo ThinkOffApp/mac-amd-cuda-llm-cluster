@@ -20,6 +20,8 @@ Nothing here is text generation, a trained-model result, or a speed measurement.
 | `decode.py` | + per-layer KV cache, chunked prefill, decode steps | passed, worst 1.8e-6 |
 | `model.py` | + 2 blocks, embeddings, LM head, 8 greedy tokens | passed, IDs match |
 | `weight_hash.py` | hashes the rank-0 weight draw, for build comparison | see below |
+| `gpt2_tp.py` | **real GPT-2 124M, real text** | passed, IDs match HF exactly |
+| `fetch_gpt2.py` | pinned-revision download + per-file hashes | identical on both hosts |
 
 Run any of them with the two-rank env contract, for example:
 
@@ -124,6 +126,69 @@ M5    torch 2.12.0a0+rocm7.13.0a20260411 combined fdd71511...
 
 **This shows the two builds draw differently. It does not isolate the cause to
 the version number** — build flags or platform would explain it equally well.
+
+## GPT-2: the one part that is not synthetic
+
+`gpt2_tp.py` runs `openai-community/gpt2` at pinned revision
+`607a30d783dfa663caf39e06633721c8d4cfcd7e`, sharded across the two machines, and
+compares against **HuggingFace's own `GPT2LMHeadModel`** (fp32, eager, eval, full
+recompute per step). That reference is independent by construction: different
+authors, different code.
+
+It is a GPT-2 adapter, not the toy fed with GPT-2 weights. It honours learned
+positional embeddings, LayerNorm with weight and bias, the fused Conv1D QKV
+layout with its `(in, out)` weight orientation, exact `gelu_new`, and the tied
+LM head.
+
+```
+3 prompts x full and chunked prefill x 16 new tokens
+token IDs match the reference EXACTLY in every case, no divergent step
+worst logit error 0.00104     declared tolerance atol 2e-2, rtol 1e-3
+collectives per generated token: 25  (2 per block x 12 blocks, + 1 broadcast)
+```
+
+Rank 0 selects each token and **broadcasts it**, so the two ranks cannot drift
+onto different sequences while both believing they are correct.
+
+**Read the margin, not just the match.** `min_top1_top2_margin` against the worst
+logit error for that case:
+
+| prompt | margin | error | headroom |
+|---|---|---|---|
+| `The capital of France is` | 0.0071 | 0.00032 | **22x** |
+| `In a shocking finding, scientists discovered` | 0.0272 | 0.00035 | 78x |
+| `def add(a, b):` | 0.4658 | 0.00104 | 449x |
+
+**22x is the real safety margin on the first prompt, not the orders of magnitude
+the toy model enjoyed.** The IDs match, and they are not matching by luck — but a
+change that grew the numerical error by one order of magnitude could start
+flipping tokens on prompts like that one. Worth knowing before anyone reads
+"token IDs match" as unconditional.
+
+### Controls for the GPT-2 adapter
+
+| control | why it is the one to run |
+|---|---|
+| `gc1_qkv_contiguous_slice` | fused QKV sliced as one contiguous range instead of three per-block slices — the most likely way to get this adapter wrong |
+| `gc2_attn_bias_twice` | row-parallel bias added per rank instead of once after the sum |
+| `gc3_no_positional_embeddings` | `wpe` dropped; the toy had no positional embeddings, so this path is new |
+
+All three fail as required. Run with `--new-tokens 4` for speed; detection is
+the point, not sequence length.
+
+### Checkpoint provenance
+
+`fetch_gpt2.py` downloads only named files (no remote custom code) at the pinned
+revision and hashes each one. Downloaded **independently on both machines** and
+compared rather than copied, so the hashes show the revision pin resolves to the
+same bytes on both:
+
+```
+model.safetensors  248dfc3911869ec493c76e65bf2fcf7f615828b0254c12b473182f0f81d3a707
+config.json        0daed7749b4f02b8f76240d5444551d7b08712dab4d0adb8239c56ba823bb7b4
+```
+
+Setup and download sit outside any timed path, and nothing here is timed.
 
 ## Not done
 
