@@ -34,6 +34,29 @@ came out 5% low. Break-even link for this model is **9.50 MB/s = 76 Mbit/s** -- 
 has 11.5x headroom, so **the wire is not the constraint**; once transfer is small against
 the fast machine's prefill, that prefill is the floor.
 
+## What a faster link buys, and the term people drop
+
+```
+link             transfer   to 1st gen tok   speedup
+100 Mbit          23.60 s        31.13 s      1.23x
+gigabit, MEASURED  2.70 s        10.22 s      3.73x
+10 GbE at 60%      0.39 s         7.92 s      4.82x   <- projection, not a result
+```
+
+Every row includes the **decoder's own prefill of token N, 241 ms**. That term is the
+N-1 boundary itself -- the producer prefills N-1 and the decoder must still process
+token N before it can generate -- so it is constant, and it grows as a share of the
+total exactly where the win looks biggest. A table that omits it reads about 3% fast
+at gigabit and puts the 10 GbE row at 4.98x instead of 4.82x.
+
+**If a runner prefills all N on the producer instead of N-1, the decoder silently
+re-prefills and the measurement is worthless.** That failure mode is quiet: the
+numbers still come out, they are just the numbers for not having split at all.
+
+Only the gigabit transfer is measured (109.3 MB/s against a nominal 125, so 87%
+efficiency). The 10 GbE row assumes 60% and is a projection until somebody times a
+file across that link.
+
 ## Correctness: matching tokens is not equivalence
 
 The transfer is lossless (`sha256` of the slot file is identical on both machines),
