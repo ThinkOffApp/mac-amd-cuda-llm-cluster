@@ -1,0 +1,7 @@
+{
+ "to_cpu_allocating_ms": 0.16502049402333796,
+ "copy_into_prealloc_ms": 0.16308348858729005,
+ "copy_into_prealloc_nonblocking_ms": 0.1681045105215162,
+ "to_device_allocating_ms": 0.15379198885057122,
+ "to_device_prealloc_ms": 0.1442500069970265
+}

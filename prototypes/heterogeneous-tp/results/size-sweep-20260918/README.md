@@ -62,3 +62,44 @@ Scope: this design — CPU-staged collectives, batch 1, 124M to 774M, Metal. It 
 not a verdict on tensor parallelism. It does say the remaining lever is neither
 payload nor model size, but getting tensors to the wire without a host round
 trip.
+
+## 3. Not synchronisation, and not allocation either
+
+Apple Silicon has unified memory, so a 3 KB device-to-host copy costing 0.16 ms
+looked like synchronisation rather than data movement. It is not.
+
+```
+  torch.mps.synchronize() alone            0.000125 ms   free
+  3 KB copy with syncs around it           0.1619   ms
+  per-copy cost, 24 copies under one sync  0.1288   ms   no better
+  per-copy cost, one copy per sync         0.1127   ms
+```
+
+Batching copies under a single sync made each copy slightly **worse**.
+
+Allocation is not it either (`prealloc.py`). Giving the copy a preallocated
+destination instead of letting `.to()` allocate:
+
+```
+  device -> host   .to(cpu) 0.1650 ms   prealloc copy_ 0.1631 ms    1% saved
+  host -> device   .to(mps) 0.1538 ms   prealloc copy_ 0.1443 ms    6% saved
+  => 0.28 ms/token against a floor of 8.53
+```
+
+## Four dead ends, and what survives
+
+```
+  bigger models        6.2x params moved staging share 29.0% -> 26.4%
+  FP16 on the wire     copy cost flat 1 KB -> 400 KB, ~1.5%
+  fewer syncs          synchronize() is free; batching is not better
+  preallocated buffers 1% and 6%, i.e. 0.28 ms/token
+```
+
+**The ~0.15 ms per device-host copy does not care about payload size,
+synchronisation or allocation.** Bounded claim: it is a floor in **PyTorch's MPS
+copy path on this machine**. Proving it is Metal's floor or the hardware's would
+need a non-PyTorch copy path, which has not been tried.
+
+**Consequence: the round trip cannot be optimised, only removed.** That requires
+the collective to reach the wire without touching the host — a GPU-aware
+transport — which is not available on this pair today.

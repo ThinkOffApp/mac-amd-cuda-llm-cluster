@@ -1,0 +1,7 @@
+{
+ "synchronize_alone_ms": 0.00012500095181167126,
+ "copy_with_syncs_ms": 0.16189549933187664,
+ "copy_batched_1_per_copy_ms": 0.1126664865296334,
+ "copy_batched_8_per_copy_ms": 0.12788281310349703,
+ "copy_batched_24_per_copy_ms": 0.12880210427586763
+}
