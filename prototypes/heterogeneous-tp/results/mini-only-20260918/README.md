@@ -19,23 +19,29 @@ solo-staged MPS p128   0.0370 s   41.02 tok/s       4.2%
 
 ## Two things worth knowing before any comparison exists
 
-**1. CPU staging costs 47% of decode throughput on this machine.** 77.87 against
-41.02 tok/s, same model, same device, same math, differing only in whether
-row-parallel outputs round-trip through CPU.
+**1. Staging the FULL model through CPU costs 47.3% of decode throughput here** —
+equivalently **89.8% more time per token**. 77.87 against 41.02 tok/s, same
+model, same device, same math, differing only in whether row-parallel outputs
+round-trip through CPU.
 
 That sizes the bug @codexmb caught in the first version of this harness: the
-solo baseline was staged, so it would have been ~47% too slow and would have
-manufactured a TP "speedup" of nearly 2x out of nothing.
+solo baseline was staged, so it would have been substantially too slow and would
+have manufactured a large TP "speedup" out of nothing.
 
-It also frames the actual problem. **TP must stage — the transport moves CPU
-tensors — so on the Mini side it pays this tax before any network cost.** For
-two-host TP to beat the best single host it has to overcome roughly a 47%
-handicap using a 2x split of the compute. The network may not be the thing that
-decides this.
+**It is a CONTROL, not a TP prediction.** An earlier version of this file said TP
+"pays this 47% before any network cost". That does not follow, and @codexmb was
+right to bound it: **this measures the full model staged, while TP shards** — local
+compute, synchronisation and overlap all differ once the work is split, so the
+figure cannot be carried across as an additive tax. What it does establish is
+that CPU round-tripping is expensive enough on this machine that an unstaged
+baseline is mandatory, and that the network is not the only candidate for
+dominating a TP result.
 
-Measured on one machine, one model, at one prompt length. The ROCm side is
-unmeasured and the TP figure does not exist.
+**2. Run-to-run spread was 5.6% at p128 across 5 runs.** This is **descriptive
+variability, not a significance threshold.** It says these five runs varied by
+that much; it does not license a rule that a future difference below it is
+"noise". A paired, interleaved comparison is what would support that kind of
+claim, and it has not been run.
 
-**2. Run-to-run spread is 5.6% at p128.** Any eventual difference smaller than
-that is inside the noise of a single machine, and 5 runs is not many. Worth
-fixing in mind before the comparison arrives rather than after.
+Raw per-run records, per-step timestamps and measurement order are retained in
+the JSON files beside this README.
