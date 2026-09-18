@@ -1,3 +1,7 @@
 === model file sha256, both boxes ===
 # started 2026-09-18T14:12:53Z
 -rw-rw-r-- 1 petrus petrus 17559178144 Aug 20 15:21 /home/petrus/llm/models/Qwen3.8-27B-UD-Q4_K_XL.gguf
+3f227079003add2511437e5b1e94812e363385225bf6a9b47b0054a72bc8b01e  /home/petrus/llm/models/Qwen3.8-27B-UD-Q4_K_XL.gguf
+-rw-r--r--@ 1 petrus  staff  17559178144 Sep 18 16:30 /Users/petrus/models/gguf/Qwen3.8-27B-UD-Q4_K_XL.gguf
+3f227079003add2511437e5b1e94812e363385225bf6a9b47b0054a72bc8b01e  /Users/petrus/models/gguf/Qwen3.8-27B-UD-Q4_K_XL.gguf
+# finished 2026-09-18T14:14:19Z

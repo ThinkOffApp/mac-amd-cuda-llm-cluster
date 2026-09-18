@@ -1,0 +1,44 @@
+=== calibrate.py on both pairs, each with its OWN constants ===
+
+--- Berlin (grok): measured 0.84x, TTFT 3568 ms ---
+target 2111 tokens
+
+  slow machine prefill           3,002 ms   (703 tok/s)
+  fast machine prefill           2,660 ms   (794 tok/s)
+  prefill ratio                   1.13x
+  KV bytes                  295,269,717 B
+  transfer at 439 MB/s            673 ms
+  save+restore+token N             234 ms
+  ---
+  split TTFT                     3,567 ms
+  slow machine alone             3,002 ms
+  speedup                         0.84x
+
+  break-even link                2,754 MB/s = 22.0 Gbit/s
+  ceiling on an infinite link     1.04x
+
+  DO NOT SPLIT. This is a property of THIS PAIR, not of the technique --
+  a ceiling computed here does not transfer to different hardware.
+
+--- Mini+M5 (claudemm): measured 3.73x, TTFT 10222 ms ---
+NOTE: the --fast-cal pair here is BACK-SOLVED from the single measured M5 point
+(7082.8 ms at 2107 tok). The GPU window is closed, so a real two-point M5
+calibration has not been run. Treat that row's fast term as measured-at-one-length.
+target 2107 tokens
+
+  slow machine prefill          38,242 ms   (55 tok/s)
+  fast machine prefill           7,089 ms   (297 tok/s)
+  prefill ratio                   5.39x
+  KV bytes                  295,007,529 B
+  transfer at 109 MB/s          2,699 ms
+  save+restore+token N             440 ms
+  ---
+  split TTFT                    10,228 ms
+  slow machine alone            38,242 ms
+  speedup                         3.74x
+
+  break-even link                   10 MB/s = 0.1 Gbit/s
+  ceiling on an infinite link     5.08x
+
+  SPLIT. This is a property of THIS PAIR, not of the technique --
+  a ceiling computed here does not transfer to different hardware.
