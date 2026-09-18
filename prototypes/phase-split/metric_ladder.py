@@ -25,6 +25,17 @@ hardware, so the reasoning can be checked in a second.
     observed FLIP RATE      the only thing that answers the question. No cheap
                             bound stands in for it.
 
+AND TV MUST BE COMPUTED ON THE DISTRIBUTION ACTUALLY SAMPLED. @codexmb: a small TV
+before truncation need not stay small after temperature, top-k/top-p and separate
+renormalisation. Measured below -- it amplifies by 1.46x when the two distributions
+disagree about which tokens make the cut, and shrinks when they agree. It is a
+rank-boundary effect near k, so raw TV is not even a floor for post-truncation TV.
+
+TV ALSO BOUNDS ONE NEXT-TOKEN DRAW AT A SHARED HISTORY. Once two sequences diverge
+their histories differ, so per-step TV does not compose into an answer-level bound.
+flip_rate.py measures whole generations empirically, which sidesteps that rather than
+solving it.
+
 TV IS STILL WORTH COMPUTING. It is a floor, so a large TV settles the question
 immediately and against us. TV = 0 exactly means p = q, and identical
 distributions give identical samples under a shared seed, so a zero is
@@ -100,6 +111,40 @@ def row(label, base, other):
           f"{tv(probs(base), probs(other)):>14.3e}")
 
 
+def topk_renorm(p, k, temp=1.0):
+    """What the sampler actually draws from. Each distribution is truncated
+    SEPARATELY, so the two need not keep the same k tokens -- which is where the
+    amplification comes from."""
+    if temp != 1.0:
+        z = [math.log(max(x, 1e-300)) / temp for x in p]
+        m = max(z)
+        lse = m + math.log(sum(math.exp(v - m) for v in z))
+        p = [math.exp(v - lse) for v in z]
+    idx = sorted(range(len(p)), key=lambda i: p[i], reverse=True)[:k]
+    total = sum(p[i] for i in idx)
+    out = [0.0] * len(p)
+    for i in idx:
+        out[i] = p[i] / total
+    return out
+
+
+def truncation_demo(vocab=4000, seed=11):
+    print("\nTV on the RAW distribution vs TV on what is actually sampled:\n")
+    rng = random.Random(seed)
+    print(f"{'settings':<28}{'TV raw':>10}{'TV sampled':>12}{'kept sets differ':>18}")
+    for sd, temp, k in [(0.05, 1.0, 40), (0.05, 0.7, 40), (0.05, 1.0, 5), (0.02, 1.0, 40)]:
+        base = [rng.gauss(0, 3) for _ in range(vocab)]
+        noisy = [v + rng.gauss(0, sd) for v in base]
+        p, q = probs(base), probs(noisy)
+        pt, qt = topk_renorm(p, k, temp), topk_renorm(q, k, temp)
+        kp = {i for i, x in enumerate(pt) if x > 0}
+        kq = {i for i, x in enumerate(qt) if x > 0}
+        print(f"{f'sd={sd} temp={temp} k={k}':<28}{tv(p,q)*100:>9.4f}%"
+              f"{tv(pt,qt)*100:>11.4f}%{len(kp ^ kq):>12} of {k}")
+    print("\nAmplified exactly when the kept sets differ; reduced when they agree.")
+    print("So raw TV is not even a floor for the TV that governs sampling.")
+
+
 def main():
     random.seed(20260918)
     base = [random.gauss(0, 6) for _ in range(VOCAB)]
@@ -117,6 +162,7 @@ def main():
     print("Row 3: a log-prob gate FAILS at atol=0.1, nothing can change.")
     print("Only TV is small in both -- but TV is a FLOOR, not a ceiling:")
     coupling_demo()
+    truncation_demo()
 
 
 if __name__ == "__main__":

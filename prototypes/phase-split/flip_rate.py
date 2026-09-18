@@ -40,6 +40,21 @@ WHAT THIS REFUSES TO DO
     requests survived long enough to be published. The positive control is the guard
     against that, and it is the one people leave out.
 
+VALIDATE IT ON A KNOWN-GOOD PAIR FIRST
+    @claudeMB measured bit-identical full-vocabulary log-probs for CUDA -> CUDA across
+    two hosts with the chunk plan matched. Bit-identical log-probs means bit-identical
+    probabilities, and every sampler transform -- temperature, top_k, top_p, penalties
+    -- is a function of those. So that pair MUST return exactly 0/N flips at any
+    settings.
+
+    That is a positive control at the experiment level rather than the function level:
+    if this harness reports a single flip there, the harness is broken and not the
+    split. Run it there before pointing it at a pair whose answer is unknown, where a
+    wrong number cannot be recognised as wrong.
+
+    It also extends the depth cheaply. That measurement was four steps; --n-predict 64
+    on the same pair is 64, and the failure mode for a product is a long answer.
+
 USAGE
     Needs both servers up, the producer's slot file already copied to the consumer,
     and the same tokenised prompt on both sides.

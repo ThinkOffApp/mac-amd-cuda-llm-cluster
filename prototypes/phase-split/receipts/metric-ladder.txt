@@ -19,3 +19,14 @@ Caveat on this demo: inverse-CDF over an untruncated 2,000-token
 distribution. Real sampling truncates to top_k first, where orderings
 agree far more often, so the multiple above is illustrative. Only the
 DIRECTION of the inequality is certain.
+
+TV on the RAW distribution vs TV on what is actually sampled:
+
+settings                        TV raw  TV sampled  kept sets differ
+sd=0.05 temp=1.0 k=40          1.7051%     2.4939%           4 of 40
+sd=0.05 temp=0.7 k=40          1.9197%     2.5336%           2 of 40
+sd=0.05 temp=1.0 k=5           1.1825%     0.4982%           0 of 5
+sd=0.02 temp=1.0 k=40          0.6807%     0.5481%           0 of 40
+
+Amplified exactly when the kept sets differ; reduced when they agree.
+So raw TV is not even a floor for the TV that governs sampling.

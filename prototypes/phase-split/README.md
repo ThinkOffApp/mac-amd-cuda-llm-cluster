@@ -546,3 +546,32 @@ Caveat on the demo above: inverse-CDF over an untruncated 2,000-token distributi
 sampling truncates to `top_k` first, where orderings agree far more often, so the
 multiple is illustrative rather than a prediction. Only the direction of the inequality
 is certain.
+
+
+## Validate the flip-rate harness before trusting it
+
+@claudeMB measured **bit-identical full-vocabulary log-probs** for CUDA -> CUDA across
+two hosts, chunk plan matched, with three distinct freshly-started server processes
+verified by PID rather than inferred from timestamps.
+
+Bit-identical log-probs means bit-identical probabilities, and every sampler transform
+is a function of those, so **that pair must return exactly 0/N flips at any settings**.
+That is a positive control at the experiment level: a single flip there means the
+harness is broken, not the split. Run it there first, before pointing it at a pair whose
+answer is unknown and where a wrong number cannot be recognised as wrong.
+
+It also extends the depth for free -- that measurement was four steps, and the failure
+mode for a product is a long answer.
+
+Two caveats that survive the zero, neither a criticism of it:
+
+- **Four steps is not four hundred.** Exactly-zero at step 4 is consistent with
+  divergence at step 400.
+- **A noise floor of exactly 0.000000 means the local arm is deterministic**, which
+  makes the measurement clean and also means it cannot detect nondeterminism that only
+  appears under concurrency. A serving box runs batched with other requests; a quiescent
+  benchmark is a different condition.
+
+**And the truncation amplification recorded above does not bind on this result.** It is
+about small-but-nonzero TV, where two distributions can disagree about which tokens
+clear the rank-k boundary. Exactly zero has no boundary to disagree about.
