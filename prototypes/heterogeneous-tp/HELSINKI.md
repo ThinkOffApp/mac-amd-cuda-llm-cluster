@@ -247,8 +247,21 @@ evening, which is larger than the effect being measured.
 |---|---|
 | `bc1_timed_run_diverges` | a timed run that diverges is caught by the per-run check and the timings are withheld (`valid: false`, zero timings returned) |
 | `bc2_one_rank_incorrect` | one rank alone judging itself incorrect aborts **both** ranks — neither hangs in a collective the other skipped |
+| `bc3_rank1_only_timed_divergence` | only rank 1's timed output is corrupted, after generation. Rank 0 has **zero** invalid runs of its own and still reports `valid: false` with zero timings |
 
-Both exit 1 on both ranks.
+All exit 1 on both ranks.
+
+`bc3` covers the hole the pre-timing gate cannot: it agrees on a verdict before
+the timed results exist. **`valid` is therefore a GLOBAL verdict, re-agreed after
+the timed runs** — a divergence on either rank invalidates both reports and both
+exit codes. Per-rank invalid-run counts and reasons are kept even when the
+timings are withheld, so a failure is diagnosable rather than merely fatal.
+
+### Scope of the comparison
+
+It compares **this GPT-2 adapter**, GPU-resident solo against two-host TP. It is
+**not** a comparison against the fastest available inference engine, and no such
+claim follows from it. That sentence is in the harness's own output.
 
 **It has not been run, and it refuses to run.** Its preflight aborts unless
 `/tmp/m5-gpu-window.open` exists, because `llm-server.service` (Flash-Next) is

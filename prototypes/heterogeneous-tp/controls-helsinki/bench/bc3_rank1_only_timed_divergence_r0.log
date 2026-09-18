@@ -1,0 +1,111 @@
+{
+  "ranks": [
+    {
+      "mode": "tp",
+      "rank": 0,
+      "world": 2,
+      "host": "Petruss-Mini",
+      "device": "cpu",
+      "requested": "cpu",
+      "torch": "2.11.0",
+      "hip": null,
+      "libraries": {
+        "transformers": "5.16.1",
+        "tokenizers": "0.23.2"
+      },
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+      "weights_sha256_prefix": "248dfc3911869ec4",
+      "prompt_tokens": 64,
+      "new_tokens": 4,
+      "warmups": 0,
+      "runs": 2,
+      "batch": 1,
+      "torch_threads": 1,
+      "config": "tp",
+      "cpu_staged": true,
+      "dtype": "float32",
+      "correctness_gate_passed": true,
+      "both_ranks_correct": true,
+      "all_timed_runs_matched_reference": true,
+      "this_rank_invalid_run_count": 0,
+      "this_rank_invalid_run_reasons": [],
+      "valid": false,
+      "validity_note": "valid is the GLOBAL verdict: a timed divergence on either rank invalidates both reports and both exit codes. Per-rank invalid-run diagnostics are kept even when timings are withheld.",
+      "scope": "Compares THIS GPT-2 adapter, GPU-resident solo against two-host TP. Not a comparison against the fastest available inference engine, and no such claim follows from it.",
+      "generated_ids": [
+        340,
+        2405,
+        13,
+        3887
+      ],
+      "reference_ids": [
+        340,
+        2405,
+        13,
+        3887
+      ],
+      "reference_count": 4,
+      "tokenizer_sha256_prefix": "8414cab924d8b9b3",
+      "config_sha256_prefix": "0daed7749b4f02b8",
+      "timings": [],
+      "coordinator_statistic": "rank 0 total_wall_s; per-rank raw timings are kept in ranks[] and not averaged",
+      "note": "Timings are only reported when the correctness gate passes. Load, tokenize, hash and the reference check are outside every timed region. The reference uses its own KV cache."
+    },
+    {
+      "mode": "tp",
+      "rank": 1,
+      "world": 2,
+      "host": "Petruss-Mini",
+      "device": "cpu",
+      "requested": "cpu",
+      "torch": "2.11.0",
+      "hip": null,
+      "libraries": {
+        "transformers": "5.16.1",
+        "tokenizers": "0.23.2"
+      },
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+      "weights_sha256_prefix": "248dfc3911869ec4",
+      "prompt_tokens": 64,
+      "new_tokens": 4,
+      "warmups": 0,
+      "runs": 2,
+      "batch": 1,
+      "torch_threads": 1,
+      "config": "tp",
+      "cpu_staged": true,
+      "dtype": "float32",
+      "correctness_gate_passed": true,
+      "both_ranks_correct": true,
+      "all_timed_runs_matched_reference": false,
+      "this_rank_invalid_run_count": 1,
+      "this_rank_invalid_run_reasons": [
+        {
+          "run_index": 0,
+          "reason": "first divergence at step 3"
+        }
+      ],
+      "valid": false,
+      "validity_note": "valid is the GLOBAL verdict: a timed divergence on either rank invalidates both reports and both exit codes. Per-rank invalid-run diagnostics are kept even when timings are withheld.",
+      "scope": "Compares THIS GPT-2 adapter, GPU-resident solo against two-host TP. Not a comparison against the fastest available inference engine, and no such claim follows from it.",
+      "generated_ids": [
+        340,
+        2405,
+        13,
+        3887
+      ],
+      "reference_ids": [
+        340,
+        2405,
+        13,
+        3887
+      ],
+      "reference_count": 4,
+      "tokenizer_sha256_prefix": "8414cab924d8b9b3",
+      "config_sha256_prefix": "0daed7749b4f02b8",
+      "timings": [],
+      "coordinator_statistic": "rank 0 total_wall_s; per-rank raw timings are kept in ranks[] and not averaged",
+      "note": "Timings are only reported when the correctness gate passes. Load, tokenize, hash and the reference check are outside every timed region. The reference uses its own KV cache."
+    }
+  ]
+}

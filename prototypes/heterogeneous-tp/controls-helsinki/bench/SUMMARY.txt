@@ -1,2 +1,3 @@
 [bc1_timed_run_diverges] rank0=1 rank1=1 FAILED AS REQUIRED -- timed output differs though the pre-timing gate passed
 [bc2_one_rank_incorrect] rank0=1 rank1=1 FAILED AS REQUIRED -- rank 1 alone reports incorrect; both must abort, neither hang
+[bc3_rank1_only_timed_divergence] rank0=1 rank1=1 -- only rank 1's timed output corrupted after generation; global verdict must invalidate BOTH

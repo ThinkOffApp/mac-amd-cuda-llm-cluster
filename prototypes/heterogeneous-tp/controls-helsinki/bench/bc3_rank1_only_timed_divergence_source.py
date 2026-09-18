@@ -281,6 +281,8 @@ def main():
                     t1 = time.perf_counter()
                     # Check THIS run's output, not just the untimed one earlier:
                     # a timed run could diverge and go unnoticed.
+                    if rank == 1 and len(runs) == 0:
+                        produced = produced[:-1] + [123]   # INJECTED: rank 1 only
                     run_ok = produced == ref_ids
                     if not run_ok:
                         timed_mismatch = True
