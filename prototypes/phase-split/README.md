@@ -234,8 +234,11 @@ is excluded and something large remains, though @codexmb is explicit that it doe
 isolate backend arithmetic from other server graph differences, and that pair is
 CUDA->Metal where this one is Vulkan->Metal.
 
-**It also dwarfs what was measured here: 9.46 across a full vocabulary against 0.67
-inside a top-10.** A top-k comparison is a keyhole. **Do not relabel a greedy match as
+**It is also a different quantity from anything measured here.** 9.46 is a maximum
+**raw-logit** difference across the full vocabulary; the 0.67 here is a **log-probability**
+difference inside a top-10. Log-probs are logits minus `logsumexp`, so a uniform shift
+disappears from one and not the other -- they cannot be compared, let alone divided. A
+top-k comparison is a keyhole *and* it is looking at a different thing. **Do not relabel a greedy match as
 correctness, and do not relax the tolerance.**
 
 ### What is still not established
@@ -343,6 +346,8 @@ The correctness evidence has a hole in the middle of it:
 same HOST, boundaries matched            0.000000 exactly        measured
 same BACKEND, DIFFERENT HOSTS            ** never tested **
 different backend, different hosts       gate FAILS, max 9.46    measured
+                                         (full-vocab RAW LOGITS -- not comparable
+                                          to this repo's top-k log-prob numbers)
 ```
 
 @codexmb's zero-error control was **same host**, which is not the same thing as same
@@ -361,21 +366,30 @@ PASSES.** Both arms evaluate token 1,201 through the identical chunk plan
 detected before either arm ran. The only difference is where the 1,200-token prefix was
 computed -- restored over the wire from asus1, or computed locally on asus2.
 
+**THESE CELLS CANNOT BE PUT IN ONE TABLE**, and an earlier version of this file did it
+anyway:
+
 ```
-same host                            0.000000   full vocabulary
-same backend, different hosts        0.000000   TOP-20, 8 steps      <- different instrument
-different backend, different hosts   9.46       full vocabulary
+same host                            0.000000   FULL-VOCAB RAW LOGITS
+same backend, different hosts        0.000000   top-20 LOG-PROBS, 8 steps
+different backend, different hosts   9.46       FULL-VOCAB RAW LOGITS
 ```
 
-**So the host boundary looks exact and the backend boundary is not** -- but the middle
-cell is measured with a narrower instrument than the two it sits between. A top-k window
-can be quiet while the vocabulary is not: at step 0 of the cross-backend run the top-10
-moved 0.67 while **179,629 logits were out of tolerance**. 160 values is 0.1% of this
-vocabulary, so a bit-identical top-20 is consistent with a full-vocabulary failure. It
-will probably pass -- identical silicon, identical build, byte-exact transport -- but
-"cross-host handoff is lossless" is the sentence that authorises deployment on
-same-backend pairs and should be measured at the standard of the sentence that forbids
-it on cross-backend ones.
+@codexmb: those are not the same quantity, not merely different coverage. A log
+probability is a logit minus `logsumexp`, so **a uniform shift across the vocabulary
+vanishes entirely in log-prob space and is fully visible in raw logits.** Every number
+measured in this repo -- the 0.67, the 0.449, the chunk sweep -- is a top-k log-prob
+difference. The 1.31 and 9.46 are full-vocabulary raw-logit differences. Setting one
+against the other is not a comparison.
+
+Coverage is the second problem on top of that: 160 values is 0.1% of this vocabulary,
+and at step 0 of the cross-backend run the top-10 moved 0.67 while **179,629 logits were
+out of tolerance**. A quiet top-k is consistent with a loud vocabulary.
+
+So the middle cell reads: **"shared top-20 log-probs agree in these runs; the
+full-vocabulary gate is pending."** Not "PASS", not "lossless", not "deployable". The
+acceptance test is full vocabulary at atol=0.1 **and** rtol=0.01 under its specified
+formula, and a top-k atol-only diagnostic is not a substitute for it.
 
 **First attempt, @claudeMB, 15:04: 0.403369 over a shared top-20, text identical, gate
 FAILS -- and confounded.** The producer prefilled 1,200 tokens and the native reference
