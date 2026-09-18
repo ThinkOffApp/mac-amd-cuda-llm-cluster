@@ -1,0 +1,17 @@
+{
+  "scope": "One on and one off run; correctness diagnostic, not repeated speed benchmark",
+  "phases": {
+    "prefill": {
+      "off_steps": 3,
+      "off_wall_us": 968390,
+      "off_median_step_us": 281314,
+      "instrumented_over_uninstrumented_wall_ratio": 1.0202852156672415
+    },
+    "decode": {
+      "off_steps": 45,
+      "off_wall_us": 8275416,
+      "off_median_step_us": 179247,
+      "instrumented_over_uninstrumented_wall_ratio": 0.9884375601178237
+    }
+  }
+}

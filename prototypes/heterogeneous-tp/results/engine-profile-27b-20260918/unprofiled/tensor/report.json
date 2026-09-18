@@ -1,0 +1,424 @@
+{
+  "mode": "tensor",
+  "model": "/Volumes/t705/ModelArchive/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q4_K_XL.gguf",
+  "vocabulary_size": 248320,
+  "max_new_tokens": 16,
+  "logit_atol": 0.10000000149011612,
+  "logit_rtol": 0.009999999776482582,
+  "reference": "same pinned GGUF on unpartitioned Metal",
+  "scope": "Three prompts; teacher-forced reference contexts for partition comparison. Not a benchmark or universal quality guarantee.",
+  "cases": [
+    {
+      "prompt": "The capital of France is",
+      "prompt_ids": [
+        760,
+        6511,
+        314,
+        9338,
+        369
+      ],
+      "model": "/Volumes/t705/ModelArchive/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q4_K_XL.gguf",
+      "vocabulary_size": 248320,
+      "chosen_ids": [
+        11751,
+        13,
+        198,
+        760,
+        6511,
+        314,
+        9564,
+        369,
+        19241,
+        13,
+        198,
+        760,
+        6511,
+        314,
+        14898,
+        369
+      ],
+      "reference_context_ids": [
+        11751,
+        13,
+        198,
+        760,
+        6511,
+        314,
+        9564,
+        369,
+        19241,
+        13,
+        198,
+        760,
+        6511,
+        314,
+        14898,
+        369
+      ],
+      "finite": true,
+      "tokens_match": true,
+      "logits_within_tolerance": true,
+      "max_abs_logit_error": 0.0005130767822265625,
+      "min_reference_top2_margin": 0.5202236175537109,
+      "step_errors": [
+        {
+          "step": 0,
+          "max_abs_error": 0.0001494884490966797,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 1,
+          "max_abs_error": 0.00017142295837402344,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 2,
+          "max_abs_error": 0.00029397010803222656,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 3,
+          "max_abs_error": 0.0005097389221191406,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 4,
+          "max_abs_error": 0.00018477439880371094,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 5,
+          "max_abs_error": 0.0002779960632324219,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 6,
+          "max_abs_error": 0.00023221969604492188,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 7,
+          "max_abs_error": 0.000492095947265625,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 8,
+          "max_abs_error": 0.0003151893615722656,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 9,
+          "max_abs_error": 0.0002117455005645752,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 10,
+          "max_abs_error": 0.0005130767822265625,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 11,
+          "max_abs_error": 0.0003497600555419922,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 12,
+          "max_abs_error": 0.0002994537353515625,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 13,
+          "max_abs_error": 0.00039267539978027344,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 14,
+          "max_abs_error": 0.0002651214599609375,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 15,
+          "max_abs_error": 0.00040721893310546875,
+          "outside_tolerance": 0
+        }
+      ],
+      "valid": true
+    },
+    {
+      "prompt": "In a shocking finding, scientists discovered",
+      "prompt_ids": [
+        623,
+        264,
+        32520,
+        8996,
+        11,
+        13523,
+        10782
+      ],
+      "model": "/Volumes/t705/ModelArchive/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q4_K_XL.gguf",
+      "vocabulary_size": 248320,
+      "chosen_ids": [
+        264,
+        491,
+        44483,
+        5365,
+        303,
+        279,
+        17415,
+        13,
+        1049,
+        557,
+        8826,
+        303,
+        1141,
+        1765,
+        24284,
+        11
+      ],
+      "reference_context_ids": [
+        264,
+        491,
+        44483,
+        5365,
+        303,
+        279,
+        17415,
+        13,
+        1049,
+        557,
+        8826,
+        303,
+        1141,
+        1765,
+        24284,
+        11
+      ],
+      "finite": true,
+      "tokens_match": true,
+      "logits_within_tolerance": true,
+      "max_abs_logit_error": 0.0006043910980224609,
+      "min_reference_top2_margin": 0.04894447326660156,
+      "step_errors": [
+        {
+          "step": 0,
+          "max_abs_error": 0.00021457672119140625,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 1,
+          "max_abs_error": 0.0003573894500732422,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 2,
+          "max_abs_error": 0.0003733634948730469,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 3,
+          "max_abs_error": 0.0002599954605102539,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 4,
+          "max_abs_error": 0.00040030479431152344,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 5,
+          "max_abs_error": 0.00016951560974121094,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 6,
+          "max_abs_error": 0.0004343986511230469,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 7,
+          "max_abs_error": 0.0003960132598876953,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 8,
+          "max_abs_error": 0.00030922889709472656,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 9,
+          "max_abs_error": 0.00039958953857421875,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 10,
+          "max_abs_error": 0.000476837158203125,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 11,
+          "max_abs_error": 0.0003873109817504883,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 12,
+          "max_abs_error": 0.0006043910980224609,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 13,
+          "max_abs_error": 0.0003681182861328125,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 14,
+          "max_abs_error": 0.0004410743713378906,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 15,
+          "max_abs_error": 0.0003993511199951172,
+          "outside_tolerance": 0
+        }
+      ],
+      "valid": true
+    },
+    {
+      "prompt": "def add(a, b):",
+      "prompt_ids": [
+        727,
+        884,
+        2784,
+        11,
+        292,
+        1590
+      ],
+      "model": "/Volumes/t705/ModelArchive/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q4_K_XL.gguf",
+      "vocabulary_size": 248320,
+      "chosen_ids": [
+        198,
+        262,
+        460,
+        264,
+        478,
+        292,
+        271,
+        727,
+        1146,
+        2784,
+        11,
+        292,
+        1590,
+        198,
+        262,
+        460
+      ],
+      "reference_context_ids": [
+        198,
+        262,
+        460,
+        264,
+        478,
+        292,
+        271,
+        727,
+        1146,
+        2784,
+        11,
+        292,
+        1590,
+        198,
+        262,
+        460
+      ],
+      "finite": true,
+      "tokens_match": true,
+      "logits_within_tolerance": true,
+      "max_abs_logit_error": 0.001157999038696289,
+      "min_reference_top2_margin": 0.1567230224609375,
+      "step_errors": [
+        {
+          "step": 0,
+          "max_abs_error": 0.00031566619873046875,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 1,
+          "max_abs_error": 0.0002678036689758301,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 2,
+          "max_abs_error": 0.00021219253540039063,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 3,
+          "max_abs_error": 0.00020551681518554688,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 4,
+          "max_abs_error": 0.00042438507080078125,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 5,
+          "max_abs_error": 0.0003552436828613281,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 6,
+          "max_abs_error": 0.00021713972091674805,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 7,
+          "max_abs_error": 0.0004432201385498047,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 8,
+          "max_abs_error": 0.001157999038696289,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 9,
+          "max_abs_error": 0.00025522708892822266,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 10,
+          "max_abs_error": 0.0001939535140991211,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 11,
+          "max_abs_error": 0.0004589557647705078,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 12,
+          "max_abs_error": 0.0005245208740234375,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 13,
+          "max_abs_error": 0.0003185272216796875,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 14,
+          "max_abs_error": 0.00032389163970947266,
+          "outside_tolerance": 0
+        },
+        {
+          "step": 15,
+          "max_abs_error": 0.0003249645233154297,
+          "outside_tolerance": 0
+        }
+      ],
+      "valid": true
+    }
+  ],
+  "valid": true
+}

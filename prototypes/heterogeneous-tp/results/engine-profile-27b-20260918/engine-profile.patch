@@ -1,0 +1,97 @@
+diff --git a/ggml/src/ggml-backend-meta.cpp b/ggml/src/ggml-backend-meta.cpp
+index 3ec40fb..ef99232 100644
+--- a/ggml/src/ggml-backend-meta.cpp
++++ b/ggml/src/ggml-backend-meta.cpp
+@@ -1962,6 +1962,11 @@ static void ggml_backend_meta_synchronize(ggml_backend_t backend) {
+ }
+ 
+ static enum ggml_status ggml_backend_meta_graph_compute(ggml_backend_t backend, struct ggml_cgraph * cgraph) {
++    const char * profile_env = getenv("GGML_META_PROFILE");
++    const bool profile = profile_env && strcmp(profile_env, "1") == 0;
++    const int64_t profile_start = profile ? ggml_time_us() : 0;
++    int64_t compute_us = 0, collective_us = 0;
++    size_t collective_count = 0, collective_input_bytes = 0;
+     GGML_ASSERT(cgraph->grads == nullptr);
+     const size_t n_backends = ggml_backend_meta_n_backends(backend);
+     ggml_backend_meta_context * backend_ctx = (ggml_backend_meta_context *) backend->context;
+@@ -2431,7 +2436,11 @@ static enum ggml_status ggml_backend_meta_graph_compute(ggml_backend_t backend,
+     };
+ 
+ 
++    const int64_t prepare_us = profile ? ggml_time_us() - profile_start : 0;
++    if (profile) ggml_backend_meta_synchronize(backend);
++    const int64_t initial_wait_us = profile ? ggml_time_us() - profile_start - prepare_us : 0;
+     for (size_t i = 0; i < backend_ctx->n_subgraphs; i++) {
++        const int64_t compute_start = profile ? ggml_time_us() : 0;
+         for (size_t j = 0; j < n_backends; j++) {
+             auto & bcj = backend_ctx->backend_configs[j];
+             const ggml_status status = ggml_backend_graph_compute_async(bcj.backend, bcj.cgraphs[i].cgraph_main);
+@@ -2440,7 +2449,19 @@ static enum ggml_status ggml_backend_meta_graph_compute(ggml_backend_t backend,
+             }
+         }
+ 
++        if (profile) {
++            ggml_backend_meta_synchronize(backend);
++            compute_us += ggml_time_us() - compute_start;
++        }
+         if (n_backends > 1 && i < backend_ctx->n_subgraphs - 1) {
++            const int64_t collective_start = profile ? ggml_time_us() : 0;
++            if (profile) {
++                ++collective_count;
++                for (size_t j = 0; j < n_backends; ++j) {
++                    auto * graph = backend_ctx->backend_configs[j].cgraphs[i].cgraph_main;
++                    collective_input_bytes += ggml_nbytes(graph->nodes[graph->n_nodes - 1]);
++                }
++            }
+             bool backend_allreduce_success = false;
+             if (backend_ctx->comm_ctx) {
+                 std::vector<ggml_tensor *> nodes;
+@@ -2459,8 +2480,17 @@ static enum ggml_status ggml_backend_meta_graph_compute(ggml_backend_t backend,
+                     return status;
+                 }
+             }
++            if (profile) {
++                ggml_backend_meta_synchronize(backend);
++                collective_us += ggml_time_us() - collective_start;
++            }
+         }
+     }
++    if (profile) {
++        fprintf(stderr, "META_PROFILE {\"nodes\":%d,\"ranks\":%zu,\"subgraphs\":%zu,\"prepare_us\":%lld,\"initial_wait_us\":%lld,\"compute_us\":%lld,\"collective_us\":%lld,\"collectives\":%zu,\"collective_input_bytes\":%zu,\"total_us\":%lld}\n",
++                cgraph->n_nodes, n_backends, backend_ctx->n_subgraphs, (long long) prepare_us, (long long) initial_wait_us,
++                (long long) compute_us, (long long) collective_us, collective_count, collective_input_bytes, (long long) (ggml_time_us() - profile_start));
++    }
+     return GGML_STATUS_SUCCESS;
+ }
+ 
+diff --git a/ggml/src/ggml-rpc/ggml-rpc.cpp b/ggml/src/ggml-rpc/ggml-rpc.cpp
+index c24caad..01db1c3 100644
+--- a/ggml/src/ggml-rpc/ggml-rpc.cpp
++++ b/ggml/src/ggml-rpc/ggml-rpc.cpp
+@@ -641,6 +641,10 @@ static rpc_tensor serialize_tensor(const ggml_tensor * tensor, const std::shared
+         if (ctx != nullptr && (dispatcher == nullptr || ctx->dispatcher == dispatcher)) {
+             result.buffer = ctx->remote_ptr;
+             result.data = reinterpret_cast<uint64_t>(tensor->data);
++            if (ggml_is_empty(tensor)) {
++                // Empty views have no payload; keep their wire address inside the owning buffer.
++                result.data = reinterpret_cast<uint64_t>(ggml_backend_buffer_get_base(buffer));
++            }
+         } else {
+             result.buffer = 0;
+             result.data = 0;
+@@ -1404,6 +1408,15 @@ ggml_tensor * rpc_server::deserialize_tensor(struct ggml_context * ctx, const rp
+         uint64_t buffer_start = (uint64_t) ggml_backend_buffer_get_base(result->buffer);
+         uint64_t buffer_size = (uint64_t) ggml_backend_buffer_get_size(result->buffer);
+         GGML_ASSERT(tensor->data + tensor_size >= tensor->data); // check for overflow
++        if (!(tensor->data >= buffer_start && tensor->data + tensor_size <= buffer_start + buffer_size)) {
++            fprintf(stderr, "TP_RPC_BOUNDS name=%.*s type=%u op=%u ne=%u,%u,%u,%u nb=%u,%u,%u,%u data=%llu base=%llu span=%llu capacity=%llu view_offset=%llu\n",
++                    GGML_MAX_NAME, tensor->name, tensor->type, tensor->op,
++                    tensor->ne[0], tensor->ne[1], tensor->ne[2], tensor->ne[3],
++                    tensor->nb[0], tensor->nb[1], tensor->nb[2], tensor->nb[3],
++                    (unsigned long long) tensor->data, (unsigned long long) buffer_start,
++                    (unsigned long long) tensor_size, (unsigned long long) buffer_size,
++                    (unsigned long long) tensor->view_offs);
++        }
+         GGML_ASSERT(tensor->data >= buffer_start && tensor->data + tensor_size <= buffer_start + buffer_size);
+     }
+ 
