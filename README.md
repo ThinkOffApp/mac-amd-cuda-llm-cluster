@@ -116,6 +116,36 @@ two milestones. Status as of 17 Sep 2026, from the tables further down:
 | **Strix + Spark** | ROCm + CUDA | **not tested** | **not tested** |
 | **all three** | Metal + ROCm + CUDA | **not attempted** | **not attempted** |
 
+**Why some of these are "no" is now measured, not guessed.** The link decides which split is
+even arithmetically possible, because the two designs differ by two orders of magnitude in how
+often they cross it:
+
+| design | crossings per token | why |
+|---|---|---|
+| tensor parallel | **2 per layer** (~120 for a 60-layer model) | every layer reduces across ranks |
+| layer split / pipeline | **1 per cut** (= 1 for a pair) | one handoff at the boundary |
+
+Measured round-trip latency on the links we own, each taken on the live machines:
+
+| link | RTT | TP cost/token (~120 crossings) | layer-split cost/token |
+|---|---|---|---|
+| Spark to Spark, RoCE over ConnectX-7 | microseconds | viable | negligible |
+| Spark to Spark, TCP over the same cable | ~0.58 ms | ~70 ms | ~0.6 ms |
+| **Mac to Spark, Thunderbolt Ethernet** | **0.904 ms** | **~108 ms, ceiling under 10 tok/s** | **~0.9 ms** |
+| Spark to Spark over wifi | 32.26 ms avg, 218 ms peak | ~4 s, unusable | ~32 ms |
+
+So on the hardware in this repo, **tensor parallel across Mac and Spark cannot win regardless of
+kernel quality** - the budget is spent before the GPUs are reached. Reaching 30 tok/s would need
+about 0.26 ms per collective, roughly 4x better than the link we have. That is an RDMA-class
+requirement, and the Mac here has no RDMA-capable NIC, so cross-platform tensor parallel is
+blocked on hardware rather than on software.
+
+The same measurement explains a result on the matched pair: moving NCCL from TCP sockets to RoCE
+over the *same physical cable* took the two-Spark serve from 32.5 to 62 tok/s single stream and
+from 91.9 to 140.5 at 8 streams, on identical code. The transport was the dominant cost there
+because CUDA's GPU round trip (0.00787 ms) is far cheaper than the wire; on Metal (0.2075 ms) the
+balance tips the other way, which is why a faster link helps some pairs and not others.
+
 Two things this table is careful about. The Mac + Strix pair buys **capacity**, not speed: the
 200 GB row runs nowhere else, and a configuration that makes a model possible at all is a different
 kind of win from one that makes it faster. And Strix + Spark is untested for a dull reason rather
