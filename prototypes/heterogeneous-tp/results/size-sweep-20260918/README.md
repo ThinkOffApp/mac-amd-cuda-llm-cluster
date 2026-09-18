@@ -194,3 +194,44 @@ copying.
 And it re-reads section 4: AMD's dispatch-and-complete round trip is ~6x cheaper
 than Apple's — a hardware and driver property, not something our code can
 optimise around.
+
+## 6. The synchronisation costs 4.8x the computation it synchronises
+
+Section 5 claimed "24 drains per token is ~3.4 ms of waiting". That only holds if
+the cost is fixed per wait rather than latency real work absorbs, so it was
+tested with matmuls at realistic GPT-2 block scale (768x768):
+
+```
+   N    one wait ms    N waits ms    extra ms    per extra wait
+   1        0.2305        0.2399      0.0094           0.0094
+   6        0.4369        1.4250      0.9881           0.1976
+  12        0.6694        2.8970      2.2276           0.2025
+  24        0.9941        5.7672      4.7731           0.2075
+```
+
+**The same 24 pieces of real work cost 0.99 ms as one pipeline and 5.77 ms
+drained after each.** Per extra drain: **0.207 ms**, *higher* than the 0.143 ms
+measured on a trivial op, so substantial compute does not absorb it. Flat from 6
+to 24, which is the signature of a fixed overhead.
+
+The `N=1` row is the control: with one wait either way the difference is 0.009 ms.
+The cost appears only when drains are added.
+
+### The problem in one line
+
+```
+  24 real matmuls, one pipeline    0.99 ms
+  24 real matmuls, drained each    5.77 ms
+  synchronisation costs 4.8x the computation
+```
+
+Tensor parallel does not lose here because the network is slow or the payload
+large. It loses because splitting a layer means **stopping the GPU 24 times per
+token**, and on Metal each stop costs more than the work between stops.
+
+The section 5 estimate of 3.4 ms was low because it used the trivial-op figure.
+The measured penalty at realistic work is **4.8 ms per token**, against a total
+TP token time of 27.35 ms.
+
+**This does not change the conclusion, it explains it.** The only useful
+direction left is a design with fewer synchronisation points per token.
