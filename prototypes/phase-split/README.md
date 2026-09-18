@@ -387,12 +387,32 @@ people leave out:
 ```
 cache hit asserted   cache_n == N-1 and prompt_n == 1 on every split run
 negative control     split vs split at one seed must AGREE
-POSITIVE control     a deliberately altered prompt must DIFFER
+POSITIVE control     an INJECTED difference must be DETECTED
 ```
 
 Without the positive control a zero flip rate is exactly what a harness comparing a
-string with itself produces -- which is the failure mode that got a confident
-`0.000000` published earlier the same day.
+string with itself produces -- the failure mode that got a confident `0.000000`
+published earlier the same day.
+
+The first version of that positive control used a deliberately **altered prompt** and
+was unsound: @codexmb pointed out an altered prompt is not guaranteed to change the
+output, so it tests the model rather than the harness and fails spuriously. The
+difference is now injected into the compared values and exercises the same `differs()`
+the measurement uses.
+
+Three further constraints, all his:
+
+- **A flip is the whole generation differing in any token.** A per-token divergence
+  rate is a different quantity and is not what this reports.
+- **Vary prompts, not only seeds.** One prompt with many seeds measures that prompt,
+  not a workload; the interval is labelled for the sampled workload and settings only.
+- **A low flip rate does not authorize deployment** and does not override the failed
+  numerical gate. It is one input to a decision that stays a human's, and
+  `--accept-numerical-divergence` is worded that way.
+
+Also from him, on the performance side: **~4,303 tokens is an interpolation between
+timings, not a measured crossover**, and the 8,192-token 1.13x observation is
+correctness-unqualified.
 
 **Note on this pair specifically: it has never been through the full-vocabulary gate.**
 The 3.73x here is a performance number. The only gate run is @codexmb's on CUDA->Metal;

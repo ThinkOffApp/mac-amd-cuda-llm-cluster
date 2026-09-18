@@ -84,8 +84,9 @@ def main():
     ap.add_argument("--consumer-backend", required=True,
                     help="backend the consumer runs; a mismatch is refused")
     ap.add_argument("--accept-numerical-divergence", action="store_true",
-                    help="proceed across a backend boundary anyway. Only with a measured "
-                         "flip rate you are willing to defend to users")
+                    help="proceed across a backend boundary anyway. A measured flip rate "
+                         "is an INPUT to that decision, not an authorization: it does not "
+                         "override the failed numerical gate")
     ap.add_argument("--timing-source", required=True, choices=["llama-server", "llama-bench"],
                     help="where the prefill timings came from. llama-bench is REFUSED: "
                          "it is not the path being split")
@@ -117,7 +118,8 @@ def main():
             "but nobody has measured that. What would settle it is a FLIP RATE: a few\n"
             "hundred generations under your real sampling settings, split against\n"
             "un-split, counting how often the emitted text differs.\n"
-            "Measure it, then pass --accept-numerical-divergence if you can defend it.")
+            "A low flip rate does NOT by itself authorize this and does not override the\n"
+            "failed gate -- it is one input to a decision that stays a human's.")
 
     if a.timing_source != "llama-server":
         raise SystemExit(
