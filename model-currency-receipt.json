@@ -1,0 +1,12 @@
+{
+  "checked_at": "2026-09-18T16:10:18+00:00",
+  "stated_reason": "reproducing the 2026-09-18 figure exactly",
+  "entries": [
+    {
+      "model": "/Users/petrus/models/gguf/gemma-3-4b-it-Q4_K_M.gguf",
+      "checker": "/Users/petrus/mac-amd-llm-cluster/scripts/model-currency-check.py",
+      "exit": 0,
+      "output": "OLDER GENERATION IN USE: gemma 3, current is gemma 4\n  stated reason: reproducing the 2026-09-18 figure exactly\n  QUOTE THIS WITH ANY NUMBER FROM THIS RUN."
+    }
+  ]
+}

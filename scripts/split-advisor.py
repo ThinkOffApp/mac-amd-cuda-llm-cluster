@@ -110,6 +110,7 @@ USAGE
 """
 
 import argparse
+import json
 import os
 import shlex
 import statistics
@@ -288,6 +289,66 @@ def parse_tps(output, streams, metric="total"):
     return None
 
 
+# --------------------------------------------------------------------------
+# Model-currency preflight. @codexmb, 2026-09-18: "A newly written checker is
+# not yet proof that this cannot recur. The check needs to be wired into the
+# actual selection/download/benchmark entry point, fail closed when current
+# information cannot be verified, and save the official source, check time,
+# chosen revision and any explicit older-version reason."
+#
+# He then searched this repo and found no checker call anywhere in it. He was
+# right: the guard written an hour earlier protected downloads through one
+# wrapper and left the path that actually produced the bad number untouched.
+# This runs before any host is measured, and refuses.
+# --------------------------------------------------------------------------
+
+MODEL_CHECKERS = ["~/bin/modelcheck.py",
+                  os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                               "model-currency-check.py")]
+RECEIPT = "model-currency-receipt.json"
+
+
+def _preflight_models(models, reason, receipt_path):
+    """Refuse to benchmark until every model's generation has been checked.
+
+    Fails CLOSED: if no checker is reachable, or a checker cannot answer, the
+    run does not start. A benchmark that proceeds when the check is unavailable
+    is the same as not having the check.
+    """
+    import datetime
+    import shutil
+    import subprocess
+
+    checker = next((os.path.expanduser(c) for c in MODEL_CHECKERS
+                    if os.path.exists(os.path.expanduser(c))), None)
+    if checker is None:
+        raise SystemExit(
+            "REFUSING TO BENCHMARK: no model-currency checker found.\n"
+            "  looked for: " + ", ".join(MODEL_CHECKERS) + "\n"
+            "A model was benchmarked on 2026-09-18 that was five months out of date\n"
+            "because nothing in this path asked. Install a checker or state why this\n"
+            "run may skip it -- silence is not permission.")
+
+    entries = []
+    for m in models:
+        cmd = [sys.executable, checker, m] + (["--reason", reason] if reason else [])
+        r = subprocess.run(cmd, capture_output=True, text=True)
+        entries.append({"model": m, "checker": checker, "exit": r.returncode,
+                        "output": (r.stdout + r.stderr).strip()})
+        if r.returncode != 0:
+            print((r.stdout + r.stderr).strip(), file=sys.stderr)
+            raise SystemExit(f"REFUSING TO BENCHMARK: {os.path.basename(m)} did not pass "
+                             f"the currency check (exit {r.returncode}).")
+        print((r.stdout + r.stderr).strip())
+
+    with open(receipt_path, "w") as f:
+        json.dump({"checked_at": datetime.datetime.now(datetime.timezone.utc)
+                                      .isoformat(timespec="seconds"),
+                   "stated_reason": reason or None,
+                   "entries": entries}, f, indent=2)
+    print(f"currency receipt -> {receipt_path}")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -311,9 +372,20 @@ def main():
     ap.add_argument("--metric", choices=["pp", "tg", "total"], default="total",
                     help="what to optimise when tuning: prefill, generation, or both. "
                          "They have different optima; pick the one you care about")
+    ap.add_argument("--older-model-reason", default="",
+                    help="why an older model generation is right for THIS run; printed "
+                         "with the result and written to the currency receipt")
+    ap.add_argument("--currency-receipt", default=RECEIPT,
+                    help="where to write the model-currency receipt")
     ap.add_argument("--repeats", type=int, default=1,
                     help="runs per ratio while tuning; 3+ before quoting a result")
     args = ap.parse_args()
+
+    # Before ANY host is touched. Every model this run will use, including the
+    # remote ones, goes through the check or the run does not start.
+    _preflight_models(
+        [args.model_local] + [h.split(":")[-1] for h in args.host],
+        args.older_model_reason, args.currency_receipt)
 
     if args.tune_ts:
         local = Host(f"{args.local_name}::{args.local_bin}:{args.model_local}")

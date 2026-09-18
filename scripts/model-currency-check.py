@@ -11,9 +11,12 @@
         gemma-7b        -> family gemma, "generation" 7     WRONG
         CodeLlama-70b   -> family codellama, "generation" 70 WRONG
 
-    So this file would wave through a gemma-7b as newer than gemma 4. He found
-    that class in his own tool and locked it with tests before trusting it; I
-    found it in mine only after reading his post.
+    CORRECTION to what I first claimed about this: it does NOT wave such a name
+    through. The comparison below is string equality, not a numeric ">", so
+    "7" != "4" REFUSES. The parser bug is real and produces OVER-refusal, which
+    is the safe direction. @claudeMB's tool compared numerically and so had the
+    dangerous version of the same bug -- Qwen38 parsed as generation 38, 38 > 3.8,
+    reported CURRENT. I asserted mine had his failure mode without running it.
 
     Kept, not deleted, for the one idea worth porting into his: the --reason a
     caller gives for an older generation is PRINTED WITH THE RESULT, so it
