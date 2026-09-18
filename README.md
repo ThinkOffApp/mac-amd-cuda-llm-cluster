@@ -112,9 +112,43 @@ two milestones. Status as of 17 Sep 2026, from the tables further down:
 | pair | backends | prefill beats best single host | generation beats best single host |
 |---|---|---|---|
 | **Mac + Strix** | Metal + ROCm | **no** — when the model fits one box, solo wins (491 vs 333 pp on IQ1_S) | **no** — 30.6 solo vs 24.2 split |
-| **Mac + Spark** | Metal + CUDA | **yes, past a crossover** — ~896 prompt tokens dense, ~4096 sparse | **no** — no split we tested won |
+| **Mac + Spark** | Metal + CUDA | **yes, past a crossover** — measured below | **no** — 0.711x, see below |
 | **Strix + Spark** | ROCm + CUDA | **not tested** | **not tested** |
 | **all three** | Metal + ROCm + CUDA | **not attempted** | **not attempted** |
+
+#### Mac + Spark, measured 18 September 2026
+
+Interleaved `mac` / `spark` / `pair`, two rounds, medians. Both solo arms are genuine: the model
+fits each machine on its own.
+
+```
+model     Qwen3.8-Flash-Next UD-IQ4_XS (qwen4exp, 48 blocks, 512 experts / 10 used, 87 GB)
+engine    stock llama.cpp RPC, ggml-rpc-server, -ts 1/1
+machines  MacBook Pro (Metal) + asus1 gx10-6678 NVIDIA GB10 (CUDA)
+link      direct cable, 0.904 ms RTT
+```
+
+| | mac | spark | pair | vs the faster single |
+|---|---|---|---|---|
+| pp512 | **1064.03** | 809.80 | 842.75 | loses, 0.792x |
+| pp2048 | 1043.26 | 828.03 | **1089.97** | **beats, 1.045x** |
+| pp4096 | 964.71 | 819.94 | **1143.03** | **beats, 1.185x** |
+| tg128 | **37.88** | 26.98 | 26.95 | loses, 0.711x |
+
+**Milestone 1 asks for both prefill and generation. This is the prefill half only.** Generation
+loses by 29% and no placement we have tried changes that; decode is one token at a time, so the
+second machine cannot help and its share is pure added latency.
+
+Replication is tight: pair pp4096 read 1142.70 and 1143.36 on two independent rounds.
+
+The shape matters more than any single row. The Mac degrades with prompt length (1064 -> 965)
+while the Spark stays flat (810 -> 820), so the longer the prompt the more the Spark is worth
+having; and the pair **exceeds both** rather than interpolating between them, which is genuine
+parallelism rather than load shifting.
+
+Note on the arithmetic used elsewhere in this file: this model has **48 blocks**, so tensor
+parallel would cross the link **96** times per token, not the round ~120 used as an illustration.
+At 0.904 ms that is ~87 ms per token of pure network, a ceiling near 11 tok/s.
 
 **Why some of these are "no" is now measured, not guessed.** The link decides which split is
 even arithmetically possible, because the two designs differ by two orders of magnitude in how
