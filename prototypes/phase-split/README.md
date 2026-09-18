@@ -481,3 +481,46 @@ correctness-unqualified.
 **Note on this pair specifically: it has never been through the full-vocabulary gate.**
 The 3.73x here is a performance number. The only gate run is @codexmb's on CUDA->Metal;
 what was measured here is 0.67 inside a top-10, which that result shows is a keyhole.
+
+
+## Which comparison answers the question
+
+Four quantities were argued over and three of them proxy for "does the split change the
+answer" rather than answering it. `metric_ladder.py` shows why with no model and no
+hardware:
+
+```
+                                  max RAW LOGIT  max LOG-PROB   TV distance
+uniform shift of 9.46                  9.460000      0.000000     7.834e-17
+non-uniform noise, sd 0.05             0.208582      0.208925     1.017e-02
+one p=1e-17 token moved 3.0            3.000000      3.000000     1.809e-15
+```
+
+**Row 1**: softmax is shift-invariant, so a uniform shift across the vocabulary is a
+large raw-logit difference that changes nothing. The number currently gating deployment
+-- `9.46` -- is a raw-logit maximum, and **nobody has decomposed how much of it is shift**.
+
+**Row 3**: a maximum over ~152k entries is set by whichever entry moved most, and the
+tail moves most while mattering least. A token at p=1e-17 fails an atol=0.1 log-prob
+gate while being unsamplable.
+
+**Only TV is small in both.**
+
+```
+TV(p, q) = 0.5 * sum |p_i - q_i|
+```
+
+**TV is exactly the maximum probability that a single sampled token differs** -- a bound,
+not an estimate, with no assumption about `top_k`. It is one line beyond the `logsumexp`
+on logits already collected: exponentiate, halve the L1 distance.
+
+```
+full-vocab RAW LOGITS    fails on differences that cannot change an output
+full-vocab LOG-PROBS     right space, maximum decided by the irrelevant tail
+TV DISTANCE per step     bounds the probability a sampled token differs   <- decisive
+observed FLIP RATE       what happens under real settings (flip_rate.py)
+```
+
+**TV is the ceiling, the flip rate is the realisation.** A measured flip rate above the
+TV bound means the harness is wrong, which makes `flip_rate.py` self-checking against a
+number computed independently of it.

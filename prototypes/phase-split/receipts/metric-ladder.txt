@@ -1,0 +1,10 @@
+vocabulary 151,936
+
+                                   max RAW LOGIT  max LOG-PROB   TV distance
+uniform shift of 9.46                   9.460000      0.000000     7.834e-17
+non-uniform noise, sd 0.05              0.208582      0.208925     1.017e-02
+one p=1e-17 token moved 3.0             3.000000      3.000000     1.809e-15
+
+Row 1: a raw-logit gate FAILS, nothing can change.
+Row 3: a log-prob gate FAILS at atol=0.1, nothing can change.
+Only TV is small in both, and only TV bounds what a sampler can do.

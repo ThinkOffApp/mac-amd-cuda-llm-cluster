@@ -18,17 +18,6 @@ have to say so.
 """
 import json, math, subprocess, sys
 
-BANNER = (
-    "NOT THE ACCEPTANCE GATE. This reports a TOP-K LOG-PROBABILITY difference.\n"
-    "The gate is a FULL-VOCABULARY RAW-LOGIT comparison at atol=0.1 AND rtol=0.01.\n"
-    "log p = logit - logsumexp, so a uniform shift across the vocabulary vanishes\n"
-    "here and is fully visible there; these numbers cannot be compared with gate\n"
-    "results or put in the same table. A quiet top-k is consistent with a loud\n"
-    "vocabulary: one measured run had the top-10 move 0.67 while 179,629 logits\n"
-    "were out of tolerance.\n"
-)
-
-
 BASE = "http://127.0.0.1:8091"
 MARK = "\n__S__:"
 
