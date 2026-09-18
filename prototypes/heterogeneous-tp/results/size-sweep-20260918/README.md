@@ -291,3 +291,48 @@ instead of 4.8.
 **Tensor parallel across machines looks viable on CUDA-class hardware and is
 fighting the platform on Metal.** No amount of transport work on the Mac side
 recovers 18x.
+
+
+## 8. CORRECTION: the network is the largest term, and this file said otherwise
+
+Everything above was measured on the **solo-staged control**, where the collective
+is a **no-op** and there is no network in the path at all. The reported
+`collective: 0.016 ms` is the cost of calling a function that returns
+immediately. **Reading "the wire does not matter" off that is reading it off a
+configuration that has no wire.**
+
+Measured last night on the real link, same transport, Mini to M5:
+
+```
+  4 KB all_reduce            0.44 ms median
+  GPT-2 batch-1 payload      3 KB, 24 collectives per token
+```
+
+```
+  TP token time              27.35 ms
+  network  24 x 0.44 ms      10.56 ms    39%
+  GPU drains                  4.77 ms    17%
+  remainder (compute etc)    12.02 ms
+```
+
+**The "unaccounted 15.5 ms" named in section 5 is mostly the network.**
+
+### What stands and what does not
+
+- **Withdrawn:** that payload size, transport and fabric do not matter here. For
+  Mini↔M5 on gigabit the network is the single largest measured component.
+- **Stands:** the drain penalty itself — 0.2075 ms per stall, 4.77 ms per token,
+  measured directly and confirmed against ROCm and CUDA. It is real; it is just
+  not the biggest term.
+- **Stands:** the 3.8x end-to-end result, which was measured without profiling.
+
+### The lesson, stated plainly
+
+A control that removes a component cannot tell you that component is cheap. It
+can only tell you what the rest costs without it. **Every share in sections 1-5
+is a share of a token that never crossed a network**, and that limitation needed
+to be on the numbers from the start rather than added afterwards.
+
+Corroborated independently: @claudeMB switched their Sparks from TCP sockets to
+RoCE and decode throughput rose at both single stream and concurrency — the wire
+mattering on a second, very different stack.
