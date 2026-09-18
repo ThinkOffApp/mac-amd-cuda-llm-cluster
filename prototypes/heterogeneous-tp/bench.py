@@ -92,6 +92,11 @@ def main():
                     help="auto: CPU staging for tp, GPU-resident for solo. "
                          "'cpu' with --mode solo is the STAGED CONTROL, not a "
                          "single-host baseline.")
+    ap.add_argument("--generation-head", choices=["baseline", "last-root"],
+                    default="baseline", help="last-root computes only the last "
+                    "position logits, on rank 0, and transfers only the chosen ID")
+    ap.add_argument("--profile", action="store_true", help="Diagnostic synchronized "
+                    "phase timings; use separate unprofiled runs for speed claims")
     args = ap.parse_args()
     # Validate everything answerable locally BEFORE opening a socket, so a bad
     # invocation cannot leave a peer waiting on a connection that never comes.
@@ -129,13 +134,15 @@ def main():
     prompt_ids = tok(SEED_TEXT)["input_ids"][:args.prompt_tokens]
     assert len(prompt_ids) == args.prompt_tokens, "seed text too short"
 
+    from phase_profile import PhaseProfile, ProfiledTCPCollectives
+    profile = PhaseProfile(lambda: sync(device))
     stage_cpu = (args.mode == "tp") if args.stage == "auto" else (args.stage == "cpu")
     config_label = args.mode if not (args.mode == "solo" and stage_cpu) else "solo-staged"
     if args.mode == "tp":
         if not stage_cpu:
             ap.error("tp requires CPU staging: the transport moves CPU tensors")
         from tcp_collectives import TCPCollectives
-        collective = TCPCollectives()
+        collective = ProfiledTCPCollectives(profile) if args.profile else TCPCollectives()
     else:
         collective = NullCollective()
     try:
@@ -168,52 +175,73 @@ def main():
             wte_d, wpe_d = sd["wte.weight"].to(device), sd["wpe.weight"].to(device)
             lnf_w, lnf_b = sd["ln_f.weight"].to(device), sd["ln_f.bias"].to(device)
 
+            def reduce_part(part):
+                if not stage_cpu:
+                    return part
+                with profile.measure("device_to_host", synchronize=True):
+                    part = part.to("cpu").contiguous()
+                with profile.measure("collective", payload_bytes=part.numel() * 4):
+                    collective.all_reduce(part, op=dist.ReduceOp.SUM)
+                with profile.measure("host_to_device", synchronize=True):
+                    return part.to(device)
+
             def block_forward(x, b, cache, offset):
-                h = F.layer_norm(x, (dim,), b["ln1_w"], b["ln1_b"], eps)
-                qkv = h @ b["ca_w"] + b["ca_b"]
-                q, k, v = qkv.split(cpr, dim=-1)
-                sh = lambda t: t.view(t.shape[0], hpr, head_dim).transpose(0, 1)
-                q, k, v = sh(q), sh(k), sh(v)
-                cache["k"] = k if cache["k"] is None else torch.cat([cache["k"], k], 1)
-                cache["v"] = v if cache["v"] is None else torch.cat([cache["v"], v], 1)
-                scores = q @ cache["k"].transpose(-2, -1) / math.sqrt(head_dim)
-                scores = scores + causal_mask(x.shape[0], cache["k"].shape[1],
-                                              offset, scores.device, scores.dtype)
-                ctx = (torch.softmax(scores, -1) @ cache["v"]).transpose(0, 1).reshape(
-                    x.shape[0], cpr)
-                # Solo keeps this on the GPU. Staging it through CPU with no
-                # peer to reduce with would make the single-host baseline slower
-                # than it is, and flatter any TP comparison against it.
-                part = ctx @ b["cp_w"]
-                if stage_cpu:
-                    part = part.to("cpu").contiguous()
-                    collective.all_reduce(part, op=dist.ReduceOp.SUM)
-                    part = part.to(device)
-                x = x + (part + b["cp_b"])
-                h = F.layer_norm(x, (dim,), b["ln2_w"], b["ln2_b"], eps)
-                part = gelu_new(h @ b["fc_w"] + b["fc_b"]) @ b["mp_w"]
-                if stage_cpu:
-                    part = part.to("cpu").contiguous()
-                    collective.all_reduce(part, op=dist.ReduceOp.SUM)
-                    part = part.to(device)
-                return x + (part + b["mp_b"])
+                with profile.measure("attention_compute", synchronize=True):
+                    h = F.layer_norm(x, (dim,), b["ln1_w"], b["ln1_b"], eps)
+                    qkv = h @ b["ca_w"] + b["ca_b"]
+                    q, k, v = qkv.split(cpr, dim=-1)
+                    sh = lambda t: t.view(t.shape[0], hpr, head_dim).transpose(0, 1)
+                    q, k, v = sh(q), sh(k), sh(v)
+                    cache["k"] = k if cache["k"] is None else torch.cat([cache["k"], k], 1)
+                    cache["v"] = v if cache["v"] is None else torch.cat([cache["v"], v], 1)
+                    scores = q @ cache["k"].transpose(-2, -1) / math.sqrt(head_dim)
+                    scores = scores + causal_mask(x.shape[0], cache["k"].shape[1],
+                                                  offset, scores.device, scores.dtype)
+                    ctx = (torch.softmax(scores, -1) @ cache["v"]).transpose(0, 1).reshape(
+                        x.shape[0], cpr)
+                    # Solo keeps this on the GPU. Staging it through CPU with no
+                    # peer to reduce with would make the single-host baseline slower
+                    # than it is, and flatter any TP comparison against it.
+                    part = ctx @ b["cp_w"]
+                part = reduce_part(part)
+                with profile.measure("mlp_compute", synchronize=True):
+                    x = x + (part + b["cp_b"])
+                    h = F.layer_norm(x, (dim,), b["ln2_w"], b["ln2_b"], eps)
+                    part = gelu_new(h @ b["fc_w"] + b["fc_b"]) @ b["mp_w"]
+                part = reduce_part(part)
+                with profile.measure("residual_compute", synchronize=True):
+                    return x + (part + b["mp_b"])
 
             def forward(ids, caches, offset):
-                pos = torch.arange(offset, offset + len(ids), device=device)
-                x = wte_d[torch.tensor(ids, device=device)] + wpe_d[pos]
+                with profile.measure("embedding_compute", synchronize=True):
+                    pos = torch.arange(offset, offset + len(ids), device=device)
+                    x = wte_d[torch.tensor(ids, device=device)] + wpe_d[pos]
                 for b, c in zip(blocks, caches):
                     x = block_forward(x, b, c, offset)
-                x = F.layer_norm(x, (dim,), lnf_w, lnf_b, eps)
-                return (x @ wte_d.T).to("cpu")
+                with profile.measure("head_compute_and_copy", synchronize=True):
+                    if args.generation_head == "last-root":
+                        if rank != 0:
+                            return None
+                        # Earlier positions cannot affect the final layer norm/head.
+                        # Keep argmax on device: only the selected ID crosses to CPU.
+                        x = F.layer_norm(x[-1:], (dim,), lnf_w, lnf_b, eps)
+                        return x @ wte_d.T
+                    x = F.layer_norm(x, (dim,), lnf_w, lnf_b, eps)
+                    return (x @ wte_d.T).to("cpu")
 
             def generate(n_new, stamps=None):
                 caches = [{"k": None, "v": None} for _ in range(n_layer)]
+                profile.phase = "prefill"
                 logits = forward(prompt_ids, caches, 0)
                 offset = len(prompt_ids)
                 out = []
                 for i in range(n_new):
-                    choice = torch.tensor([float(torch.argmax(logits[-1]))])
-                    collective.broadcast(choice, src=0)
+                    with profile.measure("token_selection", synchronize=True):
+                        choice = torch.tensor([float(torch.argmax(logits[-1]))]) if (
+                            args.generation_head == "baseline" or rank == 0
+                        ) else torch.zeros(1)
+                    with profile.measure("token_broadcast", payload_bytes=4):
+                        collective.broadcast(choice, src=0)
                     nxt = int(choice.item())
                     out.append(nxt)
                     if stamps is not None:
@@ -225,6 +253,7 @@ def main():
                     if nxt == EOS:
                         break
                     if i < n_new - 1:
+                        profile.phase = "decode"
                         logits = forward([nxt], caches, offset)
                         offset += 1
                 return out
@@ -265,6 +294,7 @@ def main():
 
             # ---------- timed region ----------
             runs = []
+            profile_runs = []
             invalid_runs = []
             timed_mismatch = False
             if both_correct:
@@ -275,10 +305,12 @@ def main():
                     stamps = []
                     barrier()
                     sync(device)
+                    profile.start(args.profile)
                     t0 = time.perf_counter()
                     produced = generate(args.new_tokens, stamps)
                     sync(device)
                     t1 = time.perf_counter()
+                    phase_stats = profile.finish()
                     # Check THIS run's output, not just the untimed one earlier:
                     # a timed run could diverge and go unnoticed.
                     run_ok = produced == ref_ids
@@ -294,6 +326,14 @@ def main():
                     decode_n = len(produced) - 1   # tokens after the first
                     decode_s = stamps[-1] - stamps[0]
                     assert len(stamps) == len(produced), (len(stamps), len(produced))
+                    if args.profile:
+                        profile_runs.append({
+                            "output_matches_reference": run_ok,
+                            "generated_count": len(produced),
+                            "prefill_wall_s": ttft,
+                            "decode_wall_s": decode_s,
+                            "total_wall_s": t1 - t0,
+                            "phases": phase_stats})
                     runs.append({
                         "output_matches_reference": run_ok,
                         "generated_count": len(produced),
@@ -321,6 +361,17 @@ def main():
             "torch_threads": torch.get_num_threads(),
             "config": config_label, "cpu_staged": stage_cpu,
             "dtype": "float32",
+            "generation_head": args.generation_head,
+            "source_sha256": {
+                name: hashlib.sha256(open(os.path.join(os.path.dirname(__file__), name), "rb").read()).hexdigest()
+                for name in ("bench.py", "phase_profile.py", "tcp_collectives.py")},
+            "profile_enabled": args.profile,
+            "profile_note": ("Diagnostic only. Extra synchronization changes scheduling. "
+                             "Collective time includes waiting for peer compute, serialization, "
+                             "socket I/O and reduction, not just network traffic. Socket "
+                             "send/receive are nested within collective/broadcast times; "
+                             "do not add them twice or sum times across ranks. Payload bytes "
+                             "exclude frame headers. Use unprofiled runs for speed comparisons."),
             "correctness_gate_passed": correct,
             "both_ranks_correct": both_correct,
             "all_timed_runs_matched_reference": not timed_mismatch,
@@ -340,7 +391,8 @@ def main():
                 open(os.path.join(MODEL_DIR, "tokenizer.json"), 'rb').read()).hexdigest()[:16],
             "config_sha256_prefix": hashlib.sha256(
                 open(os.path.join(MODEL_DIR, "config.json"), 'rb').read()).hexdigest()[:16],
-            "timings": runs if globally_valid else [],
+            "timings": runs if globally_valid and not args.profile else [],
+            "profile_runs": profile_runs if globally_valid else [],
             "coordinator_statistic": ("rank 0 total_wall_s; per-rank raw timings "
                                       "are kept in ranks[] and not averaged"),
             "note": ("Timings are only reported when the correctness gate passes. "
