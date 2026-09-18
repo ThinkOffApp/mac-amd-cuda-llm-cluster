@@ -9,9 +9,9 @@ and CUDA, aiming to speed up both prompt processing and output generation.
 
 We are now developing **Mac + AMD + CUDA tensor parallelism**, beginning with
 Mac correctness tests and AMD support alongside them. This is separate from
-the existing llama.cpp RPC benchmarks below. The performance target is both
-prefill and generation faster than the fastest single host under matched
-model, precision, context and workload; we have not demonstrated that target.
+the existing llama.cpp RPC benchmarks below. The performance target is stated
+in full under [What we are aiming at](#what-we-are-aiming-at); we have not
+demonstrated it.
 
 - **Implemented and locally tested:** a [sharded FP32 MLP harness](prototypes/heterogeneous-tp/README.md)
   with local MPS/CUDA/ROCm device selection and explicit CPU-staged Gloo
@@ -29,11 +29,28 @@ model, precision, context and workload; we have not demonstrated that target.
   two-host CPU socket reduction probe. Its raw results and framing need review
   before inclusion as benchmark data. This does not yet validate an integrated
   MPS–ROCm model run, accelerator transfer costs, or negligible transport overhead.
-- **Spark–Spark control:** the MiaLab GLM-5.3-Flash EXL3/DFlash recipe has been
-  attempted. The latest diagnosed failure was worker-side DFlash weight loading;
-  the worker exited while the head container remained running without a healthy
-  API. Repair/relaunch is underway. No successful served-token result from this
-  recipe is recorded here yet.
+- **Spark–Spark control: now serving.** The MiaLab GLM-5.3-Flash EXL3/DFlash
+  recipe came up TP=2 across two GB10s on 17 September 2026 (`/health` 200,
+  `system_fingerprint vllm-0.1.dev20051+g487ecf187-tp2-7175cf7e`). The final
+  blocker was not the fabric: the launcher passes `-e NCCL_IB_DISABLE=0` and
+  `-e NCCL_NET=IB` as literals, so an exported override never reaches the
+  container. Verify with `docker inspect`, not with what you exported.
+
+  Measured through `/v1/completions` with streaming, TTFT for prefill and the
+  streamed tail for decode:
+
+  | prompt | TTFT | prefill tok/s | decode tok/s |
+  |---|---|---|---|
+  | 512 | 1.09 s | 470.4 | 5.58 |
+  | 2048 | 2.62 s | 781.5 | 5.56 |
+  | 4096 | 6.25 s | 655.5 | 4.52 |
+
+  **This is NCCL over TCP sockets, not RoCE** (GPUDirect RDMA is unsupported on
+  GB10), so it is the pessimal transport and these decode figures are a floor,
+  not a verdict on tensor parallelism. For scale, llama.cpp layer split decodes
+  22.2 tok/s on the same bench, about 4x faster, but at a different engine and
+  quantization, so the two are not a controlled comparison. Prompt token counts
+  are approximate.
 
 Next gates are a physical mixed-host correctness run, a transformer block,
 a small complete model, then repeatable end-to-end timing. Experimental RDMA
