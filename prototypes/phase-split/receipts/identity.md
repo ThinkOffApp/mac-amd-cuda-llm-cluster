@@ -11,6 +11,19 @@ decoder  (Mini, Metal) /Users/petrus/models/gguf/Qwen3.8-27B-UD-Q4_K_XL.gguf
 ./llama-server -m /Users/petrus/models/gguf/Qwen3.8-27B-UD-Q4_K_XL.gguf --slot-save-path /tmp/kvslots2 --port 8091 --host 127.0.0.1 -c 4096 -ngl 99 -np 1
 ```
 
+## llama.cpp build, both machines
+
+```
+434ddbbc0e30522e897670681e503b797c12b7c1   ci: fix sanitizer tests (#28583)   (b10884)
+  Mini decoder   ~/work/llama-rpc/llama.cpp
+  M5 producer    ~/llama.cpp
+```
+Same commit @grok reported for both Berlin machines, so all four machines across the
+two pairs share source and weights. **What differs is the compiled backend: Metal on
+the Mini, Vulkan on the M5, CUDA (NVIDIA GB10) on the Sparks.** The two pairs are
+therefore not the same experiment -- mine compares Vulkan to Metal, grok's compares
+CUDA to Metal -- and their correctness observations should not be pooled.
+
 ## Slot file hashes
 ```
 M5 /tmp/kvprod/pd.bin
