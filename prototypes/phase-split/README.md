@@ -134,6 +134,33 @@ So the cross-machine gap is not explained by chunking, at least on Metal. This d
 not prove Vulkan is equally insensitive; it removes the confound on the side that
 could be tested.
 
+### Does the fixed block belong to the model or to `-c`?
+
+If the 156.9 MB were a slice of the allocated context, every crossover computed from
+it would be valid only at `-c 4096`. Measured, same 512-token prompt, only `-c` varying:
+
+```
+-c 2048    190,463,552 B
+-c 4096    190,463,552 B      difference: 0 B
+```
+
+**Identical.** The fixed block is a model property, so the constant is portable across
+context settings. (`-c 8192` does not fit beside a 27B on this 24 GB machine: it loads,
+answers `/health` with 200, and returns `Compute error` on every completion. The two
+servers must be run sequentially, and a health probe is not evidence that a server
+works -- only a completion that returns content is.)
+
+### Crossover lengths are NOT bounds
+
+An earlier version of this file, and of the room discussion, called a crossover computed
+outside the calibrated range an "upper bound". **That is wrong.** Each machine's prefill
+curve has a quadratic term, but the *difference* of two such curves need not grow
+superlinearly and need not stay positive: kernels, hybrid attention, context settings and
+memory pressure move either curve independently. Outside its data the fit gives neither a
+value nor a bound nor even a sign, and a near-zero denominator does not establish "never
+pays at any length" either. `calibrate.py` refuses rather than answering, and refuses
+outside the calibrated model, build and `-c` as well as the calibrated length.
+
 ### What is still not established
 
 The shared top-10 is **not a full-vocabulary logit gate**, and four matching greedy

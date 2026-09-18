@@ -8,6 +8,10 @@ accurate from cheap measurements:
     slow-machine prefill at the target length   fitted from two short prefills
     KV bytes at the target length               const + per_token * n
 
+These are bounded observations on ONE pair, one model, one build, one -c. They are
+not validation of a universal install-time rule, and the full-vocabulary correctness
+gate is still outstanding.
+
 Checked against the Mini at 2107 tokens, calibrating on 512 and 1024 only:
 
     slow prefill    predicted 38,242 ms   actual 38,153 ms    0.23%
@@ -44,6 +48,14 @@ def main():
     ap.add_argument("--allow-extrapolation", action="store_true",
                     help="evaluate beyond the longest calibrated length anyway; "
                          "the answer is then a model, not a measurement")
+    # Length is not the only range a calibration has. @codexmb: refuse outside the
+    # calibrated model, build and context as well -- a curve measured on one build
+    # at one -c is not evidence about another.
+    ap.add_argument("--calibrated-on", required=True,
+                    help="identity the calibration was taken under, e.g. "
+                         "'sha3f227079/build434ddbbc/c4096'")
+    ap.add_argument("--target-on", required=True,
+                    help="identity this prediction is for; must match --calibrated-on")
     # No defaults on any of these. Today's recurring failure was a constant
     # carried across a boundary where it did not hold: a per-token KV rate that
     # hid a fixed block, and a ceiling from one pair quoted at another. A default
@@ -59,6 +71,14 @@ def main():
                          "Constant across links, NOT across machines.")
     a = ap.parse_args()
 
+    if a.calibrated_on != a.target_on:
+        raise SystemExit(
+            f"REFUSING: calibrated on '{a.calibrated_on}' but asked about "
+            f"'{a.target_on}'.\n"
+            "Model weights, llama.cpp build and -c each change the curves this tool\n"
+            "fits. A calibration is evidence about the configuration it was taken\n"
+            "under and about no other. Re-calibrate on the target.")
+
     n = a.tokens
     calibrated_to = min(max(a.slow_cal[0], a.slow_cal[2]),
                         max(a.fast_cal[0], a.fast_cal[2]))
@@ -66,10 +86,12 @@ def main():
         raise SystemExit(
             f"REFUSING: asked for {n:,} tokens, calibrated only to {calibrated_to:,.0f}.\n"
             f"That is a {n/calibrated_to:.1f}x extrapolation of a linear fit.\n"
-            "Prefill is not linear -- attention is quadratic -- so the prefill GAP grows\n"
-            "faster than this model assumes while KV grows exactly linearly. A crossover\n"
-            "computed out here is an UPPER BOUND at best, and the run may not even be\n"
-            "possible at the configured context.\n"
+            "Out here the fit supplies NEITHER A VALUE NOR A BOUND, not even a sign.\n"
+            "Each machine's prefill curve has a quadratic term, but the DIFFERENCE of two\n"
+            "such curves need not grow superlinearly and need not stay positive; kernels,\n"
+            "hybrid attention, context settings and memory pressure move either curve\n"
+            "independently. A near-zero denominator likewise does not prove 'never pays'.\n"
+            "The run may also be impossible at the configured context.\n"
             "Calibrate at a length near the target, or pass --allow-extrapolation and\n"
             "report the answer as a model rather than a measurement.")
     s_slope, s_icept = fit_linear([(a.slow_cal[0], a.slow_cal[1]), (a.slow_cal[2], a.slow_cal[3])])
@@ -81,6 +103,7 @@ def main():
     fixed = fast + a.save_ms + a.restore_ms + a.token_n_ms
     split = fixed + transfer
 
+    print(f"[{a.target_on}]")
     print(f"target {n} tokens (calibrated to {calibrated_to:,.0f})"
           + (f"  ** {n/calibrated_to:.1f}x EXTRAPOLATION -- this is a model, not a measurement **"
              if n > calibrated_to else "") + "\n")
