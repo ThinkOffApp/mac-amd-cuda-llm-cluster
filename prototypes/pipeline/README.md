@@ -76,3 +76,6 @@ python validate_edges.py --model-dir /model/gpt2 --out /tmp/rolling-edges
 The edge runner includes a Metal case and therefore requires a Metal-capable host.
 The modern GGUF-model diagnostic is described in [GGUF_CONTEXTS.md](GGUF_CONTEXTS.md).
 Physical-pair overlap and performance remain to be measured.
+
+A working same-host prefill/decode state-transfer recipe for Gemma 4 and 27B,
+including failed and passing full-logit controls, is in [SLOT_HANDOFF.md](SLOT_HANDOFF.md).

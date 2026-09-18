@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/Users/petrus/Documents/Codex/2026-09-16/che/work/gguf-state-check",
+    "/Users/petrus/Documents/Codex/2026-09-16/che/work/models/gemma-4-e4b/gemma-4-E4B-it-Q4_K_M.gguf",
+    "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/slot-fresh/gemma4/slots/before-final-prompt-token.bin",
+    "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/slot-state-logits-matched/gemma4/prompt.json",
+    "1",
+    "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/slot-state-logits-matched/gemma4/report.json",
+    "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/slot-state-logits/gemma4/matched-plan.json"
+  ],
+  "exit_code": 0,
+  "source_sha256": "cb43860bb24d10f730ac65e773a9284fa674d4b3e8bb366bec5b804ca9f999cf"
+}

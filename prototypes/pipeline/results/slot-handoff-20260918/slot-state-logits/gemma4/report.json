@@ -1,0 +1,126 @@
+{
+  "valid": false,
+  "model": "/Users/petrus/Documents/Codex/2026-09-16/che/work/models/gemma-4-e4b/gemma-4-E4B-it-Q4_K_M.gguf",
+  "state": "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/slot-fresh/gemma4/slots/before-final-prompt-token.bin",
+  "state_bytes_loaded": 55598700,
+  "prefix_pos_max": 2110,
+  "prompt_tokens": 2112,
+  "full_swa": true,
+  "atol": 0.10000000149011612,
+  "rtol": 0.009999999776482582,
+  "steps": [
+    {
+      "step": 0,
+      "native_token": 236761,
+      "restored_token": 236761,
+      "max_abs_error": 0.12962067127227783,
+      "outside_tolerance": 6
+    },
+    {
+      "step": 1,
+      "native_token": 562,
+      "restored_token": 562,
+      "max_abs_error": 0.009623527526855469,
+      "outside_tolerance": 0
+    },
+    {
+      "step": 2,
+      "native_token": 15318,
+      "restored_token": 15318,
+      "max_abs_error": 0.0074634552001953125,
+      "outside_tolerance": 0
+    },
+    {
+      "step": 3,
+      "native_token": 5274,
+      "restored_token": 5274,
+      "max_abs_error": 0.009654998779296875,
+      "outside_tolerance": 0
+    },
+    {
+      "step": 4,
+      "native_token": 8735,
+      "restored_token": 8735,
+      "max_abs_error": 0.007990360260009766,
+      "outside_tolerance": 0
+    },
+    {
+      "step": 5,
+      "native_token": 506,
+      "restored_token": 506,
+      "max_abs_error": 0.004010200500488281,
+      "outside_tolerance": 0
+    },
+    {
+      "step": 6,
+      "native_token": 11172,
+      "restored_token": 11172,
+      "max_abs_error": 0.0044097900390625,
+      "outside_tolerance": 0
+    },
+    {
+      "step": 7,
+      "native_token": 236764,
+      "restored_token": 236764,
+      "max_abs_error": 0.0035495758056640625,
+      "outside_tolerance": 0
+    },
+    {
+      "step": 8,
+      "native_token": 506,
+      "restored_token": 506,
+      "max_abs_error": 0.00667572021484375,
+      "outside_tolerance": 0
+    },
+    {
+      "step": 9,
+      "native_token": 15612,
+      "restored_token": 15612,
+      "max_abs_error": 0.006545543670654297,
+      "outside_tolerance": 0
+    },
+    {
+      "step": 10,
+      "native_token": 1883,
+      "restored_token": 1883,
+      "max_abs_error": 0.003715991973876953,
+      "outside_tolerance": 0
+    },
+    {
+      "step": 11,
+      "native_token": 236764,
+      "restored_token": 236764,
+      "max_abs_error": 0.0048389434814453125,
+      "outside_tolerance": 0
+    },
+    {
+      "step": 12,
+      "native_token": 532,
+      "restored_token": 532,
+      "max_abs_error": 0.004555225372314453,
+      "outside_tolerance": 0
+    },
+    {
+      "step": 13,
+      "native_token": 1418,
+      "restored_token": 1418,
+      "max_abs_error": 0.010384559631347656,
+      "outside_tolerance": 0
+    },
+    {
+      "step": 14,
+      "native_token": 7835,
+      "restored_token": 7835,
+      "max_abs_error": 0.0036683082580566406,
+      "outside_tolerance": 0
+    },
+    {
+      "step": 15,
+      "native_token": 8369,
+      "restored_token": 8369,
+      "max_abs_error": 0.005953788757324219,
+      "outside_tolerance": 0
+    }
+  ],
+  "scope": "Same-host Metal; native full prefill versus HTTP slot state restored in a fresh executable. Not cross-backend or network performance."
+}
