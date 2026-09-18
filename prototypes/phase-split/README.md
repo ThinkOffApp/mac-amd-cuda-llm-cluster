@@ -145,7 +145,32 @@ cross-machine, for comparison                        0.670641
 ```
 
 **A chunk-plan difference alone moves the distributions**, on one machine with one
-backend, one build and one set of weights. (Setting 0.269895 against 0.670641 as a
+backend, one build and one set of weights. A five-pattern sweep (`chunk_sweep.py`,
+`receipts/chunk-sweep.txt`) puts the largest such difference at **0.449241**, with all
+five plans emitting identical text:
+
+```
+half vs late            0.449241        one-shot vs late        0.193828
+half vs early           0.422413        one-shot vs early       0.154447
+quarter-steps vs late   0.378033        half vs quarter-steps   0.071208
+quarter-steps vs early  0.351205        late vs early           0.039978
+one-shot vs half        0.269895        one-shot vs quarter     0.198687
+```
+
+Per-step, the chunk effect is not even consistently smaller than the cross-machine one
+(`receipts/per-step.txt`):
+
+```
+step     cross-machine    chunk plan
+0             0.238789      0.269895   <- chunk plan LARGER
+1             0.272204      0.053249
+2             0.670641      0.024322
+3             0.225183      0.047880
+```
+
+Those two columns come from different caches (2107 vs 2106 tokens), different prompt
+lengths and different generated tokens, so they are shown together only to compare
+shapes. (Setting 0.269895 against 0.670641 as a
 percentage would be wrong: they are maxima from different experiments, at different
 steps, over different tokens -- a ratio, not a decomposition. The chunk contribution to
 the physical gap is unknown.) So the cross-machine difference is **NOT established as a

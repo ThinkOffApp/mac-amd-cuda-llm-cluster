@@ -1,0 +1,14 @@
+Two DIFFERENT experiments -- different caches, different prompt lengths, and
+therefore different generated tokens. They are shown on one axis to make the
+shapes comparable, NOT to license a ratio between them.
+
+step     cross-machine    chunk plan
+0             0.238789      0.269895
+1             0.272204      0.053249
+2             0.670641      0.024322
+3             0.225183      0.047880
+max           0.670641      0.269895
+
+The maxima fall on different steps, which is exactly why quoting one over the
+other as a percentage was wrong. Attributing any share of the cross-machine
+number to chunking needs the producer's real boundaries matched.
