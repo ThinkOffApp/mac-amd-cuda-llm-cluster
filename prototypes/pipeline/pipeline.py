@@ -15,7 +15,22 @@ THE QUESTION THIS EXISTS TO ANSWER
     So this measures it directly, on the same Mac<->Linux pair, with real GPT-2
     weights: does overlap beat alternation, and by how much.
 
-WHY THE CHUNKS ARE SEQUENCES, NOT TOKENS
+THE FIRST VERSION OF THIS HAD THE ALGORITHM BACKWARDS
+    It cut ONE batch of 32 into four chunks of 8 to fill the pipeline. Petrus
+    and claudeMB both called it: you should be doubling, not halving. The
+    measured 27B curve says why — sequence-steps per second at batch 32 / 16 /
+    8 is 70.8 / 45.7 / 25.4. Bigger calls are strictly more efficient, so
+    subdividing a batch to fill a pipeline destroys the very thing that makes
+    the machine fast. It was paying the pipeline in the only currency that
+    matters.
+
+    `--inflight N` is the corrected algorithm: N INDEPENDENT batches, each at
+    the full good size, so every call stays efficient and the pipeline depth
+    comes from more concurrent work rather than from slicing existing work.
+    That is also what vLLM does — its stages carry separate full-size scheduler
+    batches, not fragments of one.
+
+WHY THE BATCHES ARE SEQUENCES, NOT TOKENS
     Sequences in a decode batch are independent — sequence i's next token needs
     only sequence i's own KV. So splitting the batch by sequence needs no
     cross-chunk dependency inside a step, and the pipelined and alternating
@@ -60,6 +75,30 @@ PROMPTS = [
     "Water boils at a temperature of",
     "The best way to learn a language is",
     "Once upon a time there was",
+    "The quickest route from Helsinki to",
+    "A neural network learns by",
+    "My favourite recipe for bread uses",
+    "The treaty was signed in the year",
+    "Climate scientists have warned that",
+    "To install the package you should",
+    "The mountain range separating them was",
+    "He looked at the map and realised",
+    "Electric cars are cheaper to run because",
+    "The first computer program was written by",
+    "In the middle of the night she heard",
+    "The difference between a virus and",
+    "Coffee grown at high altitude tends to",
+    "The bridge collapsed because engineers had",
+    "Ancient Greek philosophers argued that",
+    "When the power failed the backup",
+    "Photosynthesis converts sunlight into",
+    "The submarine descended slowly toward",
+    "Every language in the family shares",
+    "Rainfall in the region has dropped",
+    "The algorithm terminates when the error",
+    "Volcanic soil is fertile because",
+    "The orchestra tuned to the oboe because",
+    "Satellites in low orbit must periodically",
 ]
 
 
@@ -198,17 +237,16 @@ def main():
                     choices=["cpu", "mps", "cuda", "rocm"])
     ap.add_argument("--batch", type=int, default=8, help="sequences decoded together")
     ap.add_argument("--new-tokens", type=int, default=32)
-    ap.add_argument("--chunks", type=int, default=1,
-                    help="micro-batches in flight per step; 1 = alternating (the baseline)")
+    ap.add_argument("--inflight", type=int, default=1,
+                    help="independent FULL-SIZE batches in flight; 1 = alternating baseline. "
+                         "NOT a subdivision of --batch: see the note in the docstring")
     ap.add_argument("--split", type=int, default=6,
                     help="layers on stage 0; the rest go to stage 1")
     ap.add_argument("--out", default="")
     args = ap.parse_args()
 
-    if args.batch % args.chunks:
-        ap.error(f"--batch {args.batch} must divide by --chunks {args.chunks}; "
-                 "an uneven split would change the arithmetic between runs and "
-                 "make the identical-tokens gate meaningless")
+    if args.inflight < 1:
+        ap.error("--inflight must be at least 1")
     if args.batch > len(PROMPTS):
         ap.error(f"--batch must be <= {len(PROMPTS)} distinct prompts")
     if args.device == "mps" and not torch.backends.mps.is_available():
@@ -254,7 +292,10 @@ def main():
     plen = min(len(p) for p in prompts)
     ids = torch.tensor([p[:plen] for p in prompts], dtype=torch.long)
 
-    caches = [{"k": None, "v": None} for _ in mine]
+    # One cache set PER IN-FLIGHT BATCH. They are fully independent streams:
+    # identical prompts across batches is fine and deliberate, because it makes
+    # every batch's output directly comparable to the single-batch run.
+    caches = [[{"k": None, "v": None} for _ in mine] for _ in range(args.inflight)]
     busy = 0.0
 
     def stage_forward(x, cache_slice, offset):
@@ -266,77 +307,66 @@ def main():
         # ---- prefill: whole batch, never chunked. Chunking prefill would change
         # ---- a second variable at the same time as the one under test.
         t0 = time.perf_counter()
-        if rank == 0:
-            pos = torch.arange(0, plen, device=device)
-            x = wte[ids.to(device)] + wpe[pos]
-            x = stage_forward(x, caches, 0)
-            chan.send("prefill", x)
-            nxt = chan.recv("tokens").to(torch.long)
-        else:
-            x = chan.recv("prefill").to(device)
-            x = stage_forward(x, caches, 0)
-            h = F.layer_norm(x, (dim,), lnf_w, lnf_b, eps)
-            logits = h[:, -1, :] @ wte.T
-            nxt = logits.argmax(-1).to("cpu")
-            chan.send("tokens", nxt.to(torch.float32))
+        nxt = []
+        for f in range(args.inflight):
+            if rank == 0:
+                pos = torch.arange(0, plen, device=device)
+                x = wte[ids.to(device)] + wpe[pos]
+                x = stage_forward(x, caches[f], 0)
+                chan.send(f"prefill{f}", x)
+                nxt.append(chan.recv(f"tokens{f}").to(torch.long))
+            else:
+                x = chan.recv(f"prefill{f}").to(device)
+                x = stage_forward(x, caches[f], 0)
+                h = F.layer_norm(x, (dim,), lnf_w, lnf_b, eps)
+                t = (h[:, -1, :] @ wte.T).argmax(-1).to("cpu")
+                chan.send(f"tokens{f}", t.to(torch.float32))
+                nxt.append(t)
         busy += time.perf_counter() - t0
 
-        generated = [[int(t)] for t in nxt.reshape(-1)]
+        generated = [[[int(t)] for t in n.reshape(-1)] for n in nxt]
         offset = plen
-        chunk_size = args.batch // args.chunks
-        # PER-CHUNK caches, split once after the unchunked prefill. The first
-        # version sliced one batch-wide cache each step and wrote the result
-        # back, which cannot work: the block appends a token, so the result is
-        # longer than the slice it came from. Giving each chunk its own cache
-        # removes the write-back entirely and keeps the chunks independent,
-        # which is the property the whole experiment rests on.
-        chunk_caches = [
-            [{"k": c["k"][i * chunk_size:(i + 1) * chunk_size],
-              "v": c["v"][i * chunk_size:(i + 1) * chunk_size]} for c in caches]
-            for i in range(args.chunks)
-        ]
         wall0 = time.perf_counter()
         compute = 0.0
 
         for _step in range(args.new_tokens - 1):
-            cur = nxt.reshape(-1)
             if rank == 0:
-                # Send every chunk BEFORE waiting for any reply: that is what
-                # puts passes in flight. Stage 1 is already working on chunk 0
-                # while this loop computes chunk 1.
-                for c in range(args.chunks):
-                    lo, hi = c * chunk_size, (c + 1) * chunk_size
+                # Send every in-flight batch BEFORE waiting for any reply: that
+                # is what keeps stage 1 fed. Each call is a FULL batch, so the
+                # pipeline costs nothing in per-call efficiency — the whole
+                # point of the correction.
+                for f in range(args.inflight):
                     t = time.perf_counter()
                     pos = torch.arange(offset, offset + 1, device=device)
-                    x = wte[cur[lo:hi].to(device)].unsqueeze(1) + wpe[pos]
-                    x = stage_forward(x, chunk_caches[c], offset)
+                    x = wte[nxt[f].reshape(-1).to(device)].unsqueeze(1) + wpe[pos]
+                    x = stage_forward(x, caches[f], offset)
                     compute += time.perf_counter() - t
-                    chan.send(f"h{c}", x)
-                outs = []
-                for c in range(args.chunks):
-                    outs.append(chan.recv(f"t{c}"))
-                nxt = torch.cat(outs).to(torch.long)
+                    chan.send(f"h{f}", x)
+                nxt = [chan.recv(f"t{f}").to(torch.long) for f in range(args.inflight)]
             else:
-                outs = []
-                for c in range(args.chunks):
-                    x = chan.recv(f"h{c}").to(device)
+                out = []
+                for f in range(args.inflight):
+                    x = chan.recv(f"h{f}").to(device)
                     t = time.perf_counter()
-                    x = stage_forward(x, chunk_caches[c], offset)
+                    x = stage_forward(x, caches[f], offset)
                     h = F.layer_norm(x, (dim,), lnf_w, lnf_b, eps)
                     tokens = (h[:, -1, :] @ wte.T).argmax(-1).to("cpu")
                     compute += time.perf_counter() - t
-                    chan.send(f"t{c}", tokens.to(torch.float32))
-                    outs.append(tokens)
-                nxt = torch.cat(outs).to(torch.long)
-            for i, t in enumerate(nxt.reshape(-1).tolist()):
-                generated[i].append(int(t))
+                    chan.send(f"t{f}", tokens.to(torch.float32))
+                    out.append(tokens)
+                nxt = [o.to(torch.long) for o in out]
+            for f in range(args.inflight):
+                for i, t in enumerate(nxt[f].reshape(-1).tolist()):
+                    generated[f][i].append(int(t))
             offset += 1
 
         wall = time.perf_counter() - wall0
 
-    tokens_out = args.batch * (args.new_tokens - 1)
+    seqs = args.batch * args.inflight
+    tokens_out = seqs * (args.new_tokens - 1)
     report = {
-        "rank": rank, "device": str(device), "chunks": args.chunks,
+        "rank": rank, "device": str(device), "inflight": args.inflight,
+        "sequences_total": seqs,
         "split_layers": [len(stage0_layers), len(stage1_layers)],
         "batch": args.batch, "new_tokens": args.new_tokens,
         "decode_wall_s": round(wall, 4),
@@ -344,9 +374,17 @@ def main():
         "this_rank_compute_s": round(compute, 4),
         "this_rank_busy_fraction": round(compute / wall, 4),
         "bytes_sent": chan.bytes_sent,
-        "sequences": [tok.decode(g) for g in generated] if rank == 0 else None,
-        "token_ids_sha": hashlib.sha256(
-            json.dumps(generated).encode()).hexdigest()[:16],
+        "sequences": [tok.decode(g) for g in generated[0]] if rank == 0 else None,
+        # CORRECTNESS GATE, and it has to be per-batch rather than over the
+        # whole run: hashing all N batches makes the hash change with N for a
+        # trivial reason and proves nothing. Every in-flight batch is fed the
+        # SAME prompts on purpose, so:
+        #   - all_batches_identical must be true WITHIN a run, and
+        #   - batch0_sha must match the --inflight 1 run.
+        # Together those say the extra depth changed the schedule and not the
+        # arithmetic. Without them this is just a bigger number.
+        "batch0_sha": hashlib.sha256(json.dumps(generated[0]).encode()).hexdigest()[:16],
+        "all_batches_identical": all(g == generated[0] for g in generated),
     }
     print(json.dumps(report, indent=2), flush=True)
     if args.out:

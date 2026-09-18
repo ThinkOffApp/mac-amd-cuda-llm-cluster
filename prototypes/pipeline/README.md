@@ -89,6 +89,42 @@ gate across chunk counts, and the transport measurement showing the network is ~
 step and flat in the number of frames. What does not stand is any claim about models other
 than the ones measured here.
 
+## The corrected algorithm — and the control that kills that too
+
+Petrus and claudeMB both objected to the first version: cutting one batch into C chunks
+makes every call smaller, and smaller calls are less efficient. You should be doubling, not
+halving. So `--inflight N` replaced `--chunks C`: N INDEPENDENT batches, each at full size,
+depth from more concurrent work rather than from slicing existing work — what vLLM does.
+
+It behaves as predicted, rising instead of falling:
+
+| inflight | sequences | tok/s |
+|---------:|----------:|------:|
+| 1 | 8 | 99.9 |
+| 2 | 16 | 107.9 |
+| 4 | 32 | 176.8 |
+
+**But that compares different amounts of work.** Holding the total at 32 sequences and
+varying only the arrangement:
+
+| arrangement | tok/s |
+|---|------:|
+| depth 4 x batch 8 | 167.3 |
+| depth 2 x batch 16 | 262.6 |
+| **depth 1 x batch 32 (plain)** | **348.2** |
+
+**One big batch beats every pipelined arrangement, by 2.1x.** The +77% was an artefact of
+giving depth more work. Correctness gate held throughout: all in-flight batches are fed the
+same prompts, all produced identical tokens, and batch 0 matched the depth-1 run
+(`606d95a16050d62c`, the same hash as the unchunked runs). The schedule changed, the
+arithmetic did not.
+
+**Unified result, now in three disguises:** on this hardware one large call always beats
+several smaller ones — whether the smaller calls come from chunking a batch or from
+independent batches in flight. Per-call efficiency dominates any overlap a pipeline wins
+back. Corroborated on served weights by the Qwen3.8-27B curve: 32x the work for 5.4x the
+time.
+
 ## Limits, stated
 - Results describe GPT-2 124M and 774M ONLY. Benchmark on weights you serve.
 - One prototype, one transport, FP32, no continuous batching.
