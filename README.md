@@ -9,9 +9,9 @@ and CUDA, aiming to speed up both prompt processing and output generation.
 
 We are now developing **Mac + AMD + CUDA tensor parallelism**, beginning with
 Mac correctness tests and AMD support alongside them. This is separate from
-the existing llama.cpp RPC benchmarks below. The performance target is both
-prefill and generation faster than the fastest single host under matched
-model, precision, context and workload; we have not demonstrated that target.
+the existing llama.cpp RPC benchmarks below. The performance target is stated
+in full under [What we are aiming at](#what-we-are-aiming-at); we have not
+demonstrated it.
 
 - **Implemented and locally tested:** a [sharded FP32 MLP harness](prototypes/heterogeneous-tp/README.md)
   with local MPS/CUDA/ROCm device selection and explicit CPU-staged Gloo
@@ -29,11 +29,36 @@ model, precision, context and workload; we have not demonstrated that target.
   two-host CPU socket reduction probe. Its raw results and framing need review
   before inclusion as benchmark data. This does not yet validate an integrated
   MPS–ROCm model run, accelerator transfer costs, or negligible transport overhead.
-- **Spark–Spark control:** the MiaLab GLM-5.3-Flash EXL3/DFlash recipe has been
-  attempted. The latest diagnosed failure was worker-side DFlash weight loading;
-  the worker exited while the head container remained running without a healthy
-  API. Repair/relaunch is underway. No successful served-token result from this
-  recipe is recorded here yet.
+- **Spark–Spark control: now serving, numbers withheld.** The MiaLab
+  GLM-5.3-Flash EXL3/DFlash recipe came up TP=2 across two GB10s on
+  17 September 2026 (`/health` 200,
+  `system_fingerprint vllm-0.1.dev20051+g487ecf187-tp2-7175cf7e`). The final
+  blocker was the launcher, not the fabric: it passes `-e NCCL_IB_DISABLE=0`
+  and `-e NCCL_NET=IB` as literals, so an exported override never reaches the
+  container. Verify with `docker inspect`, not with what you exported.
+
+  **No throughput figures are published here yet.** The first benchmark counted
+  streamed SSE chunks as tokens; the server's own counter shows **3.76 tokens
+  per chunk**, so those figures were low by that factor and are withdrawn.
+  Token-counted re-measurement disagrees with itself across prompt lengths
+  (TTFT contains roughly four already-decoded tokens, which mixes the prefill
+  and decode phases), so the honest state is: **the recipe serves, and the
+  rate is not yet measured to a standard worth publishing.** Per-token
+  timestamps are the next step.
+
+  The inspected configuration for the record, read back out of the running
+  container with `docker inspect` rather than assumed from the launch command:
+  `NCCL_IB_DISABLE=1`, `NCCL_NET=Socket`, `GPU_MEM_UTIL=0.85`,
+  `MAX_NUM_SEQS=4`, `MAX_NUM_BATCHED_TOKENS=7168`, `MAX_MODEL_LEN=8192`.
+  (An earlier revision of this file said `GPU_MEM_UTIL=0.80`, which is what the
+  launch requested; the container reports 0.85, and the container is what ran.)
+  GPUDirect RDMA is unsupported on GB10, so a matched RoCE comparison cannot be
+  run on this hardware and no claim is made about how this transport ranks
+  against others.
+
+  **`MAX_NUM_SEQS=4` bounds every concurrency result from this deployment.**
+  Requests beyond four queue rather than batch, so any throughput-versus-batch
+  curve measured here describes this configuration, not the hardware.
 
 Next gates are a physical mixed-host correctness run, a transformer block,
 a small complete model, then repeatable end-to-end timing. Experimental RDMA
@@ -50,6 +75,120 @@ All three backends now appear here, which is why the repo is no longer called
 identical files, and then split across the cable with the Mac: when that split is worth
 doing, when it is not, and the 186 GiB quant that exceeds either device budget and ran split
 across both.
+
+## What we are aiming at
+
+Build and measure a heterogeneous **Apple Metal + AMD ROCm + NVIDIA CUDA** execution framework
+that, for a matched model, quantization and workload:
+
+1. **beats the fastest single host** in both prefill and generation, then
+2. **beats the fastest-plus-slowest two-host pair** in both.
+
+Neither is achieved. Neither has even been attempted yet, and the distinction that makes that true
+is worth stating plainly: **three hosts is not three platforms.** A MacBook and two GB10 Sparks is
+three machines but only two backends, Metal and CUDA. The AMD Strix Halo sits at the other desk, so
+every result below is a two-platform result.
+
+Where the two-platform work stands, as context rather than as partial credit:
+
+- **Prefill** already beats the better single machine past a crossover, from about 896 prompt tokens
+  on the dense 27B and about 4096 on the sparse 177B, with the margin still growing at the longest
+  length tested.
+- **Generation** has lost every split we have tried, by roughly a third at best. That is the real
+  work, and adding a third platform does not by itself fix it.
+
+Milestone 2 is the one that matters for a mixed set: it asks whether a slower third platform still
+*adds* once you have the good pair, rather than being carried by it. If it does not, the honest
+result is that heterogeneous scaling stops at two, and that is worth publishing too.
+
+Every table below is what the hardware actually did, including the configurations where combining
+machines made things worse.
+
+### Sub-aims: each platform PAIR first
+
+The triple is the goal, but it is only reachable if the pairs work, so each pair carries the same
+two milestones. Status as of 17 Sep 2026, from the tables further down:
+
+| pair | backends | prefill beats best single host | generation beats best single host |
+|---|---|---|---|
+| **Mac + Strix** | Metal + ROCm | **no** — when the model fits one box, solo wins (491 vs 333 pp on IQ1_S) | **no** — 30.6 solo vs 24.2 split |
+| **Mac + Spark** | Metal + CUDA | **yes, past a crossover** — measured below | **no at 1 stream** — 0.711x; concurrency untested |
+| **Strix + Spark** | ROCm + CUDA | **not tested** | **not tested** |
+| **all three** | Metal + ROCm + CUDA | **not attempted** | **not attempted** |
+
+#### Mac + Spark, measured 18 September 2026
+
+Interleaved `mac` / `spark` / `pair`, two rounds, medians. Both solo arms are genuine: the model
+fits each machine on its own.
+
+```
+model     Qwen3.8-Flash-Next UD-IQ4_XS (qwen4exp, 48 blocks, 512 experts / 10 used, 87 GB)
+engine    stock llama.cpp RPC, ggml-rpc-server, -ts 1/1
+machines  MacBook Pro (Metal) + asus1 gx10-6678 NVIDIA GB10 (CUDA)
+link      direct cable, 0.904 ms RTT
+```
+
+| | mac | spark | pair | vs the faster single |
+|---|---|---|---|---|
+| pp512 | **1064.03** | 809.80 | 842.75 | loses, 0.792x |
+| pp2048 | 1043.26 | 828.03 | **1089.97** | **beats, 1.045x** |
+| pp4096 | 964.71 | 819.94 | **1143.03** | **beats, 1.185x** |
+| tg128 (1 stream) | **37.88** | 26.98 | 26.95 | loses, 0.711x — see caveat |
+
+**Milestone 1 asks for both prefill and generation. This is the prefill half only.**
+
+**The generation row is measured at concurrency 1 and says nothing about concurrency above 1.**
+`llama-bench` is single-stream by design. At one stream a pipeline is structurally worse than one
+machine: token N+1 needs token N, so only one stage works at a time and the other idles. With
+several concurrent streams the stages overlap *across requests*, which is the regime pipeline
+parallelism exists for and which a single-stream benchmark cannot show. **Untested here. Do not
+read the 0.711x as a verdict on generation.**
+
+Replication is tight: pair pp4096 read 1142.70 and 1143.36 on two independent rounds.
+
+The shape matters more than any single row. The Mac degrades with prompt length (1064 -> 965)
+while the Spark stays flat (810 -> 820), so the longer the prompt the more the Spark is worth
+having; and the pair **exceeds both** rather than interpolating between them, which is genuine
+parallelism rather than load shifting.
+
+Note on the arithmetic used elsewhere in this file: this model has **48 blocks**, so tensor
+parallel would cross the link **96** times per token, not the round ~120 used as an illustration.
+At 0.904 ms that is ~87 ms per token of pure network, a ceiling near 11 tok/s.
+
+**Why some of these are "no" is now measured, not guessed.** The link decides which split is
+even arithmetically possible, because the two designs differ by two orders of magnitude in how
+often they cross it:
+
+| design | crossings per token | why |
+|---|---|---|
+| tensor parallel | **2 per layer** (~120 for a 60-layer model) | every layer reduces across ranks |
+| layer split / pipeline | **1 per cut** (= 1 for a pair) | one handoff at the boundary |
+
+Measured round-trip latency on the links we own, each taken on the live machines:
+
+| link | RTT | TP cost/token (~120 crossings) | layer-split cost/token |
+|---|---|---|---|
+| Spark to Spark, RoCE over ConnectX-7 | microseconds | viable | negligible |
+| Spark to Spark, TCP over the same cable | ~0.58 ms | ~70 ms | ~0.6 ms |
+| **Mac to Spark, Thunderbolt Ethernet** | **0.904 ms** | **~108 ms, ceiling under 10 tok/s** | **~0.9 ms** |
+| Spark to Spark over wifi | 32.26 ms avg, 218 ms peak | ~4 s, unusable | ~32 ms |
+
+So on the hardware in this repo, **tensor parallel across Mac and Spark cannot win regardless of
+kernel quality** - the budget is spent before the GPUs are reached. Reaching 30 tok/s would need
+about 0.26 ms per collective, roughly 4x better than the link we have. That is an RDMA-class
+requirement, and the Mac here has no RDMA-capable NIC, so cross-platform tensor parallel is
+blocked on hardware rather than on software.
+
+The same measurement explains a result on the matched pair: moving NCCL from TCP sockets to RoCE
+over the *same physical cable* took the two-Spark serve from 32.5 to 62 tok/s single stream and
+from 91.9 to 140.5 at 8 streams, on identical code. The transport was the dominant cost there
+because CUDA's GPU round trip (0.00787 ms) is far cheaper than the wire; on Metal (0.2075 ms) the
+balance tips the other way, which is why a faster link helps some pairs and not others.
+
+Two things this table is careful about. The Mac + Strix pair buys **capacity**, not speed: the
+200 GB row runs nowhere else, and a configuration that makes a model possible at all is a different
+kind of win from one that makes it faster. And Strix + Spark is untested for a dull reason rather
+than a technical one, the two machines are currently in different cities.
 
 ### Two desks, two halves of this repo
 
