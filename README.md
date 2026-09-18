@@ -29,28 +29,28 @@ demonstrated it.
   two-host CPU socket reduction probe. Its raw results and framing need review
   before inclusion as benchmark data. This does not yet validate an integrated
   MPS–ROCm model run, accelerator transfer costs, or negligible transport overhead.
-- **Spark–Spark control: now serving.** The MiaLab GLM-5.3-Flash EXL3/DFlash
-  recipe came up TP=2 across two GB10s on 17 September 2026 (`/health` 200,
+- **Spark–Spark control: now serving, numbers withheld.** The MiaLab
+  GLM-5.3-Flash EXL3/DFlash recipe came up TP=2 across two GB10s on
+  17 September 2026 (`/health` 200,
   `system_fingerprint vllm-0.1.dev20051+g487ecf187-tp2-7175cf7e`). The final
-  blocker was not the fabric: the launcher passes `-e NCCL_IB_DISABLE=0` and
-  `-e NCCL_NET=IB` as literals, so an exported override never reaches the
+  blocker was the launcher, not the fabric: it passes `-e NCCL_IB_DISABLE=0`
+  and `-e NCCL_NET=IB` as literals, so an exported override never reaches the
   container. Verify with `docker inspect`, not with what you exported.
 
-  Measured through `/v1/completions` with streaming, TTFT for prefill and the
-  streamed tail for decode:
+  **No throughput figures are published here yet.** The first benchmark counted
+  streamed SSE chunks as tokens; the server's own counter shows **3.76 tokens
+  per chunk**, so those figures were low by that factor and are withdrawn.
+  Token-counted re-measurement disagrees with itself across prompt lengths
+  (TTFT contains roughly four already-decoded tokens, which mixes the prefill
+  and decode phases), so the honest state is: **the recipe serves, and the
+  rate is not yet measured to a standard worth publishing.** Per-token
+  timestamps are the next step.
 
-  | prompt | TTFT | prefill tok/s | decode tok/s |
-  |---|---|---|---|
-  | 512 | 1.09 s | 470.4 | 5.58 |
-  | 2048 | 2.62 s | 781.5 | 5.56 |
-  | 4096 | 6.25 s | 655.5 | 4.52 |
-
-  **This is NCCL over TCP sockets, not RoCE** (GPUDirect RDMA is unsupported on
-  GB10), so it is the pessimal transport and these decode figures are a floor,
-  not a verdict on tensor parallelism. For scale, llama.cpp layer split decodes
-  22.2 tok/s on the same bench, about 4x faster, but at a different engine and
-  quantization, so the two are not a controlled comparison. Prompt token counts
-  are approximate.
+  The inspected NCCL configuration for the record: `NCCL_IB_DISABLE=1`,
+  `NCCL_NET=Socket`, `GPU_MEM_UTIL=0.80`, confirmed inside the container by
+  `docker inspect`. GPUDirect RDMA is unsupported on GB10, so a matched
+  RoCE comparison cannot be run on this hardware and no claim is made about
+  how this transport ranks against others.
 
 Next gates are a physical mixed-host correctness run, a transformer block,
 a small complete model, then repeatable end-to-end timing. Experimental RDMA
