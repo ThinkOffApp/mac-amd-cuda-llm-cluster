@@ -1,0 +1,179 @@
+{
+  "scope": "Single local Mac MPS solo only; no physical-pair speedup follows. Interleaved head modes; two warmups and one recorded run per process; five trials.",
+  "started_at": 1789718553.782327,
+  "finished_at": 1789718668.249342,
+  "summary": [
+    {
+      "prompt": 128,
+      "head": "baseline",
+      "ttft_median_s": 0.02392804200644605,
+      "decode_median_tokens_per_s": 78.82694663005208,
+      "samples": [
+        {
+          "prompt": 128,
+          "head": "baseline",
+          "trial": 1,
+          "ttft_s": 0.024198541999794543,
+          "decode_tokens_per_s": 88.80328590225918
+        },
+        {
+          "prompt": 128,
+          "head": "baseline",
+          "trial": 2,
+          "ttft_s": 0.02643379202345386,
+          "decode_tokens_per_s": 73.26608330231997
+        },
+        {
+          "prompt": 128,
+          "head": "baseline",
+          "trial": 3,
+          "ttft_s": 0.021384584018960595,
+          "decode_tokens_per_s": 78.82694663005208
+        },
+        {
+          "prompt": 128,
+          "head": "baseline",
+          "trial": 4,
+          "ttft_s": 0.02146625000750646,
+          "decode_tokens_per_s": 99.54261087000481
+        },
+        {
+          "prompt": 128,
+          "head": "baseline",
+          "trial": 5,
+          "ttft_s": 0.02392804200644605,
+          "decode_tokens_per_s": 65.8647344596809
+        }
+      ]
+    },
+    {
+      "prompt": 128,
+      "head": "last-root",
+      "ttft_median_s": 0.02085708300000988,
+      "decode_median_tokens_per_s": 74.44996032597,
+      "samples": [
+        {
+          "prompt": 128,
+          "head": "last-root",
+          "trial": 1,
+          "ttft_s": 0.023130540997954085,
+          "decode_tokens_per_s": 70.32554868630382
+        },
+        {
+          "prompt": 128,
+          "head": "last-root",
+          "trial": 2,
+          "ttft_s": 0.020604249992175028,
+          "decode_tokens_per_s": 75.36294588232087
+        },
+        {
+          "prompt": 128,
+          "head": "last-root",
+          "trial": 3,
+          "ttft_s": 0.02106308299698867,
+          "decode_tokens_per_s": 68.05194686097859
+        },
+        {
+          "prompt": 128,
+          "head": "last-root",
+          "trial": 4,
+          "ttft_s": 0.02085708300000988,
+          "decode_tokens_per_s": 90.6762396914205
+        },
+        {
+          "prompt": 128,
+          "head": "last-root",
+          "trial": 5,
+          "ttft_s": 0.019188167003449053,
+          "decode_tokens_per_s": 74.44996032597
+        }
+      ]
+    },
+    {
+      "prompt": 512,
+      "head": "baseline",
+      "ttft_median_s": 0.03044175001559779,
+      "decode_median_tokens_per_s": 100.01960035012462,
+      "samples": [
+        {
+          "prompt": 512,
+          "head": "baseline",
+          "trial": 1,
+          "ttft_s": 0.023097583994967863,
+          "decode_tokens_per_s": 105.22451561732312
+        },
+        {
+          "prompt": 512,
+          "head": "baseline",
+          "trial": 2,
+          "ttft_s": 0.06365150000783615,
+          "decode_tokens_per_s": 87.00119820477904
+        },
+        {
+          "prompt": 512,
+          "head": "baseline",
+          "trial": 3,
+          "ttft_s": 0.03044175001559779,
+          "decode_tokens_per_s": 108.77687674722273
+        },
+        {
+          "prompt": 512,
+          "head": "baseline",
+          "trial": 4,
+          "ttft_s": 0.03005912498338148,
+          "decode_tokens_per_s": 85.40123499532642
+        },
+        {
+          "prompt": 512,
+          "head": "baseline",
+          "trial": 5,
+          "ttft_s": 0.03514366698800586,
+          "decode_tokens_per_s": 100.01960035012462
+        }
+      ]
+    },
+    {
+      "prompt": 512,
+      "head": "last-root",
+      "ttft_median_s": 0.029711707989918068,
+      "decode_median_tokens_per_s": 104.97091431070601,
+      "samples": [
+        {
+          "prompt": 512,
+          "head": "last-root",
+          "trial": 1,
+          "ttft_s": 0.029711707989918068,
+          "decode_tokens_per_s": 91.12774384313249
+        },
+        {
+          "prompt": 512,
+          "head": "last-root",
+          "trial": 2,
+          "ttft_s": 0.025673208001535386,
+          "decode_tokens_per_s": 112.88194230093706
+        },
+        {
+          "prompt": 512,
+          "head": "last-root",
+          "trial": 3,
+          "ttft_s": 0.031076167011633515,
+          "decode_tokens_per_s": 105.07200356878242
+        },
+        {
+          "prompt": 512,
+          "head": "last-root",
+          "trial": 4,
+          "ttft_s": 0.032048082997789606,
+          "decode_tokens_per_s": 104.97091431070601
+        },
+        {
+          "prompt": 512,
+          "head": "last-root",
+          "trial": 5,
+          "ttft_s": 0.028925209015142173,
+          "decode_tokens_per_s": 89.07192361822386
+        }
+      ]
+    }
+  ]
+}
