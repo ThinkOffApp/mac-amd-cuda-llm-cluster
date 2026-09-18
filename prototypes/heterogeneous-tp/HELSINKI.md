@@ -209,9 +209,22 @@ Setup and download sit outside any timed path, and nothing here is timed.
 against Mini+M5 tensor parallel, same revision, tokenizer, FP32, eval, one torch
 thread, same KV cache and the same greedy/EOS policy in all three.
 
-**Solo runs the FULL model on its own GPU** — a `NullCollective` makes
-`all_reduce` the identity over one rank, so the arithmetic path is the same and
-only the sharding differs. Never a half shard, never CPU.
+**Solo runs the FULL model on its own GPU, and keeps it there.** A `NullCollective`
+makes `all_reduce` the identity over one rank, and row-parallel outputs stay
+GPU-resident: `--stage` defaults to CPU staging for TP and GPU residency for
+solo. The first version staged solo through CPU at every attention and MLP
+projection even with no peer to reduce with, which would have made the
+single-host baseline slower than it is and **flattered any TP comparison against
+it**. The staged variant is still available as `--mode solo --stage cpu` and
+reports itself as `solo-staged`, because it is a useful control but not a
+baseline.
+
+**Every timed run is checked against the reference after the clock stops**, not
+just the untimed run before warmup, and a mismatch invalidates that run and the
+whole result. **Both ranks exchange their correctness verdict and abort
+together**, so one rank cannot skip collectives the other is still waiting in.
+Barriers sit outside every timed region so one rank's reference work or warmup is
+not billed to the other's measurement.
 
 **The correctness gate runs before any timing and the timings are withheld if it
 fails.** Load, tokenize, hash and the reference check sit outside every timed
@@ -227,6 +240,15 @@ pass, which quietly misaligned both numbers.
 running them in three blocks, so a machine drifting over the session perturbs all
 three equally. This fleet has already produced a 15% drift on a Mac across one
 evening, which is larger than the effect being measured.
+
+### Benchmark controls
+
+| control | what it proves |
+|---|---|
+| `bc1_timed_run_diverges` | a timed run that diverges is caught by the per-run check and the timings are withheld (`valid: false`, zero timings returned) |
+| `bc2_one_rank_incorrect` | one rank alone judging itself incorrect aborts **both** ranks — neither hangs in a collective the other skipped |
+
+Both exit 1 on both ranks.
 
 **It has not been run, and it refuses to run.** Its preflight aborts unless
 `/tmp/m5-gpu-window.open` exists, because `llm-server.service` (Flash-Next) is

@@ -1,0 +1,2 @@
+[bc1_timed_run_diverges] rank0=1 rank1=1 FAILED AS REQUIRED -- timed output differs though the pre-timing gate passed
+[bc2_one_rank_incorrect] rank0=1 rank1=1 FAILED AS REQUIRED -- rank 1 alone reports incorrect; both must abort, neither hang

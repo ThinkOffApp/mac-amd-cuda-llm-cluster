@@ -279,6 +279,7 @@ def main():
                     t1 = time.perf_counter()
                     # Check THIS run's output, not just the untimed one earlier:
                     # a timed run could diverge and go unnoticed.
+                    produced = [0] + produced[1:]   # INJECTED DIVERGENCE
                     run_ok = produced == ref_ids
                     if not run_ok:
                         timed_mismatch = True

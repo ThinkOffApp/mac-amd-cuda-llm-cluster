@@ -246,7 +246,7 @@ def main():
                 ids_ref.append(nxt)
             del ref_model
             got = generate(args.new_tokens)
-            correct = got == ref_ids
+            correct = (got == ref_ids) and rank == 0   # INJECTED: rank 1 fails
 
             def agree(flag):
                 """Both ranks must reach the same verdict, or neither proceeds.
