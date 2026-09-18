@@ -87,8 +87,10 @@ def main():
             "Measured on one real pair, llama-bench and llama-server agreed within 7% on\n"
             "each machine's absolute prefill and disagreed by 2.07x on their DIFFERENCE\n"
             "(0.702 s against 0.339 s at 2,111 tokens). This rule uses only the\n"
-            "difference. On that pair the two sources sit on OPPOSITE SIDES of the line:\n"
-            "llama-bench says split, the server run measured a 0.84x loss.\n"
+            "difference. At 2,111 tokens BOTH still say do-not-split (-0.205 s against\n"
+            "-0.568 s), so they agreed on the verdict there -- but a 2x error in the only\n"
+            "term that matters moves the crossover, and llama-bench puts it just ~17%\n"
+            "above the length actually tested.\n"
             "Time the prefill with llama-server on the real prompt -- that is the path\n"
             "being split.")
 
