@@ -235,7 +235,7 @@ def main():
                         continue
                     got, got_logits, eos, caches = sharded_generate(pid, args.new_tokens, chunks)
                     again, again_logits, again_eos, again_caches = sharded_generate(
-                        pid, args.new_tokens, chunks)
+                        pid, args.new_tokens, 3 - chunks)
                     finite = bool(torch.isfinite(got_logits).all())
                     reset_ok = bool(again == got and again_eos == eos and
                                     again_logits.shape == got_logits.shape and

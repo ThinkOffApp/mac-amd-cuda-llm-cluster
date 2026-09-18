@@ -1,3 +1,4 @@
 [gc1_qkv_contiguous_slice] exit=1 FAILED AS REQUIRED -- fused QKV sliced contiguously, not per q/k/v block
 [gc2_attn_bias_twice] exit=1 FAILED AS REQUIRED -- attn c_proj bias counted twice
 [gc3_no_positional_embeddings] exit=1 FAILED AS REQUIRED -- wpe dropped from the sharded path
+[gc4_reset_different_split] exit=1 -- repeat run uses the other prefill split; bitwise reset check must reject it

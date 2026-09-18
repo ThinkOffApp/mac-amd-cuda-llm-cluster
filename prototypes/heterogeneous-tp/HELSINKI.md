@@ -173,8 +173,21 @@ flipping tokens on prompts like that one. Worth knowing before anyone reads
 | `gc2_attn_bias_twice` | row-parallel bias added per rank instead of once after the sum |
 | `gc3_no_positional_embeddings` | `wpe` dropped; the toy had no positional embeddings, so this path is new |
 
-All three fail as required. Run with `--new-tokens 4` for speed; detection is
+Plus `gc4_reset_different_split`: the repeat run prefills with the other chunk
+split, which the bitwise reset check must reject. It does. That control exists
+because the reset check was strengthened from "same IDs" to "bitwise identical
+logits", and a stricter check is worth nothing until you show it can fail.
+
+All four fail as required. Run with `--new-tokens 4` for speed; detection is
 the point, not sequence length.
+
+### On reading the margin
+
+@codexmb's bound, which is the correct way to state this: **a sufficient
+condition for same-step argmax agreement is `margin > 2 * max_abs_error`.** It is
+satisfied for every case here and is reported per case as
+`argmax_bound_margin_gt_2x_error`. It is evidence **for these samples only** and
+is not a guarantee about other prompts.
 
 ### Checkpoint provenance
 
