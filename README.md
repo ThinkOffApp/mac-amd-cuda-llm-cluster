@@ -46,11 +46,19 @@ demonstrated it.
   rate is not yet measured to a standard worth publishing.** Per-token
   timestamps are the next step.
 
-  The inspected NCCL configuration for the record: `NCCL_IB_DISABLE=1`,
-  `NCCL_NET=Socket`, `GPU_MEM_UTIL=0.80`, confirmed inside the container by
-  `docker inspect`. GPUDirect RDMA is unsupported on GB10, so a matched
-  RoCE comparison cannot be run on this hardware and no claim is made about
-  how this transport ranks against others.
+  The inspected configuration for the record, read back out of the running
+  container with `docker inspect` rather than assumed from the launch command:
+  `NCCL_IB_DISABLE=1`, `NCCL_NET=Socket`, `GPU_MEM_UTIL=0.85`,
+  `MAX_NUM_SEQS=4`, `MAX_NUM_BATCHED_TOKENS=7168`, `MAX_MODEL_LEN=8192`.
+  (An earlier revision of this file said `GPU_MEM_UTIL=0.80`, which is what the
+  launch requested; the container reports 0.85, and the container is what ran.)
+  GPUDirect RDMA is unsupported on GB10, so a matched RoCE comparison cannot be
+  run on this hardware and no claim is made about how this transport ranks
+  against others.
+
+  **`MAX_NUM_SEQS=4` bounds every concurrency result from this deployment.**
+  Requests beyond four queue rather than batch, so any throughput-versus-batch
+  curve measured here describes this configuration, not the hardware.
 
 Next gates are a physical mixed-host correctness run, a transformer block,
 a small complete model, then repeatable end-to-end timing. Experimental RDMA
