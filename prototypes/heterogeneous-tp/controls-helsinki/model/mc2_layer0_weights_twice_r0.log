@@ -1,0 +1,360 @@
+{
+  "passed": false,
+  "transport": "CPU tcp",
+  "dtype": "float32",
+  "logit_atol": 0.0002,
+  "model": "2-block prenorm decoder, embeddings + LM head, greedy",
+  "WARNING": "SYNTHETIC WEIGHTS. Generated token IDs are arithmetic, not language. This is not text generation and not a trained-model result. No speed claim is made.",
+  "ranks": [
+    {
+      "rank": 0,
+      "device": "cpu",
+      "requested": "cpu",
+      "torch": "2.11.0",
+      "hip": null,
+      "cuda": null,
+      "host": "Petruss-Mini",
+      "layers": 2,
+      "heads": 8,
+      "local_heads": 4,
+      "dim": 128,
+      "hidden": 256,
+      "local_hidden": 128,
+      "vocab": 64,
+      "collectives_per_token": 4,
+      "collectives_total": 336,
+      "cases": [
+        {
+          "prompt_len": 1,
+          "chunks": 1,
+          "generated": 8,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "cache_reset_reproducible": true,
+          "final_cache_len_ok": true,
+          "max_abs_logit_error": 4.031726360321045,
+          "min_top1_top2_margin": 0.06350314617156982,
+          "reference_ids": [
+            0,
+            38,
+            27,
+            62,
+            62,
+            60,
+            55,
+            55
+          ],
+          "sharded_ids": [
+            26,
+            26,
+            42,
+            17,
+            39,
+            38,
+            13,
+            28
+          ]
+        },
+        {
+          "prompt_len": 5,
+          "chunks": 1,
+          "generated": 8,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "cache_reset_reproducible": true,
+          "final_cache_len_ok": true,
+          "max_abs_logit_error": 3.8784103393554688,
+          "min_top1_top2_margin": 0.08418989181518555,
+          "reference_ids": [
+            0,
+            51,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62
+          ],
+          "sharded_ids": [
+            53,
+            30,
+            52,
+            42,
+            39,
+            38,
+            35,
+            20
+          ]
+        },
+        {
+          "prompt_len": 5,
+          "chunks": 2,
+          "generated": 8,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "cache_reset_reproducible": true,
+          "final_cache_len_ok": true,
+          "max_abs_logit_error": 3.878410577774048,
+          "min_top1_top2_margin": 0.08418989181518555,
+          "reference_ids": [
+            0,
+            51,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62
+          ],
+          "sharded_ids": [
+            53,
+            30,
+            52,
+            42,
+            39,
+            38,
+            35,
+            20
+          ]
+        },
+        {
+          "prompt_len": 17,
+          "chunks": 1,
+          "generated": 8,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "cache_reset_reproducible": true,
+          "final_cache_len_ok": true,
+          "max_abs_logit_error": 3.2221317291259766,
+          "min_top1_top2_margin": 0.08151364326477051,
+          "reference_ids": [
+            31,
+            53,
+            30,
+            52,
+            60,
+            55,
+            55,
+            55
+          ],
+          "sharded_ids": [
+            31,
+            53,
+            30,
+            52,
+            42,
+            39,
+            19,
+            32
+          ]
+        },
+        {
+          "prompt_len": 17,
+          "chunks": 2,
+          "generated": 8,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "cache_reset_reproducible": true,
+          "final_cache_len_ok": true,
+          "max_abs_logit_error": 3.2221312522888184,
+          "min_top1_top2_margin": 0.08151364326477051,
+          "reference_ids": [
+            31,
+            53,
+            30,
+            52,
+            60,
+            55,
+            55,
+            55
+          ],
+          "sharded_ids": [
+            31,
+            53,
+            30,
+            52,
+            42,
+            39,
+            19,
+            32
+          ]
+        }
+      ]
+    },
+    {
+      "rank": 1,
+      "device": "cpu",
+      "requested": "cpu",
+      "torch": "2.11.0",
+      "hip": null,
+      "cuda": null,
+      "host": "Petruss-Mini",
+      "layers": 2,
+      "heads": 8,
+      "local_heads": 4,
+      "dim": 128,
+      "hidden": 256,
+      "local_hidden": 128,
+      "vocab": 64,
+      "collectives_per_token": 4,
+      "collectives_total": 336,
+      "cases": [
+        {
+          "prompt_len": 1,
+          "chunks": 1,
+          "generated": 8,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "cache_reset_reproducible": true,
+          "final_cache_len_ok": true,
+          "max_abs_logit_error": 4.031726360321045,
+          "min_top1_top2_margin": 0.06350314617156982,
+          "reference_ids": [
+            0,
+            38,
+            27,
+            62,
+            62,
+            60,
+            55,
+            55
+          ],
+          "sharded_ids": [
+            26,
+            26,
+            42,
+            17,
+            39,
+            38,
+            13,
+            28
+          ]
+        },
+        {
+          "prompt_len": 5,
+          "chunks": 1,
+          "generated": 8,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "cache_reset_reproducible": true,
+          "final_cache_len_ok": true,
+          "max_abs_logit_error": 3.8784103393554688,
+          "min_top1_top2_margin": 0.08418989181518555,
+          "reference_ids": [
+            0,
+            51,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62
+          ],
+          "sharded_ids": [
+            53,
+            30,
+            52,
+            42,
+            39,
+            38,
+            35,
+            20
+          ]
+        },
+        {
+          "prompt_len": 5,
+          "chunks": 2,
+          "generated": 8,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "cache_reset_reproducible": true,
+          "final_cache_len_ok": true,
+          "max_abs_logit_error": 3.878410577774048,
+          "min_top1_top2_margin": 0.08418989181518555,
+          "reference_ids": [
+            0,
+            51,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62
+          ],
+          "sharded_ids": [
+            53,
+            30,
+            52,
+            42,
+            39,
+            38,
+            35,
+            20
+          ]
+        },
+        {
+          "prompt_len": 17,
+          "chunks": 1,
+          "generated": 8,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "cache_reset_reproducible": true,
+          "final_cache_len_ok": true,
+          "max_abs_logit_error": 3.2221317291259766,
+          "min_top1_top2_margin": 0.08151364326477051,
+          "reference_ids": [
+            31,
+            53,
+            30,
+            52,
+            60,
+            55,
+            55,
+            55
+          ],
+          "sharded_ids": [
+            31,
+            53,
+            30,
+            52,
+            42,
+            39,
+            19,
+            32
+          ]
+        },
+        {
+          "prompt_len": 17,
+          "chunks": 2,
+          "generated": 8,
+          "passed": false,
+          "token_ids_match_reference": false,
+          "cache_reset_reproducible": true,
+          "final_cache_len_ok": true,
+          "max_abs_logit_error": 3.2221312522888184,
+          "min_top1_top2_margin": 0.08151364326477051,
+          "reference_ids": [
+            31,
+            53,
+            30,
+            52,
+            60,
+            55,
+            55,
+            55
+          ],
+          "sharded_ids": [
+            31,
+            53,
+            30,
+            52,
+            42,
+            39,
+            19,
+            32
+          ]
+        }
+      ]
+    }
+  ]
+}
