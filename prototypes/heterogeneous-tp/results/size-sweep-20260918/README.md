@@ -103,3 +103,42 @@ need a non-PyTorch copy path, which has not been tried.
 **Consequence: the round trip cannot be optimised, only removed.** That requires
 the collective to reach the wire without touching the host — a GPU-aware
 transport — which is not available on this pair today.
+
+## 4. The bottleneck is the Mac, by 6.5x
+
+Same probe on the M5's ROCm side. No GPU window was needed: a few hundred 3 KB
+copies is negligible load, and Flash-Next stayed `active` with health 200,
+checked before and after.
+
+```
+  per device<->host copy, 3 KB
+    Mini  Metal (MPS)    0.1650 ms
+    M5    ROCm           0.0255 ms      6.5x cheaper
+```
+
+Fixed cost on both — flat across payload size on both — but the Mac's fixed cost
+is six and a half times larger.
+
+```
+  staging floor per token, 24 collectives, both directions
+    Mini   7.65 ms/token
+    M5     1.22 ms/token
+    M5 alone completes an entire token in 7.10 ms
+```
+
+**The Mac's copy overhead alone exceeds the whole single-machine token time. The
+PC's is under a fifth of it.** Ranks stage concurrently, so the pair pays the Mac.
+
+The ROCm figures were taken under contention, which can only make ROCm look worse
+than it is. A clean measurement would widen this gap, not narrow it.
+
+### What follows
+
+1. **This is a PyTorch-on-Metal cost, not a tensor-parallel one.** Same design,
+   same payloads, same collective count; the PC side alone would not bottleneck.
+2. **It reframes the Mac+PC pairing.** The property that makes it appealing —
+   most people own both — is also what makes it slow on current evidence. A
+   PC+PC pair carries a floor 6x lower and is worth measuring.
+3. The bound from section 3 matters more now: this is a floor in **PyTorch's**
+   MPS copy path. Whether a non-PyTorch path on Metal does better is unknown and
+   decides whether this is fixable software or a hardware property.
