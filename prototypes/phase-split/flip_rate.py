@@ -47,13 +47,22 @@ IF YOU COMPUTE TV FROM A SERVER API, REPORT THE CAPTURED MASS BESIDE IT
     of the window. Widening to top-120,000 dropped it to 9.8e-4 with nothing else
     changed.
 
-    The rigorous form, for S = ids captured by BOTH arms:
+    The rigorous form, for S = ids captured by BOTH arms, PER MEASURED STEP:
 
         TV_full  <=  0.5 * [ sum_S |p_i - q_i|  +  (1 - P(S))  +  (1 - Q(S)) ]
 
     The unseen tail can contribute at most the mass living in it, so that is an UPPER
-    bound and needs no apology -- but only if the captured mass is reported. A bare
-    top-k TV figure is uninterpretable.
+    bound and needs no apology -- subject to three conditions @codexmb attached to it:
+
+      p and q must be the ORIGINAL GLOBALLY NORMALISED probabilities, not a top-k
+      slice renormalised to sum to one, or (1 - P(S)) is not the tail mass
+
+      each token ID counted ONCE
+
+      stated PER STEP, not aggregated across steps
+
+    And only if the captured mass is reported beside it: a bare top-k TV figure is
+    uninterpretable.
 
     This is the mirror of the truncation finding in metric_ladder.py: truncation can
     make TV bigger, an unreported tail can invent TV that is not there, and neither is
