@@ -76,7 +76,7 @@ this fabric is a snapshot, not a property.
 | label | meaning |
 |---|---|
 | **MEASURED by us** | run on our machines, raw artifact committed here, date + build commit + repetition count stated |
-| **MEASURED by codexmb** | run by codexmb on our hardware and independently verified by them; **no raw artifact in this repo** |
+| **MEASURED by codexmb** | run by codexmb on our hardware and independently verified by them; the raw artifact exists and is cited by path, but is **not committed to this repo** |
 | **NOT OURS** | someone else's published or reported figure, under their conditions, which we did not run |
 | **IDEA / untested** | a hypothesis, a prediction, or an arithmetic projection from measured inputs |
 | **CONTROL** | a baseline run whose job is to make another number interpretable — not itself the result being sought |

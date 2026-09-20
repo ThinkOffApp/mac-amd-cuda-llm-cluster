@@ -626,8 +626,8 @@ limiters, and **we did not isolate which** — the gap is unexplained, not attri
 
 ### The two-Spark GLM serve: read the transport per run
 
-**MEASURED by codexmb, independently verified by them, no raw artifact in this repo.**
-MiaAI-Lab GLM-5.3-Flash-EXL3-2x-DGX-Sparks at checkout
+**MEASURED by codexmb, independently verified by them. The raw artifact exists (path below)
+but is not committed here.** MiaAI-Lab GLM-5.3-Flash-EXL3-2x-DGX-Sparks at checkout
 `6961fa0706f3c0b25775bf42a575471972582bac`, image
 `ghcr.io/miaai-lab/glm-5.3-flash-2x-dgx-sparks:exl3-instanttensor`, both ASUS Ascent GX10
 boxes serving GLM-5.3-Flash-EXL3. DFlash 7, MTP 2, context 8192, max seq 2. One bounded
@@ -637,11 +637,30 @@ streaming measurement: **24 prompt + 384 completion tokens**.
 > returned ENOMEM. It is explicitly NOT an RDMA success** — it is what the stack fell back
 > to when RDMA registration failed.
 
-codexmb separately reported **19.2 completion tokens/s including thinking**. We could not
-locate the measurement boundary for that figure — which run, what prompt, whether it is the
-same bounded measurement above — so **it is recorded here as a number we cannot state the
-conditions for, and is not published as a throughput result.** A throughput figure without
-its boundary is not usable by anyone downstream.
+**The 19.2 tok/s figure, and why it is not published as throughput.** codexmb's
+measurement is **fully documented** — the artifact is
+`Documents/Codex/2026-09-20/che/outputs/glm-performance/measurement.json` and reads:
+
+```
+prompt_tokens 24   completion_tokens 384   total_tokens 408
+elapsed_seconds 20.032584      first_text_seconds 0.3227
+overall_completion_tokens_per_second 19.16877
+reasoning_characters 1634      answer_characters 0
+first_answer_seconds null      finish_reason "length"
+```
+
+**The reason it cannot be quoted as throughput is not missing conditions. It is that the
+task produced no answer at all.** All 384 completion tokens were spent inside the reasoning
+block, the run hit the token cap, and it emitted **zero answer characters**.
+
+So 19.17 tok/s is a **correctly measured generation rate** and **not a measurement of a
+completed task**. Those are different quantities. A reader assembling a benchmark bundle
+needs the distinction: this number is usable as "how fast does this stack emit tokens",
+and is not usable as "how fast does this stack answer a question". We publish it as the
+former, labelled, rather than as the latter.
+
+An earlier revision of this section said the conditions could not be located. **That was
+wrong** — they were recorded all along, in the file above.
 
 **And the transport on that pair is not a constant.** A *different* run on the same two
 boxes the same day used `NCCL_NET=IB` with `NCCL_IB_DISABLE=0` on GID 6/5 and ran over
@@ -725,6 +744,19 @@ pair to a run.
   buffer-size lines in the load log before trusting a row.
 - A watchdog that says "ssh down" during a split is usually a box at load
   average 20 answering slowly; verify on both addresses before reacting.
+- **Never grade a reasoning model on whether it produced visible output.** A
+  harness that keys "did it work" on answer text will silently mis-grade every
+  reasoning model, because a run can spend its entire token budget inside the
+  reasoning block and return empty content with `finish_reason: length`. It bit
+  us twice on 20 Sep 2026: a GLM-5.3-Flash-EXL3 measurement produced 384
+  completion tokens, 1634 reasoning characters and **zero answer characters**
+  (see the two-Spark section above), and separately a freshly loaded reasoning
+  model given a 40-token cap on the MacBook returned empty content and was
+  nearly recorded as a broken model. **Key success on completion tokens
+  produced, and treat `finish_reason: length` WITH tokens as a success, not a
+  failure.** Then keep the two quantities apart in the write-up: *generation
+  rate* and *completed-task throughput* are different measurements, and a run
+  that emits no answer measures only the first.
 
 ## Hardware used
 
