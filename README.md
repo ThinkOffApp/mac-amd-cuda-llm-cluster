@@ -1,5 +1,12 @@
 # mac-amd-cuda-llm-cluster
 
+**Based on work by [Ash Hart](https://github.com/ashhart/MCDMA),
+[Chad Hurley](https://github.com/chadhurley25075-png/pd-bridge) and
+[Benjamin Ostrov](https://github.com/b-ostrov/MelonDMA).**
+Their projects are independent of this one; see
+[Related upstream work](#related-upstream-work) for what each is and what we
+have and have not reproduced.
+
 Run a 321B model across a Mac and an AMD Strix Halo mini PC over one Thunderbolt
 cable, with an NVIDIA GB10 on the same bench. Benchmark results are labelled
 with their configurations. Now building tensor parallelism across Metal, ROCm
@@ -44,6 +51,13 @@ Neither is ours and neither is a dependency here; we measure against them.
   memory access over Thunderbolt XDomain; kext plus a ConnectX-5 Ex in a TB5
   enclosure. Apache-2.0. Published beta with measured latencies: 4 KiB QD1
   medians, Mac→Spark WRITE 7.6 µs, READ 6.0 µs (his measurements, not ours).
+- **[pd-bridge](https://github.com/chadhurley25075-png/pd-bridge)** — Chad Hurley.
+  Heterogeneous prefill/decode for DeepSeek-V4-Flash: CUDA prefill on a DGX
+  Spark under vLLM, Metal decode on a Mac Studio under oMLX, over plain 10GbE.
+  Apache-2.0. Splits by **phase** rather than by layer, which is a different
+  axis from the layer-split benchmarks in this repository, and the one-way case
+  needs no special interconnect. His reported figures (including a claimed
+  ~3.7x over a Mac alone at 241K tokens) are **his, and not reproduced here**.
 - **[MelonDMA](https://github.com/b-ostrov/MelonDMA)** — Benjamin Ostrov
   (@b_ostrov). Experimental PCIDriverKit driver for Mellanox ConnectX on macOS,
   RoCEv2, libibverbs-style userspace. Apache-2.0. Requires SIP disabled; Apple
