@@ -576,7 +576,8 @@ everywhere below.**
 
 A dual-port Thunderbolt-to-SFP28 adapter, sold under several names ("PX Thunderbolt
 to Ethernet", "thunderbolt 25G" and others). We bought the one branded **Plyisty**,
-at roughly 221 EUR. It works on Thunderbolt 3 and Thunderbolt 4.
+at **240 EUR including shipping** — a price actually paid, not a lookup. It works on
+Thunderbolt 3 and Thunderbolt 4.
 
 What is inside it was never documented by the seller. It has since been opened and
 identified by Christian Kohlschütter in an
@@ -618,6 +619,57 @@ reading the card's headline figure as something we expect to reach.
 **The interconnect plan is a comparison, not a replacement:** the 25-gigabit
 ConnectX-4 route we already have, measured against the 100-gigabit ConnectX-5 route
 once it lands. Neither arm of that comparison has been run.
+
+### What the three paths cost, and what the money actually buys
+
+There are three ways to get a fast network card onto a Mac, at three very different
+prices. The useful part of comparing them is not which is quickest. It is that **the
+money does not buy speed in anything like the proportion the port labels suggest.**
+
+**No speed in this subsection was measured by us.** The 32 and 48 gigabit figures are
+expectations derived from published specifications and Thunderbolt tunnel limits, not
+results. The single real measurement here is Benjamin Ostrov's, on his own hardware.
+We have paid for two of these three paths and have tested neither.
+
+**Path 1 — build it yourself, roughly 200-300 EUR.** The route
+[Benjamin Ostrov](https://github.com/b-ostrov/MelonDMA) has taken: an ADT-Link
+USB4-to-PCIe adapter, a second-hand Mellanox ConnectX-4, a power supply you provide
+yourself, a 3D-printed frame of his own design, and a cable. He measures
+**28 Gbit/s** on it today, on a PCIe Gen3 adapter — **his measurement, his hardware,
+not ours.** The prices below vary in how firm they are, so each one says which it is:
+
+| component | price | how firm |
+|---|---|---|
+| ADT-Link USB4-to-PCIe adapter | 109 EUR AliExpress / 129 DFRobot / 170 Amazon | dated lookup, 15 Sep 2026 |
+| the same adapter's UT4G variant | **unknown** | out of stock, no price shown |
+| Mellanox ConnectX-4, second-hand | ~26 EUR (about $30) | **one** eBay listing — indicative, not a market survey |
+| ATX power supply, user-supplied | 30-60 EUR | **estimate, not looked up** |
+| 3D-printed frame | — | self-designed |
+| direct-attach cable or transceiver | 20-30 EUR | **estimate, not looked up** |
+
+**Path 2 — the Plyisty adapter, which we own. 240 EUR including shipping, a price
+actually paid.** Dual 25-gigabit ports. On published tunnel limits we do not expect it
+to exceed about 28 Gbit/s in practice, but that is an expectation and nothing more:
+**it has not been tested, and we genuinely do not know how well it works until it is.**
+
+**Path 3 — the Helios 5S enclosure and ConnectX-5 card, ordered. Over 800 EUR for the
+two together, again a price actually paid.** OWC publish up to about 6000 MB/s for the
+enclosure, roughly 48 gigabits. Not arrived, nothing measured.
+
+**Here is the part the port labels hide.** All three paths are limited by the
+Thunderbolt tunnel rather than by the network card in them. So the real comparison is
+roughly 200-300 EUR for about 32 gigabits against over 800 EUR for about 48. Paying
+three to four times as much does not return three to four times the throughput — and
+it very definitely does not buy 100 gigabits against 25, which is what anyone reading
+only the two cards' port speeds would conclude. What the extra money buys is a
+Thunderbolt 5 tunnel rather than a Thunderbolt 4 one, a finished enclosure with its own
+power and cooling rather than a bare board and a supply sitting on the desk, and a card
+that is not the component holding the link back.
+
+**One detail worth noticing on the way past: the network card is the cheapest thing in
+the build.** A ConnectX-4 at about 26 EUR sits inside an adapter that costs four to six
+times more than the card does. Second-hand enterprise networking is nearly free. The
+Thunderbolt bridge needed to get it onto a Mac is where the money actually goes.
 
 ## What we are testing next: models that fit in no single machine
 
