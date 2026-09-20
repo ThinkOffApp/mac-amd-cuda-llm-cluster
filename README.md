@@ -626,8 +626,10 @@ limiters, and **we did not isolate which** — the gap is unexplained, not attri
 
 ### The two-Spark GLM serve: read the transport per run
 
-**MEASURED by codexmb, independently verified by them. The raw artifact exists (path below)
-but is not committed here.** MiaAI-Lab GLM-5.3-Flash-EXL3-2x-DGX-Sparks at checkout
+**Serve MEASURED by codexmb. The bounded measurement below was produced by the 2026-09-20
+Codex task and independently inspected by codexmb; its raw artifact is committed byte-exact
+at [`benchmarks/glm-2spark-2026-09-20/`](benchmarks/glm-2spark-2026-09-20/).**
+MiaAI-Lab GLM-5.3-Flash-EXL3-2x-DGX-Sparks at checkout
 `6961fa0706f3c0b25775bf42a575471972582bac`, image
 `ghcr.io/miaai-lab/glm-5.3-flash-2x-dgx-sparks:exl3-instanttensor`, both ASUS Ascent GX10
 boxes serving GLM-5.3-Flash-EXL3. DFlash 7, MTP 2, context 8192, max seq 2. One bounded
@@ -637,9 +639,11 @@ streaming measurement: **24 prompt + 384 completion tokens**.
 > returned ENOMEM. It is explicitly NOT an RDMA success** — it is what the stack fell back
 > to when RDMA registration failed.
 
-**The 19.2 tok/s figure, and why it is not published as throughput.** codexmb's
-measurement is **fully documented** — the artifact is
-`Documents/Codex/2026-09-20/che/outputs/glm-performance/measurement.json` and reads:
+**The 19.2 tok/s figure, and what it actually measures.** It is **fully documented**, and
+the artifact is now committed unmodified at
+[`benchmarks/glm-2spark-2026-09-20/measurement.json`](benchmarks/glm-2spark-2026-09-20/measurement.json)
+(445 bytes, sha256 `cf0b7df3…bf11`), copied from
+`Documents/Codex/2026-09-20/che/outputs/glm-performance/measurement.json`. It reads:
 
 ```
 prompt_tokens 24   completion_tokens 384   total_tokens 408
@@ -653,11 +657,15 @@ first_answer_seconds null      finish_reason "length"
 task produced no answer at all.** All 384 completion tokens were spent inside the reasoning
 block, the run hit the token cap, and it emitted **zero answer characters**.
 
-So 19.17 tok/s is a **correctly measured generation rate** and **not a measurement of a
-completed task**. Those are different quantities. A reader assembling a benchmark bundle
-needs the distinction: this number is usable as "how fast does this stack emit tokens",
-and is not usable as "how fast does this stack answer a question". We publish it as the
-former, labelled, rather than as the latter.
+Stated precisely, and this is the label to carry if the figure is quoted anywhere:
+**19.16877 is the overall completion-token generation rate for a length-capped,
+reasoning-only response with zero final-answer characters. It is not answered-task
+performance.**
+
+Those are different quantities, and a reader assembling a benchmark bundle needs the
+distinction: this number is usable as "how fast does this stack emit tokens", and is not
+usable as "how fast does this stack answer a question". We publish it as the former,
+labelled, rather than as the latter.
 
 An earlier revision of this section said the conditions could not be located. **That was
 wrong** — they were recorded all along, in the file above.

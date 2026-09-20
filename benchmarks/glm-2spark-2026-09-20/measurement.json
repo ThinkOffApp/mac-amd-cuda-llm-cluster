@@ -1,0 +1,16 @@
+{
+  "elapsed_seconds": 20.032584084023256,
+  "first_text_seconds": 0.3227123340475373,
+  "first_answer_seconds": null,
+  "usage": {
+    "prompt_tokens": 24,
+    "total_tokens": 408,
+    "completion_tokens": 384
+  },
+  "stream_chunks": 106,
+  "reasoning_characters": 1634,
+  "answer_characters": 0,
+  "finish_reason": "length",
+  "overall_completion_tokens_per_second": 19.16877015912563,
+  "decode_tokens_per_second_approx": 19.431886968035286
+}
