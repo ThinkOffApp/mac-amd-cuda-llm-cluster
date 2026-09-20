@@ -38,9 +38,13 @@ Neither is ours and neither is a dependency here; we measure against them.
   quoted publicly (8.67 µs RTT, 19.8–38 Gbit/s, tweet of 15 Sep 2026) are not in
   that README and are **unverified by us**.
 
-For scale, our own transport over the direct 10G cable measures a 4 KiB TCP
-ping-pong median of 350 µs (≈175 µs per one-way hop) against Ash Hart's 6–8 µs
-RDMA figures — a 20–30× gap. That gap is the reason both projects exist.
+For scale, our own transport over the direct 10G cable measures these TCP
+ping-pong RTT medians (3000 samples each, 2026-09-16): **64 B 403.0 µs,
+4 KiB 244.0 µs, 64 KiB 810.8 µs**. Ash Hart reports 4 KiB QD1 medians of
+7.6 µs (WRITE) and 6.0 µs (READ) for the same payload size. Comparing like
+payloads that is roughly **30-40x**, though his measurement boundary is not
+stated and ours is a full round trip, so treat the ratio as an order of
+magnitude rather than a figure. That gap is the reason both projects exist.
 
 ### Development update — 17 September 2026
 
