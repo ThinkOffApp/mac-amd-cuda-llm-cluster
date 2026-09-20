@@ -5,6 +5,34 @@ cable, with an NVIDIA GB10 on the same bench. Benchmark results are labelled
 with their configurations. Now building tensor parallelism across Metal, ROCm
 and CUDA, aiming to speed up both prompt processing and output generation.
 
+### What this is, in plain words
+
+Apple, AMD and NVIDIA GPUs on the same bench, joined by ordinary cables, running
+one large language model across all of them at once. The question this repository
+exists to answer is a practical one: **when is splitting a model across several
+machines actually faster than just using the best machine you own?**
+
+Often the answer is "it is not". Those cases are published here too, because a
+benchmark that reports only its wins is not a benchmark.
+
+**Two shorthands appear in every table below, and they are most of the jargon you
+need:**
+
+- **`pp`** is *prompt processing*, also called prefill: how fast a machine reads
+  your prompt. `pp512` is that rate measured on a 512-token prompt.
+- **`tg`** is *token generation*: how fast it writes the answer back. `tg128` is
+  that rate over 128 generated tokens.
+
+Both are tokens per second and higher is better. The two behave very differently
+when a model is split across machines, and that difference is most of what this
+repository is about.
+
+**How to read the rest.** Each section opens with what it found; the tables under
+it are the evidence, kept for anyone who would rather check a claim than take it.
+Every figure carries the conditions it was measured under, other people's
+measurements are attributed to them, and where we did not measure something it
+says so plainly.
+
 ### Related upstream work
 
 This repository is the **Ethernet / TCP baseline**. Two independent projects are
@@ -90,7 +118,8 @@ for the first correctness gate.
 Everyone pairs DGX Sparks with DGX Sparks, or Macs with Macs. This repo
 documents the mixed set: **Apple M5 Max (Metal) + AMD Strix Halo (ROCm) +
 NVIDIA GB10 (CUDA)**, joined by `ggml-rpc-server` over a Thunderbolt IP link
-and 10 GbE. It is the setup behind the M5² benchmark card.
+and 10 GbE. It is the setup behind the **M5² benchmark card** below, a name that
+pairs the two machines it was measured on: the Apple M5 Max and the Bosgame M5.
 
 All three backends now appear here, which is why the repo is no longer called
 `mac-amd-llm-cluster`. The GB10 first appears below as a straight two-way comparison on
@@ -166,6 +195,28 @@ Linux Ethernet interfaces". There is exactly one cable between the boxes.
 this one — what a Thunderbolt link between a Mac and a Strix Halo box can actually carry, measured
 layer by layer, plus the raw logs behind every table here.
 
+### The whole fleet, and the software that watches it
+
+The two desks above are halves of one set of machines. This is all of it in a
+single frame: the Bosgame M5 (Strix Halo) stacked on top of the two ASUS Ascent
+GX10 Sparks, a Raspberry Pi driving the small touchscreen above them, the MacBook
+on the right, an e-ink tablet on the left, and the car dashboard on the display
+behind.
+
+![The fleet on one desk: the Bosgame M5 stacked on two ASUS Ascent GX10 Sparks, a Raspberry Pi touchscreen, an e-ink tablet and the MacBook](images/fleet-desk.jpg)
+
+Hardware at this size stops being something you can hold in your head, so the
+other half of the setup is the software that keeps track of it. Every machine
+reports into one page, which is what both the small touchscreen and the e-ink
+tablet in the photo above are displaying:
+
+![The fleet dashboard: each machine with the model it is serving, plus processor, memory and temperature](images/fleet-dashboard.jpg)
+
+One card per machine, with **the model that machine is currently serving** beside
+its name, and its processor, memory and temperature underneath. The practical use
+is knowing whether a box is busy before starting a benchmark on it, which matters
+more than it sounds: several of the caveats later in this README exist precisely
+because a machine was under load when it should have been idle.
 
 ## The measured result (GLM-5.3-Flash 321B MoE, pp512 / tg128 tok/s)
 
@@ -282,14 +333,12 @@ GB10. Two things fall out of the absolute numbers that are worth more than the r
   −9.7 % sparse) rather than the direction. We also previously said this model showed no run-to-run drift;
   it shows less, not none (one of the three passes came in ~7 % low at 2048 and 4096).
 
-*Same control still missing.* Both columns are llama.cpp. A native NVIDIA stack on the same model is what
-would separate "the GB10 loses on this workload" from "llama.cpp's CUDA path loses on this workload", and
-that run has not happened. Until it does, read every sparse row here as a statement about this stack.
-
-*The control we have not run:* whether the reversal is the silicon or llama.cpp's CUDA MoE
-path being less mature than its Metal one. The separator is the same model on a native NVIDIA
-stack (TensorRT-LLM or a modelopt-aware vLLM). Until then the sparse table says
-"llama.cpp on this hardware", not "this hardware".
+*The control we have not run.* Both columns are llama.cpp, so nothing here separates "the
+GB10 loses on this workload" from "llama.cpp's CUDA path loses on this workload" — its
+mixture-of-experts path may simply be less mature than its Metal one. The separator would be
+the same model on a native NVIDIA stack (TensorRT-LLM, or a modelopt-aware vLLM), and **that
+run has not happened.** Until it does, read every sparse row here as a statement about this
+stack: "llama.cpp on this hardware", not "this hardware".
 
 **Approximate effective weight-read rate** (weight bytes × tg64 on the dense model):
 ≈440 GB/s on the M5 Max, ≈225 GB/s on the GB10. This is not measured DRAM bandwidth. It
@@ -812,13 +861,278 @@ pair to a run.
   rate* and *completed-task throughput* are different measurements, and a run
   that emits no answer measures only the first.
 
+## The interconnect: three paths, and what actually limits each one
+
+Putting a fast network card on a Mac means reaching it through a Thunderbolt port,
+and that turns out to be the whole story. Each path has **three speeds in series** —
+the Thunderbolt tunnel, the PCIe link behind it, and the network card itself — and
+**the smallest of the three sets the ceiling.** Laid side by side, the bottleneck
+stops being something a reader has to work out.
+
+**No speed in this section was measured by us.** Every figure below is either a
+published specification or someone else's measurement, attributed where it appears.
+We own one of these three paths and have ordered another, and **neither has been
+tested.** The machines they are meant to join are pictured
+[earlier in this README](#the-whole-fleet-and-the-software-that-watches-it).
+
+### The three paths at a glance
+
+| | Thunderbolt tunnel | PCIe link | network card | price | measured so far | **what binds it** |
+|---|---|---|---|---|---|---|
+| **1. ADT-Link, self-assembled** — not ours | USB4 Gen3x2, 40 Gb/s raw, **~32 usable** on a Thunderbolt 3/4 host | Gen4 x4 | ConnectX-4, 40GbE | ~200-300 EUR assembled | **28 Gbit/s, Ostrov's figure** on his own hardware, on a Gen3 adapter | **the tunnel** |
+| **2. Plyisty** — ours, in hand | Thunderbolt 3/4, 40 Gb/s raw, **~32 usable** | OCP 2.0 module, bridged to Thunderbolt | ConnectX-4 Lx, **dual 25GbE** | **240 EUR, paid** | nothing by us. 20.7 one-way / 25.4 saturated, **Kohlschütter's figures** | **the tunnel** |
+| **3. OWC Helios 5S + MCX516A-CDAT** — ordered | Thunderbolt 5, **80 Gb/s** data | Gen4, slot **x16 mechanical / x4 electrical**, ~63 Gb/s | ConnectX-5 Ex, dual 100GbE, **200 Gb/s** capable | **over 800 EUR, paid** for the pair | nothing. OWC publish ~6000 MB/s, about 48 Gb/s | **PCIe width and the enclosure — not the card** |
+
+**Read down the "network card" column and the point makes itself: the card is the
+fastest component in every path and the limit in none of them.** A card rated at 200
+gigabits reaches perhaps 48. A dual-25-gigabit card reaches perhaps 28. What actually
+constrains all three is the Thunderbolt tunnel, or the PCIe width sitting in front of
+it. **Anyone shopping by the number printed on the box — "100 gigabit!" — will buy the
+wrong thing**, and that is what this table exists to prevent.
+
+**Connector width is not electrical width.** The Helios slot is physically a full x16
+and electrically an x4. The card could use sixteen lanes; it is given four. That is
+exactly the trap the table above exposes, and nothing on a spec sheet flags it for you.
+
+### Path 1: the self-assembled adapter
+
+The cheapest route, and not ours — it is the build
+[Benjamin Ostrov](https://github.com/b-ostrov/MelonDMA) has put together: an
+[ADT-Link USB4-to-PCIe adapter](https://www.adt.link/product/UT4G.html), a second-hand
+Mellanox ConnectX-4, a power supply you provide yourself, a 3D-printed frame of his own
+design, and a cable. He measures **28 Gbit/s** on it today, on a PCIe Gen3 adapter —
+**his measurement, on his hardware, not ours.** The adapter's controller is an ASMedia
+ASM2464PD on the UT3G and an ASM2464PDX on the UT4G; both are PCIe Gen4 x4, so the
+upstream link is the same either way.
+
+Prices vary in how firm they are, so each says which it is:
+
+| component | price | how firm |
+|---|---|---|
+| ADT-Link USB4-to-PCIe adapter | 109 EUR AliExpress / 129 DFRobot / 170 Amazon | dated lookup, 15 Sep 2026 |
+| the same adapter's UT4G variant | **unknown** | out of stock, no price shown |
+| Mellanox ConnectX-4, second-hand | ~26 EUR (about $30) | **one** eBay listing — indicative, not a market survey |
+| ATX power supply, user-supplied | 30-60 EUR | **estimate, not looked up** |
+| 3D-printed frame | — | self-designed |
+| direct-attach cable or transceiver | 20-30 EUR | **estimate, not looked up** |
+
+### Path 2: the Plyisty adapter, which we own
+
+A dual-port Thunderbolt-to-SFP28 adapter, sold under several names ("PX Thunderbolt to
+Ethernet", "thunderbolt 25G" and others). We bought the one branded **Plyisty**, at
+**240 EUR including shipping — a price actually paid, not a lookup.** It works on
+Thunderbolt 3 and Thunderbolt 4.
+
+What is inside it was never documented by the seller. It has since been opened and
+identified by Christian Kohlschütter in an
+[independent teardown (January 2026)](https://kohlschuetter.github.io/blog/posts/2026/01/27/tb25/):
+a **Mellanox ConnectX-4 Lx EN** on an OCP 2.0 module — MCX4411A in the single-port
+version, MCX4421A in the dual — bridged to Thunderbolt by a carrier board, and
+reporting itself in `lspci` as an MT27710. On a MacBook Pro he measured 20.7 Gbit/s in
+one direction and 25.4 Gbit/s with both directions saturated. **Those are his
+measurements on his machine, not ours.** We have published no numbers of our own for
+this adapter, and the owner's position on it is simply that he has no idea how well it
+works until he tests it.
+
+**The part that matters most, and it is a subtle one.** The ConnectX-4 Lx silicon
+supports RDMA over Ethernet and SR-IOV. On macOS **neither can be configured**: the
+mlx5 DriverKit driver presents the card as an ordinary network interface and nothing
+more. The limit is therefore in the **driver, not in the chip** — the hardware is
+capable and the operating system does not expose it. That distinction is the entire
+reason the MelonDMA and MCDMA projects described above exist, and it is worth stating
+in full rather than shortening to "the card cannot do RDMA", which is simply false.
+
+One practical catch as well: both 25-gigabit ports share a single Thunderbolt tunnel,
+so bonding the two does not yield 50 gigabits.
+
+### Path 3: the Helios enclosure and ConnectX-5, ordered
+
+An [OWC Mercury Helios 5S](https://www.owc.com/solutions/mercury-helios-5s) — a
+Thunderbolt 5 enclosure — holding a Mellanox
+[MCX516A-CDAT](https://docs.nvidia.com/networking/display/connectx5en/specifications),
+a ConnectX-5 Ex with dual 100-gigabit ports on PCIe Gen4 x16. **Over 800 EUR for the
+two together, again a price actually paid.**
+
+**Nothing here has been measured. The hardware has not arrived, and no benchmark in
+this repository involves it.** What follows is arithmetic on published specifications,
+not a result of ours.
+
+The card is rated for 200 gigabits per second across its two ports together, but only
+in a full-width slot. The Helios slot is **x16 mechanically and x4 electrically**, and
+OWC quote the enclosure at up to about 6000 MB/s. On this path, then, the **enclosure
+sets the ceiling rather than the card** — worth knowing before reading the card's
+headline figure as something we expect to reach.
+
+### What the money actually buys
+
+The prices above span roughly four to one, and the speeds do not. Because all three
+paths are capped by the Thunderbolt tunnel rather than by the card, the real comparison
+is about **200-300 EUR for roughly 32 gigabits against over 800 EUR for roughly 48.**
+Paying three to four times as much does not return three to four times the throughput,
+and it very definitely does not buy 100 gigabits against 25.
+
+What the extra money does buy is a Thunderbolt 5 tunnel rather than a Thunderbolt 4
+one, a finished enclosure with its own power and cooling rather than a bare board and a
+supply sitting on the desk, and a card that is not the component holding the link back.
+
+**One detail worth noticing on the way past: the network card is the cheapest thing in
+the build.** A ConnectX-4 at about 26 EUR sits inside an adapter that costs four to six
+times more than the card does. Second-hand enterprise networking is nearly free. The
+Thunderbolt bridge needed to get it onto a Mac is where the money actually goes.
+
+**The interconnect plan is a comparison, not a replacement:** the 25-gigabit ConnectX-4
+route we already have, measured against the 100-gigabit ConnectX-5 route once it lands.
+Neither arm of that comparison has been run.
+
+## What we are testing next: models that fit in no single machine
+
+The models worth pointing this cluster at are the ones that fit nowhere in it on
+their own. The most any single box here can hold is about **121 GiB**, once the
+runtime's own overhead is counted, so anything above that line is the actual subject
+and everything below it is a control. That addressable figure, not the installed
+memory figure, is the one the model sizes below are compared against.
+
+**None of this has been run.** It is a plan. The model sizes are read from published
+model files; everything about what will actually execute is unverified.
+
+### Three totals, and they are not the same number
+
+Treating these as interchangeable is exactly the kind of error this repository
+exists to avoid, so all three are stated separately:
+
+| figure | what it actually is |
+|---|---|
+| **512 GB** | raw installed memory, four boxes at 128 GB each. **Not usable capacity** — no run will ever see this number. |
+| **≈493 GB** (459 GiB) | what the runtimes can address, added up: 107 GiB on the Mac, 110 GiB on the Strix Halo, 121 GiB on each of the two Sparks (measured 20 Sep 2026) |
+| **384 GB** | the practical target for inference that never swaps. Deliberately conservative, and the figure the ladder below is trying to approach. |
+
+The distance between the first and second is the ordinary gap between memory a
+machine contains and memory a GPU runtime is allowed to hold — and the per-box
+figures agree with the device budgets already recorded independently in the
+[capacity section](#capacity-the-case-where-the-ratio-does-not-exist) above. The
+distance between the second and third is deliberate headroom for everything that is
+not model weights.
+
+### The ladder
+
+Climb model sizes one rung at a time and find where it stops working.
+
+**The first rung is chosen so that failure is cheap.** DeepSeek V4-Flash-0731
+UD-IQ4_XS, at 127.3 GiB, sits just past the single-box line. It is the least
+expensive test that spreading a model across machines works at all: if the transport
+is broken, this breaks immediately, before any long run has been paid for.
+
+From there the rungs climb through quantizations of DeepSeek, Qwen3.8-Flash-Next and
+GLM-5.3-Flash, to see how close to the 384 GB mark inference can get while staying
+non-swapping.
+
+One rung has effectively been climbed already. The capacity section above records
+**GLM-5.3-Flash UD-Q4_K_XL at 185.98 GiB running across two boxes that could not hold
+it individually** — no speedup to quote, but the model ran where it otherwise could
+not. That result is the reason this ladder looks worth building.
+
+### The rungs
+
+Sizes are in GiB, summed across shards where a quantization ships in several parts,
+and read from the published model files rather than estimated. **The line to compare
+against is 121 GiB.** DeepSeek V4-Flash-0731 was published 2026-07-31;
+Qwen3.8-Flash-Next and GLM-5.3-Flash both 2026-08-26.
+
+**These are candidates, not predictions.** A size says a model might fit. It does not
+say it will run, and the precision of these figures should not be mistaken for
+confidence about that — see the limits at the end of this section.
+
+**DeepSeek V4-Flash-0731**
+
+| GiB | quantization | |
+|---:|---|---|
+| 97.1 | UD-IQ3_XXS | below the line — control |
+| 108.1 | UD-IQ3_S | below the line |
+| 119.3 | UD-Q3_K_M | below the line, barely |
+| **127.3** | **UD-IQ4_XS** | **the first rung** |
+| 127.3 | UD-IQ4_NL | |
+| 144.3 | MXFP4 | |
+| 144.4 | UD-Q4_K_XL | |
+| 150.8 | UD-Q8_K_XL | |
+
+**Qwen3.8-Flash-Next**
+
+| GiB | quantization | |
+|---:|---|---|
+| **76.3** | **UD-IQ3_XXS** | **below the line — and running right now** |
+| 103.7 | UD-Q4_K_XL | below the line |
+| 147.4 | UD-Q5_K_XL | |
+| 157.5 | UD-Q6_K_XL | |
+| 175.3 | Q8_0 | |
+| 329.7 | BF16 | unquantised |
+
+**GLM-5.3-Flash**
+
+| GiB | quantization | |
+|---:|---|---|
+| 86.7 | UD-IQ1_S | below the line |
+| 101.3 | UD-Q2_K_XL | below the line |
+| 112.1 | UD-IQ3_XXS | below the line |
+| 137.4 | UD-Q3_K_XL | |
+| 146.1 | UD-IQ4_XS | |
+| 186.0 | UD-Q4_K_XL | already run across two boxes, see the capacity section |
+| 223.8 | UD-Q5_K_XL | |
+| 271.8 | UD-Q6_K_XL | |
+| 317.6 | Q8_0 | |
+| 597.6 | BF16 | **ruled out on arithmetic alone** |
+
+**One rung already has a live baseline, which makes it the most useful place to start
+asking about quality.** The 76.3 GiB Qwen file is what the Strix Halo box is serving
+today — it is visible on the fleet dashboard pictured earlier in this README, beside
+that machine's name. Climbing the same family to Q8_0 at 175.3 GiB, or to the
+unquantised BF16 at 329.7, would compare against something measured daily rather than
+against nothing.
+
+**One row is excluded before any of this starts, and it is listed because it is
+excluded.** GLM-5.3-Flash at BF16 is 597.6 GiB. That is larger than all four boxes
+added together, and far larger than the roughly 459 GiB the runtimes can actually
+address. No split, no transport and no backend changes that. The ceiling is real, and
+recording it here is cheaper than having someone rediscover it on a plan later.
+
+### Two questions, and the second one is open
+
+**Speed, first.** Prefill and generation throughput as the model grows and more boxes
+are brought in. This is the familiar question, and most of this README is already
+about it.
+
+**Whether splitting the work makes total memory use *smaller*, second — and this is
+the non-obvious half.** We do not know. Spreading a model across machines plausibly
+adds per-box overhead, and it plausibly avoids duplication a single box would have to
+pay for. Those pull in opposite directions, and **nobody here has measured which one
+wins.** It is written as an open question because that is what it is, and settling it
+is part of what these runs are for.
+
+### What a size on this ladder does not prove
+
+A model's summed weight size establishes **candidate fit, and nothing beyond it.** It
+does not establish:
+
+- that every backend involved supports that model's architecture,
+- that a layer split divides into proportions each box can actually hold,
+- or that each device's share of the key-value cache fits alongside its share of the
+  weights.
+
+None of these are hypothetical. The pitfalls and flags sections above record what
+each of them looks like when it goes wrong.
+
 ## Hardware used
 
-- MacBook Pro, Apple M5 Max, 128 GB unified
-- Bosgame M5, AMD Ryzen AI Max+ 395 (Strix Halo), 128 GB (64 GiB VRAM carve in
-  August, 1 GB carve with a 120 GB GTT from September)
-- ASUS Ascent GX10, NVIDIA GB10, 124,544 MiB, CUDA 13 (added 16 Sep 2026)
-- One Thunderbolt 4 cable; 10 GbE to the GX10
+- **MacBook Pro**, Apple M5 Max, 128 GB unified memory. It travels between the two
+  desks, which is why the same laptop appears in both.
+- **Bosgame M5**, AMD Ryzen AI Max+ 395 (Strix Halo), 128 GB (64 GiB VRAM carve-out
+  in August, 1 GB carve-out with a 120 GB GTT from September)
+- **Two ASUS Ascent GX10**, NVIDIA GB10, 124,544 MiB reported each, CUDA 13 (the
+  first added 16 Sep 2026, the second in Berlin). Rows naming a single Spark were
+  measured on one of them.
+- **Links:** one Thunderbolt 4 cable (MacBook to Strix Halo); 10 GbE (MacBook to
+  Spark 1); one QSFP56 direct-attach cable carrying 200 GbE (Spark 1 to Spark 2)
+- **Network hardware in hand and on order** is described in
+  [The interconnect](#the-interconnect-what-we-have-and-what-is-on-the-way) above
 
 Measured on 30-31 Aug 2026, remeasured on 10-11 Sep 2026, GB10 added 16 Sep 2026,
 Mac + GB10 split measured 17 Sep 2026.
