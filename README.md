@@ -117,11 +117,12 @@ same fleet on a phone-class screen.
 
 ![Berlin: two ASUS Ascent GX10 (NVIDIA GB10) stacked beside the MacBook](images/berlin-two-sparks-desk.jpg)
 
-Three links, all measured:
+Three links. **Two of them have a bandwidth measurement in this repository; the
+Thunderbolt one does not.**
 
 | link | what it carries | measured |
 |---|---|---|
-| **Thunderbolt** | MacBook ↔ Strix Halo, Helsinki | see the M5² table |
+| **Thunderbolt** | MacBook ↔ Strix Halo, Helsinki | **not measured here.** The [M5² card](benchmarks/m5squared-card.png) reports inference throughput *across* this link, which is not the same as the link's bandwidth |
 | **10 GbE** | MacBook ↔ Spark 1, direct cable | **9.42 Gbit/s** both ways, 0 retransmits ([iperf3](benchmarks/link-2026-09-16/)); 8.7 Gbit/s by file transfer. **TCP, never RDMA.** Every GB10 split number on this page crossed it |
 | **200 GbE** | Spark 1 ↔ Spark 2, one QSFP56 DAC | **185 Gbit/s** RDMA write, 93 % of line rate — synthetic, idle boxes, **and not used at all by the llama.cpp RPC runs here** (see the three-box topology note) |
 
