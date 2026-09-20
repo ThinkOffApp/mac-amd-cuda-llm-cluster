@@ -439,6 +439,13 @@ would need and has demonstrated a prefill/decode hand-off over it, but its READM
 parallelism among planned experiments rather than finished ones.
 
 **Open question, not yet measured: can an ADT-Link Gen4 adapter replace the Helios 5S?**
+Note these are not the same kind of product. The Helios 5S is a finished enclosure with a case,
+integrated power and cooling, and three TB5 ports. The ADT-Link is a bare adapter board plus a
+Thunderbolt cable and a bare PCIe slot: its own documentation says "prepare the power supply
+according to the power of the graphics card", so an external ATX PSU is the user's problem, and
+the page states nothing about a case, cooling, or 75 W slot power. For a ~15-25 W ConnectX card
+that is workable but it is a loose board and a PSU on the desk, not a swap of like for like.
+The price difference should be read with that in mind.
 Raised by [Benjamin Ostrov](https://github.com/b-ostrov/MelonDMA) on 20 Sep 2026, on the reasoning
 that an ADT-Link is far cheaper. We have **not** benchmarked either enclosure, and what follows is
 vendor and controller ceilings chained together, not an A/B:
@@ -455,7 +462,7 @@ reports Thunderbolt buses at up to 120 Gb/s, so the TB5 path is available to tes
 
 For scale, the card itself is not the constraint in either case: an
 [MCX516A-CDAT](https://docs.nvidia.com/networking/display/connectx5en/specifications) is
-dual-port 100GbE on PCIe Gen4 **x16**, 200 Gb/s aggregate. Through a x4 enclosure it cannot reach
+dual-port 100GbE on PCIe Gen4 **x16**, 200 Gb/s aggregate. Through either x4 path it cannot reach
 even one full port.
 
 **The experiment that would settle it**, in the order it should be run:
@@ -464,7 +471,7 @@ even one full port.
    we have never measured inference wire utilisation. If it is not the limit, the enclosure
    question is moot and the money is better spent elsewhere. This step can be done today with the
    existing 10 GbE setup and costs nothing.
-2. Same card, same host, same cable, same model, same workload; only the enclosure changes.
+2. Same card, same host, same cable, same model, same workload; only the adapter changes.
    Report iperf3 both directions, a ping-pong RTT sweep (64 B / 4 KiB / 64 KiB), and an inference
    arm, each with repetitions and the raw traces.
 3. Record the host's negotiated Thunderbolt mode per run. A TB5 enclosure on a port that
@@ -474,7 +481,7 @@ even one full port.
    the enclosure's spec sheet. Connector width is not electrical width, and electrical width is
    not what a given host negotiates.
 
-Until at least step 1 exists, no enclosure purchase is justified by anything in this repository.
+Until at least step 1 exists, no purchase of either is justified by anything in this repository.
 
 One thing this section does **not** establish: that the 10 GbE link is the bottleneck. We never
 measured inference wire utilisation, only a bulk file-copy rate, so nothing here justifies buying
