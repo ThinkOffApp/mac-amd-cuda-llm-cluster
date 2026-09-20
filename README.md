@@ -565,78 +565,51 @@ different commits, which is stated here because it is a limitation of every cros
 - A watchdog that says "ssh down" during a split is usually a box at load
   average 20 answering slowly; verify on both addresses before reacting.
 
-## The interconnect: what we have, and what is on the way
+## The interconnect: three paths, and what actually limits each one
 
-Machines are only as joined as the wire between them, and that wire is the part of
-this setup we are actively changing. Two pieces of hardware matter. One is on the
-desk. **The other has been ordered, has measured nothing, and is labelled that way
-everywhere below.**
+Putting a fast network card on a Mac means reaching it through a Thunderbolt port,
+and that turns out to be the whole story. Each path has **three speeds in series** —
+the Thunderbolt tunnel, the PCIe link behind it, and the network card itself — and
+**the smallest of the three sets the ceiling.** Laid side by side, the bottleneck
+stops being something a reader has to work out.
 
-### In hand: a 25-gigabit Thunderbolt adapter
+**No speed in this section was measured by us.** Every figure below is either a
+published specification or someone else's measurement, attributed where it appears.
+We own one of these three paths and have ordered another, and **neither has been
+tested.** The machines they are meant to join are pictured
+[earlier in this README](#the-whole-fleet-and-the-software-that-watches-it).
 
-A dual-port Thunderbolt-to-SFP28 adapter, sold under several names ("PX Thunderbolt
-to Ethernet", "thunderbolt 25G" and others). We bought the one branded **Plyisty**,
-at **240 EUR including shipping** — a price actually paid, not a lookup. It works on
-Thunderbolt 3 and Thunderbolt 4.
+### The three paths at a glance
 
-What is inside it was never documented by the seller. It has since been opened and
-identified by Christian Kohlschütter in an
-[independent teardown (January 2026)](https://kohlschuetter.github.io/blog/posts/2026/01/27/tb25/):
-a **Mellanox ConnectX-4 Lx EN** network card on an OCP 2.0 module — MCX4411A in the
-single-port version, MCX4421A in the dual — bridged to Thunderbolt by a carrier
-board, and reporting itself in `lspci` as an MT27710. On a MacBook Pro he measured
-20.7 Gbit/s in one direction and 25.4 Gbit/s with both directions saturated.
-**Those are his measurements on his machine, not ours.** We have published no
-numbers of our own for this adapter.
+| | Thunderbolt tunnel | PCIe link | network card | price | measured so far | **what binds it** |
+|---|---|---|---|---|---|---|
+| **1. ADT-Link, self-assembled** — not ours | USB4 Gen3x2, 40 Gb/s raw, **~32 usable** on a Thunderbolt 3/4 host | Gen4 x4 | ConnectX-4, 40GbE | ~200-300 EUR assembled | **28 Gbit/s, Ostrov's figure** on his own hardware, on a Gen3 adapter | **the tunnel** |
+| **2. Plyisty** — ours, in hand | Thunderbolt 3/4, 40 Gb/s raw, **~32 usable** | OCP 2.0 module, bridged to Thunderbolt | ConnectX-4 Lx, **dual 25GbE** | **240 EUR, paid** | nothing by us. 20.7 one-way / 25.4 saturated, **Kohlschütter's figures** | **the tunnel** |
+| **3. OWC Helios 5S + MCX516A-CDAT** — ordered | Thunderbolt 5, **80 Gb/s** data | Gen4, slot **x16 mechanical / x4 electrical**, ~63 Gb/s | ConnectX-5 Ex, dual 100GbE, **200 Gb/s** capable | **over 800 EUR, paid** for the pair | nothing. OWC publish ~6000 MB/s, about 48 Gb/s | **PCIe width and the enclosure — not the card** |
 
-**The part that matters most, and it is a subtle one.** The ConnectX-4 Lx silicon
-supports RDMA over Ethernet and SR-IOV. On macOS **neither can be configured**: the
-mlx5 DriverKit driver presents the card as an ordinary network interface and nothing
-more. The limit is therefore in the **driver, not in the chip** — the hardware is
-capable and the operating system does not expose it. That distinction is the entire
-reason the MelonDMA and MCDMA projects described above exist, and it is worth
-stating in full rather than shortening to "the card cannot do RDMA", which is simply
-false.
+**Read down the "network card" column and the point makes itself: the card is the
+fastest component in every path and the limit in none of them.** A card rated at 200
+gigabits reaches perhaps 48. A dual-25-gigabit card reaches perhaps 28. What actually
+constrains all three is the Thunderbolt tunnel, or the PCIe width sitting in front of
+it. **Anyone shopping by the number printed on the box — "100 gigabit!" — will buy the
+wrong thing**, and that is what this table exists to prevent.
 
-One practical catch as well: both 25-gigabit ports share a single Thunderbolt
-tunnel, so bonding the two does not yield 50 gigabits.
+**Connector width is not electrical width.** The Helios slot is physically a full x16
+and electrically an x4. The card could use sixteen lanes; it is given four. That is
+exactly the trap the table above exposes, and nothing on a spec sheet flags it for you.
 
-### Ordered, not tested: the 100-gigabit path
+### Path 1: the self-assembled adapter
 
-An **OWC Mercury Helios 5S** (a Thunderbolt 5 enclosure) holding a **Mellanox
-MCX516A-CDAT** — a ConnectX-5 Ex, dual-port 100-gigabit Ethernet, PCIe Gen4 x16.
+The cheapest route, and not ours — it is the build
+[Benjamin Ostrov](https://github.com/b-ostrov/MelonDMA) has put together: an
+[ADT-Link USB4-to-PCIe adapter](https://www.adt.link/product/UT4G.html), a second-hand
+Mellanox ConnectX-4, a power supply you provide yourself, a 3D-printed frame of his own
+design, and a cable. He measures **28 Gbit/s** on it today, on a PCIe Gen3 adapter —
+**his measurement, on his hardware, not ours.** The adapter's controller is an ASMedia
+ASM2464PD on the UT3G and an ASM2464PDX on the UT4G; both are PCIe Gen4 x4, so the
+upstream link is the same either way.
 
-**Nothing here has been measured. The hardware has not arrived, and no benchmark in
-this repository involves it.** What follows is arithmetic on published
-specifications, not a result of ours.
-
-The card is rated for 200 gigabits per second across its two ports together, but
-only in a full-width slot. The Helios slot is **x16 mechanically and x4
-electrically**, and OWC quote the enclosure at up to about 6000 MB/s. On this path,
-then, the **enclosure sets the ceiling rather than the card** — worth knowing before
-reading the card's headline figure as something we expect to reach.
-
-**The interconnect plan is a comparison, not a replacement:** the 25-gigabit
-ConnectX-4 route we already have, measured against the 100-gigabit ConnectX-5 route
-once it lands. Neither arm of that comparison has been run.
-
-### What the three paths cost, and what the money actually buys
-
-There are three ways to get a fast network card onto a Mac, at three very different
-prices. The useful part of comparing them is not which is quickest. It is that **the
-money does not buy speed in anything like the proportion the port labels suggest.**
-
-**No speed in this subsection was measured by us.** The 32 and 48 gigabit figures are
-expectations derived from published specifications and Thunderbolt tunnel limits, not
-results. The single real measurement here is Benjamin Ostrov's, on his own hardware.
-We have paid for two of these three paths and have tested neither.
-
-**Path 1 — build it yourself, roughly 200-300 EUR.** The route
-[Benjamin Ostrov](https://github.com/b-ostrov/MelonDMA) has taken: an ADT-Link
-USB4-to-PCIe adapter, a second-hand Mellanox ConnectX-4, a power supply you provide
-yourself, a 3D-printed frame of his own design, and a cable. He measures
-**28 Gbit/s** on it today, on a PCIe Gen3 adapter — **his measurement, his hardware,
-not ours.** The prices below vary in how firm they are, so each one says which it is:
+Prices vary in how firm they are, so each says which it is:
 
 | component | price | how firm |
 |---|---|---|
@@ -647,29 +620,73 @@ not ours.** The prices below vary in how firm they are, so each one says which i
 | 3D-printed frame | — | self-designed |
 | direct-attach cable or transceiver | 20-30 EUR | **estimate, not looked up** |
 
-**Path 2 — the Plyisty adapter, which we own. 240 EUR including shipping, a price
-actually paid.** Dual 25-gigabit ports. On published tunnel limits we do not expect it
-to exceed about 28 Gbit/s in practice, but that is an expectation and nothing more:
-**it has not been tested, and we genuinely do not know how well it works until it is.**
+### Path 2: the Plyisty adapter, which we own
 
-**Path 3 — the Helios 5S enclosure and ConnectX-5 card, ordered. Over 800 EUR for the
-two together, again a price actually paid.** OWC publish up to about 6000 MB/s for the
-enclosure, roughly 48 gigabits. Not arrived, nothing measured.
+A dual-port Thunderbolt-to-SFP28 adapter, sold under several names ("PX Thunderbolt to
+Ethernet", "thunderbolt 25G" and others). We bought the one branded **Plyisty**, at
+**240 EUR including shipping — a price actually paid, not a lookup.** It works on
+Thunderbolt 3 and Thunderbolt 4.
 
-**Here is the part the port labels hide.** All three paths are limited by the
-Thunderbolt tunnel rather than by the network card in them. So the real comparison is
-roughly 200-300 EUR for about 32 gigabits against over 800 EUR for about 48. Paying
-three to four times as much does not return three to four times the throughput — and
-it very definitely does not buy 100 gigabits against 25, which is what anyone reading
-only the two cards' port speeds would conclude. What the extra money buys is a
-Thunderbolt 5 tunnel rather than a Thunderbolt 4 one, a finished enclosure with its own
-power and cooling rather than a bare board and a supply sitting on the desk, and a card
-that is not the component holding the link back.
+What is inside it was never documented by the seller. It has since been opened and
+identified by Christian Kohlschütter in an
+[independent teardown (January 2026)](https://kohlschuetter.github.io/blog/posts/2026/01/27/tb25/):
+a **Mellanox ConnectX-4 Lx EN** on an OCP 2.0 module — MCX4411A in the single-port
+version, MCX4421A in the dual — bridged to Thunderbolt by a carrier board, and
+reporting itself in `lspci` as an MT27710. On a MacBook Pro he measured 20.7 Gbit/s in
+one direction and 25.4 Gbit/s with both directions saturated. **Those are his
+measurements on his machine, not ours.** We have published no numbers of our own for
+this adapter, and the owner's position on it is simply that he has no idea how well it
+works until he tests it.
+
+**The part that matters most, and it is a subtle one.** The ConnectX-4 Lx silicon
+supports RDMA over Ethernet and SR-IOV. On macOS **neither can be configured**: the
+mlx5 DriverKit driver presents the card as an ordinary network interface and nothing
+more. The limit is therefore in the **driver, not in the chip** — the hardware is
+capable and the operating system does not expose it. That distinction is the entire
+reason the MelonDMA and MCDMA projects described above exist, and it is worth stating
+in full rather than shortening to "the card cannot do RDMA", which is simply false.
+
+One practical catch as well: both 25-gigabit ports share a single Thunderbolt tunnel,
+so bonding the two does not yield 50 gigabits.
+
+### Path 3: the Helios enclosure and ConnectX-5, ordered
+
+An [OWC Mercury Helios 5S](https://www.owc.com/solutions/mercury-helios-5s) — a
+Thunderbolt 5 enclosure — holding a Mellanox
+[MCX516A-CDAT](https://docs.nvidia.com/networking/display/connectx5en/specifications),
+a ConnectX-5 Ex with dual 100-gigabit ports on PCIe Gen4 x16. **Over 800 EUR for the
+two together, again a price actually paid.**
+
+**Nothing here has been measured. The hardware has not arrived, and no benchmark in
+this repository involves it.** What follows is arithmetic on published specifications,
+not a result of ours.
+
+The card is rated for 200 gigabits per second across its two ports together, but only
+in a full-width slot. The Helios slot is **x16 mechanically and x4 electrically**, and
+OWC quote the enclosure at up to about 6000 MB/s. On this path, then, the **enclosure
+sets the ceiling rather than the card** — worth knowing before reading the card's
+headline figure as something we expect to reach.
+
+### What the money actually buys
+
+The prices above span roughly four to one, and the speeds do not. Because all three
+paths are capped by the Thunderbolt tunnel rather than by the card, the real comparison
+is about **200-300 EUR for roughly 32 gigabits against over 800 EUR for roughly 48.**
+Paying three to four times as much does not return three to four times the throughput,
+and it very definitely does not buy 100 gigabits against 25.
+
+What the extra money does buy is a Thunderbolt 5 tunnel rather than a Thunderbolt 4
+one, a finished enclosure with its own power and cooling rather than a bare board and a
+supply sitting on the desk, and a card that is not the component holding the link back.
 
 **One detail worth noticing on the way past: the network card is the cheapest thing in
 the build.** A ConnectX-4 at about 26 EUR sits inside an adapter that costs four to six
 times more than the card does. Second-hand enterprise networking is nearly free. The
 Thunderbolt bridge needed to get it onto a Mac is where the money actually goes.
+
+**The interconnect plan is a comparison, not a replacement:** the 25-gigabit ConnectX-4
+route we already have, measured against the 100-gigabit ConnectX-5 route once it lands.
+Neither arm of that comparison has been run.
 
 ## What we are testing next: models that fit in no single machine
 
