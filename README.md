@@ -438,6 +438,44 @@ not aware of one that does, which is a weaker claim than saying none exists.
 would need and has demonstrated a prefill/decode hand-off over it, but its README lists tensor
 parallelism among planned experiments rather than finished ones.
 
+**Open question, not yet measured: can an ADT-Link Gen4 adapter replace the Helios 5S?**
+Raised by [Benjamin Ostrov](https://github.com/b-ostrov/MelonDMA) on 20 Sep 2026, on the reasoning
+that an ADT-Link is far cheaper. We have **not** benchmarked either enclosure, and what follows is
+vendor and controller ceilings chained together, not an A/B:
+
+| | host tunnel | PCIe | vendor figure |
+|---|---|---|---|
+| OWC Mercury Helios 5S | Thunderbolt 5, 80 Gb/s | 4.0 x4 electrical (x16 mechanical) | up to 6000 MB/s ≈ 48 Gb/s |
+| ADT-Link UT3G / UT4G | USB4 Gen3x2, 40 Gb/s (32 on a TB3/TB4 host) | 4.0 x4 | ≈30.5 Gb/s usable on USB4v1 |
+
+Both are PCIe Gen4 x4 on the card side, so on paper the difference is entirely upstream: the
+ADT-Link's ASMedia ASM2464PDX is a USB4 Gen3x2 controller, while the Helios is Thunderbolt 5. On a
+TB4 host the two should converge; on a TB5 host the Helios should win. An M5 Max MacBook Pro
+reports Thunderbolt buses at up to 120 Gb/s, so the TB5 path is available to test.
+
+For scale, the card itself is not the constraint in either case: an
+[MCX516A-CDAT](https://docs.nvidia.com/networking/display/connectx5en/specifications) is
+dual-port 100GbE on PCIe Gen4 **x16**, 200 Gb/s aggregate. Through a x4 enclosure it cannot reach
+even one full port.
+
+**The experiment that would settle it**, in the order it should be run:
+
+1. **First establish that the interconnect is the bottleneck at all.** Per the paragraph above,
+   we have never measured inference wire utilisation. If it is not the limit, the enclosure
+   question is moot and the money is better spent elsewhere. This step can be done today with the
+   existing 10 GbE setup and costs nothing.
+2. Same card, same host, same cable, same model, same workload; only the enclosure changes.
+   Report iperf3 both directions, a ping-pong RTT sweep (64 B / 4 KiB / 64 KiB), and an inference
+   arm, each with repetitions and the raw traces.
+3. Record the host's negotiated Thunderbolt mode per run. A TB5 enclosure on a port that
+   negotiated TB3 is a different experiment from the one intended, and that is easy to do by
+   accident.
+4. State the PCIe link width and speed the card actually trains at, read from the host, not from
+   the enclosure's spec sheet. Connector width is not electrical width, and electrical width is
+   not what a given host negotiates.
+
+Until at least step 1 exists, no enclosure purchase is justified by anything in this repository.
+
 One thing this section does **not** establish: that the 10 GbE link is the bottleneck. We never
 measured inference wire utilisation, only a bulk file-copy rate, so nothing here justifies buying
 a faster interconnect to fix a limit we have not demonstrated. Engine support is the part we can
