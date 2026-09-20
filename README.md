@@ -5,6 +5,29 @@ cable, with an NVIDIA GB10 on the same bench. Benchmark results are labelled
 with their configurations. Now building tensor parallelism across Metal, ROCm
 and CUDA, aiming to speed up both prompt processing and output generation.
 
+### Related upstream work
+
+This repository is the **Ethernet / TCP baseline**. Two independent projects are
+building the RDMA transport that such a cluster wants on macOS, by two different
+routes, and both are hand-building for the Mac what Linux ships in the box.
+Neither is ours and neither is a dependency here; we measure against them.
+
+- **[MCDMA](https://github.com/ashhart/MCDMA)** — Ash Hart. Metal/CUDA direct
+  memory access over Thunderbolt XDomain; kext plus a ConnectX-5 Ex in a TB5
+  enclosure. Apache-2.0. Published beta with measured latencies: 4 KiB QD1
+  medians, Mac→Spark WRITE 7.6 µs, READ 6.0 µs (his measurements, not ours).
+- **[MelonDMA](https://github.com/b-ostrov/MelonDMA)** — Benjamin Ostrov
+  (@b_ostrov). Experimental PCIDriverKit driver for Mellanox ConnectX on macOS,
+  RoCEv2, libibverbs-style userspace. Apache-2.0. Requires SIP disabled; Apple
+  has not granted the PCI entitlements, and its README warns not to run it on a
+  machine you cannot afford to reboot. Throughput and latency figures he has
+  quoted publicly (8.67 µs RTT, 19.8–38 Gbit/s, tweet of 15 Sep 2026) are not in
+  that README and are **unverified by us**.
+
+For scale, our own transport over the direct 10G cable measures a 4 KiB TCP
+ping-pong median of 350 µs (≈175 µs per one-way hop) against Ash Hart's 6–8 µs
+RDMA figures — a 20–30× gap. That gap is the reason both projects exist.
+
 ### Development update — 17 September 2026
 
 We are now developing **Mac + AMD + CUDA tensor parallelism**, beginning with
