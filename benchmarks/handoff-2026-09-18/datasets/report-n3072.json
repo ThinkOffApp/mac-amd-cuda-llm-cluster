@@ -1,0 +1,117 @@
+{
+  "n_prompt": 3072,
+  "ctx": 10240,
+  "state_name": "n3072-before-final.bin",
+  "producer_wall_s": 3.7424988746643066,
+  "producer_timings": {
+    "cache_n": 0,
+    "prompt_n": 3071,
+    "prompt_ms": 3736.307,
+    "prompt_per_token_ms": 1.216641810485184,
+    "prompt_per_second": 821.9346001278803,
+    "predicted_n": 1,
+    "predicted_ms": 0.001,
+    "predicted_per_token_ms": 0.0,
+    "predicted_per_second": 0.0
+  },
+  "producer_discarded_token": [
+    13
+  ],
+  "save_wall_s": 0.17158293724060059,
+  "save": {
+    "id_slot": 0,
+    "filename": "n3072-before-final.bin",
+    "n_saved": 3071,
+    "n_written": 358241828,
+    "timings": {
+      "save_ms": 168.17
+    }
+  },
+  "copy_s": 0.6944258213043213,
+  "state_bytes": 358241828,
+  "state_sha256": "bf0f3f4a084d8eeffe4feb4fc3dda34becde8197f30b717e862008ebe1621de2",
+  "spark_state_sha256": "bf0f3f4a084d8eeffe4feb4fc3dda34becde8197f30b717e862008ebe1621de2",
+  "copy_MBps": 515.8820668953871,
+  "restore_wall_s": 0.0332491397857666,
+  "restore": {
+    "id_slot": 0,
+    "filename": "n3072-before-final.bin",
+    "n_restored": 3071,
+    "n_read": 358241828,
+    "timings": {
+      "restore_ms": 29.529
+    }
+  },
+  "handoff_wall_s": 0.6555778980255127,
+  "handoff_timings": {
+    "cache_n": 3071,
+    "prompt_n": 1,
+    "prompt_ms": 58.015,
+    "prompt_per_token_ms": 58.015,
+    "prompt_per_second": 17.23692148582263,
+    "predicted_n": 16,
+    "predicted_ms": 595.629,
+    "predicted_per_token_ms": 39.708600000000004,
+    "predicted_per_second": 25.183461517152455
+  },
+  "handoff_tokens": [
+    357,
+    16097,
+    9064,
+    7189,
+    279,
+    9640,
+    11,
+    279,
+    6297,
+    1528,
+    11,
+    321,
+    1396,
+    7658,
+    3817,
+    13
+  ],
+  "handoff_content": " A careful experiment records the prompt, the cache state, and every generated token.",
+  "mac_native_wall_s": 4.795351982116699,
+  "mac_native_timings": {
+    "cache_n": 0,
+    "prompt_n": 3072,
+    "prompt_ms": 4227.323,
+    "prompt_per_token_ms": 1.3760817057291668,
+    "prompt_per_second": 726.7010351468293,
+    "predicted_n": 16,
+    "predicted_ms": 566.059,
+    "predicted_per_token_ms": 37.73726666666666,
+    "predicted_per_second": 26.49900452073017
+  },
+  "mac_native_tokens": [
+    357,
+    16097,
+    9064,
+    7189,
+    279,
+    9640,
+    11,
+    279,
+    6297,
+    1528,
+    11,
+    321,
+    1396,
+    7658,
+    3817,
+    13
+  ],
+  "mac_native_content": " A careful experiment records the prompt, the cache state, and every generated token.",
+  "tokens_match_native": true,
+  "cache_n": 3071,
+  "prompt_n": 1,
+  "valid_cache": true,
+  "spark_prefill_s": 3.7363069999999996,
+  "ttft_split_s": 4.6864468213043216,
+  "mac_cold_prefill_s": 4.227323,
+  "ttft_speedup": 0.9020315734263386,
+  "decode_tok_s": 25.183461517152455,
+  "overhead_s": 0.950139821304322
+}

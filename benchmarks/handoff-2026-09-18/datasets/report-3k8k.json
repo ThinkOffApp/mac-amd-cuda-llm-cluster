@@ -1,0 +1,48 @@
+{
+  "started_at": "2026-09-18T14:38:08Z",
+  "ctx": 10240,
+  "lengths": [
+    3072,
+    8192
+  ],
+  "spark_pid": 516363,
+  "mac_pid": 8596,
+  "spark_health_s": 3.145670175552368,
+  "mac_health_s": 0.001508951187133789,
+  "tokenize_s": 0.06988811492919922,
+  "tokens_available": 32001,
+  "rows": [
+    {
+      "n_prompt": 3072,
+      "valid_cache": true,
+      "tokens_match_native": true,
+      "state_bytes": 358241828,
+      "copy_s": 0.694,
+      "copy_MBps": 515.9,
+      "spark_prefill_s": 3.736,
+      "mac_cold_prefill_s": 4.227,
+      "overhead_s": 0.95,
+      "ttft_split_s": 4.686,
+      "ttft_speedup": 0.902,
+      "cache_n": 3071,
+      "prompt_n": 1,
+      "decode_tok_s": 25.18
+    },
+    {
+      "n_prompt": 8192,
+      "valid_cache": true,
+      "tokens_match_native": true,
+      "state_bytes": 693929508,
+      "copy_s": 1.088,
+      "copy_MBps": 637.7,
+      "spark_prefill_s": 9.915,
+      "mac_cold_prefill_s": 12.921,
+      "overhead_s": 1.556,
+      "ttft_split_s": 11.471,
+      "ttft_speedup": 1.126,
+      "cache_n": 8191,
+      "prompt_n": 1,
+      "decode_tok_s": 25.04
+    }
+  ]
+}

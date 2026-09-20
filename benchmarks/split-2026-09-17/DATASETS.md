@@ -1,5 +1,12 @@
 # Paired datasets for the split figure (17 Sep 2026)
 
+> **Superseded for Flash-Next, and transport-labelled.** The Flash-Next split rows here were
+> taken with **mismatched builds** (Mac `1d0c76f3c` vs Spark `434ddbbc0`) under concurrent
+> downloads. [`../split-2026-09-18/`](../split-2026-09-18/) repeats them on one commit on a
+> quiet machine and agrees. The dense Qwen3.8-27B panels here are not superseded.
+> **Transport for everything in this directory: TCP over the 10 GbE cable, not RDMA**
+> ([`TRANSPORT.md`](../../TRANSPORT.md)).
+
 All JSONL is one measurement per line with `pass`, `cfg`, a timestamp, and the value.
 `cfg` values: `mac` = MacBook solo, `gb10` = GX10 solo, `50/50` / `25/75` / `15/85` = llama.cpp RPC
 layer split, **RPC device first**, so `15/85` is 15 % GB10 / 85 % Mac.
