@@ -707,15 +707,21 @@ exists to avoid, so all three are stated separately:
 | figure | what it actually is |
 |---|---|
 | **512 GB** | raw installed memory, four boxes at 128 GB each. **Not usable capacity** — no run will ever see this number. |
-| **≈493 GB** (459 GiB) | what the runtimes can address, added up: 107 GiB on the Mac, 110 GiB on the Strix Halo, 121 GiB on each of the two Sparks (measured 20 Sep 2026) |
+| **466.7 GiB** (≈501 GB) | what the runtimes can actually address, added up: **107.5** on the Mac, **117.2** on the Strix Halo, **121.0** on each of the two Sparks. Each read from the box itself, 20 Sep 2026. |
 | **384 GB** | the practical target for inference that never swaps. Deliberately conservative, and the figure the ladder below is trying to approach. |
 
-The distance between the first and second is the ordinary gap between memory a
-machine contains and memory a GPU runtime is allowed to hold — and the per-box
-figures agree with the device budgets already recorded independently in the
-[capacity section](#capacity-the-case-where-the-ratio-does-not-exist) above. The
-distance between the second and third is deliberate headroom for everything that is
-not model weights.
+**Mind the units before comparing the first two rows.** The addressable figures are
+in GiB; the 512 GB raw figure is the decimal count of the installed modules. Those are
+not the same scale, and ≈501 GB sitting just under 512 GB makes the gap look far
+smaller than it is. In one unit the comparison is **466.7 GiB addressable against 512
+GiB installed** — a difference of some 45 GiB, which is the ordinary gap between memory
+a machine contains and memory a GPU runtime is permitted to hold, not a rounding.
+
+The per-box figures are consistent with the device budgets recorded independently in
+the [capacity section](#capacity-the-case-where-the-ratio-does-not-exist) above: the
+Mac's 107.5 GiB is the same number, and the Spark's 121.0 is within 0.6 GiB of the
+121.6 recorded there. The distance between the second and third rows is deliberate
+headroom for everything that is not model weights.
 
 ### The ladder
 
@@ -794,7 +800,7 @@ against nothing.
 
 **One row is excluded before any of this starts, and it is listed because it is
 excluded.** GLM-5.3-Flash at BF16 is 597.6 GiB. That is larger than all four boxes
-added together, and far larger than the roughly 459 GiB the runtimes can actually
+added together, and far larger than the 466.7 GiB the runtimes can actually
 address. No split, no transport and no backend changes that. The ceiling is real, and
 recording it here is cheaper than having someone rediscover it on a plan later.
 
