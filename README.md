@@ -5,6 +5,34 @@ cable, with an NVIDIA GB10 on the same bench. Benchmark results are labelled
 with their configurations. Now building tensor parallelism across Metal, ROCm
 and CUDA, aiming to speed up both prompt processing and output generation.
 
+### What this is, in plain words
+
+Apple, AMD and NVIDIA GPUs on the same bench, joined by ordinary cables, running
+one large language model across all of them at once. The question this repository
+exists to answer is a practical one: **when is splitting a model across several
+machines actually faster than just using the best machine you own?**
+
+Often the answer is "it is not". Those cases are published here too, because a
+benchmark that reports only its wins is not a benchmark.
+
+**Two shorthands appear in every table below, and they are most of the jargon you
+need:**
+
+- **`pp`** is *prompt processing*, also called prefill: how fast a machine reads
+  your prompt. `pp512` is that rate measured on a 512-token prompt.
+- **`tg`** is *token generation*: how fast it writes the answer back. `tg128` is
+  that rate over 128 generated tokens.
+
+Both are tokens per second and higher is better. The two behave very differently
+when a model is split across machines, and that difference is most of what this
+repository is about.
+
+**How to read the rest.** Each section opens with what it found; the tables under
+it are the evidence, kept for anyone who would rather check a claim than take it.
+Every figure carries the conditions it was measured under, other people's
+measurements are attributed to them, and where we did not measure something it
+says so plainly.
+
 ### Related upstream work
 
 This repository is the **Ethernet / TCP baseline**. Two independent projects are
@@ -66,7 +94,8 @@ for the first correctness gate.
 Everyone pairs DGX Sparks with DGX Sparks, or Macs with Macs. This repo
 documents the mixed set: **Apple M5 Max (Metal) + AMD Strix Halo (ROCm) +
 NVIDIA GB10 (CUDA)**, joined by `ggml-rpc-server` over a Thunderbolt IP link
-and 10 GbE. It is the setup behind the M5² benchmark card.
+and 10 GbE. It is the setup behind the **M5² benchmark card** below, a name that
+pairs the two machines it was measured on: the Apple M5 Max and the Bosgame M5.
 
 All three backends now appear here, which is why the repo is no longer called
 `mac-amd-llm-cluster`. The GB10 first appears below as a straight two-way comparison on
@@ -137,6 +166,28 @@ Linux Ethernet interfaces". There is exactly one cable between the boxes.
 this one — what a Thunderbolt link between a Mac and a Strix Halo box can actually carry, measured
 layer by layer, plus the raw logs behind every table here.
 
+### The whole fleet, and the software that watches it
+
+The two desks above are halves of one set of machines. This is all of it in a
+single frame: the Bosgame M5 (Strix Halo) stacked on top of the two ASUS Ascent
+GX10 Sparks, a Raspberry Pi driving the small touchscreen above them, the MacBook
+on the right, an e-ink tablet on the left, and the car dashboard on the display
+behind.
+
+![The fleet on one desk: the Bosgame M5 stacked on two ASUS Ascent GX10 Sparks, a Raspberry Pi touchscreen, an e-ink tablet and the MacBook](images/fleet-desk.jpg)
+
+Hardware at this size stops being something you can hold in your head, so the
+other half of the setup is the software that keeps track of it. Every machine
+reports into one page, which is what both the small touchscreen and the e-ink
+tablet in the photo above are displaying:
+
+![The fleet dashboard: each machine with the model it is serving, plus processor, memory and temperature](images/fleet-dashboard.jpg)
+
+One card per machine, with **the model that machine is currently serving** beside
+its name, and its processor, memory and temperature underneath. The practical use
+is knowing whether a box is busy before starting a benchmark on it, which matters
+more than it sounds: several of the caveats later in this README exist precisely
+because a machine was under load when it should have been idle.
 
 ## The measured result (GLM-5.3-Flash 321B MoE, pp512 / tg128 tok/s)
 
@@ -253,14 +304,12 @@ GB10. Two things fall out of the absolute numbers that are worth more than the r
   −9.7 % sparse) rather than the direction. We also previously said this model showed no run-to-run drift;
   it shows less, not none (one of the three passes came in ~7 % low at 2048 and 4096).
 
-*Same control still missing.* Both columns are llama.cpp. A native NVIDIA stack on the same model is what
-would separate "the GB10 loses on this workload" from "llama.cpp's CUDA path loses on this workload", and
-that run has not happened. Until it does, read every sparse row here as a statement about this stack.
-
-*The control we have not run:* whether the reversal is the silicon or llama.cpp's CUDA MoE
-path being less mature than its Metal one. The separator is the same model on a native NVIDIA
-stack (TensorRT-LLM or a modelopt-aware vLLM). Until then the sparse table says
-"llama.cpp on this hardware", not "this hardware".
+*The control we have not run.* Both columns are llama.cpp, so nothing here separates "the
+GB10 loses on this workload" from "llama.cpp's CUDA path loses on this workload" — its
+mixture-of-experts path may simply be less mature than its Metal one. The separator would be
+the same model on a native NVIDIA stack (TensorRT-LLM, or a modelopt-aware vLLM), and **that
+run has not happened.** Until it does, read every sparse row here as a statement about this
+stack: "llama.cpp on this hardware", not "this hardware".
 
 **Approximate effective weight-read rate** (weight bytes × tg64 on the dense model):
 ≈440 GB/s on the M5 Max, ≈225 GB/s on the GB10. This is not measured DRAM bandwidth. It
@@ -516,13 +565,73 @@ different commits, which is stated here because it is a limitation of every cros
 - A watchdog that says "ssh down" during a split is usually a box at load
   average 20 answering slowly; verify on both addresses before reacting.
 
+## The interconnect: what we have, and what is on the way
+
+Machines are only as joined as the wire between them, and that wire is the part of
+this setup we are actively changing. Two pieces of hardware matter. One is on the
+desk. **The other has been ordered, has measured nothing, and is labelled that way
+everywhere below.**
+
+### In hand: a 25-gigabit Thunderbolt adapter
+
+A dual-port Thunderbolt-to-SFP28 adapter, sold under several names ("PX Thunderbolt
+to Ethernet", "thunderbolt 25G" and others). We bought the one branded **Plyisty**,
+at roughly 221 EUR. It works on Thunderbolt 3 and Thunderbolt 4.
+
+What is inside it was never documented by the seller. It has since been opened and
+identified by Christian Kohlschütter in an
+[independent teardown (January 2026)](https://kohlschuetter.github.io/blog/posts/2026/01/27/tb25/):
+a **Mellanox ConnectX-4 Lx EN** network card on an OCP 2.0 module — MCX4411A in the
+single-port version, MCX4421A in the dual — bridged to Thunderbolt by a carrier
+board, and reporting itself in `lspci` as an MT27710. On a MacBook Pro he measured
+20.7 Gbit/s in one direction and 25.4 Gbit/s with both directions saturated.
+**Those are his measurements on his machine, not ours.** We have published no
+numbers of our own for this adapter.
+
+**The part that matters most, and it is a subtle one.** The ConnectX-4 Lx silicon
+supports RDMA over Ethernet and SR-IOV. On macOS **neither can be configured**: the
+mlx5 DriverKit driver presents the card as an ordinary network interface and nothing
+more. The limit is therefore in the **driver, not in the chip** — the hardware is
+capable and the operating system does not expose it. That distinction is the entire
+reason the MelonDMA and MCDMA projects described above exist, and it is worth
+stating in full rather than shortening to "the card cannot do RDMA", which is simply
+false.
+
+One practical catch as well: both 25-gigabit ports share a single Thunderbolt
+tunnel, so bonding the two does not yield 50 gigabits.
+
+### Ordered, not tested: the 100-gigabit path
+
+An **OWC Mercury Helios 5S** (a Thunderbolt 5 enclosure) holding a **Mellanox
+MCX516A-CDAT** — a ConnectX-5 Ex, dual-port 100-gigabit Ethernet, PCIe Gen4 x16.
+
+**Nothing here has been measured. The hardware has not arrived, and no benchmark in
+this repository involves it.** What follows is arithmetic on published
+specifications, not a result of ours.
+
+The card is rated for 200 gigabits per second across its two ports together, but
+only in a full-width slot. The Helios slot is **x16 mechanically and x4
+electrically**, and OWC quote the enclosure at up to about 6000 MB/s. On this path,
+then, the **enclosure sets the ceiling rather than the card** — worth knowing before
+reading the card's headline figure as something we expect to reach.
+
+**The plan is a comparison, not a replacement:** the 25-gigabit ConnectX-4 route we
+already have, measured against the 100-gigabit ConnectX-5 route once it lands.
+Neither arm of that comparison has been run.
+
 ## Hardware used
 
-- MacBook Pro, Apple M5 Max, 128 GB unified
-- Bosgame M5, AMD Ryzen AI Max+ 395 (Strix Halo), 128 GB (64 GiB VRAM carve in
-  August, 1 GB carve with a 120 GB GTT from September)
-- ASUS Ascent GX10, NVIDIA GB10, 124,544 MiB, CUDA 13 (added 16 Sep 2026)
-- One Thunderbolt 4 cable; 10 GbE to the GX10
+- **MacBook Pro**, Apple M5 Max, 128 GB unified memory. It travels between the two
+  desks, which is why the same laptop appears in both.
+- **Bosgame M5**, AMD Ryzen AI Max+ 395 (Strix Halo), 128 GB (64 GiB VRAM carve-out
+  in August, 1 GB carve-out with a 120 GB GTT from September)
+- **Two ASUS Ascent GX10**, NVIDIA GB10, 124,544 MiB reported each, CUDA 13 (the
+  first added 16 Sep 2026, the second in Berlin). Rows naming a single Spark were
+  measured on one of them.
+- **Links:** one Thunderbolt 4 cable (MacBook to Strix Halo); 10 GbE (MacBook to
+  Spark 1); one QSFP56 direct-attach cable carrying 200 GbE (Spark 1 to Spark 2)
+- **Network hardware in hand and on order** is described in
+  [The interconnect](#the-interconnect-what-we-have-and-what-is-on-the-way) above
 
 Measured on 30-31 Aug 2026, remeasured on 10-11 Sep 2026, GB10 added 16 Sep 2026,
 Mac + GB10 split measured 17 Sep 2026.
