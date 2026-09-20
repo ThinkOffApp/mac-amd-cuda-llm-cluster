@@ -1,0 +1,11 @@
+multistream | model Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf | gen 96 | slots 8
+== arm mac ==
+   mac N=1  aggregate    19.94 tok/s   per-stream  19.94   medTTFT  0.33s   (1/1)
+   mac N=2  aggregate    28.99 tok/s   per-stream  14.50   medTTFT  0.26s   (2/2)
+   mac N=4  aggregate     0.35 tok/s   per-stream   0.09   medTTFT  8.55s   (4/4)
+   mac N=8: all streams failed
+== arm pair ==
+  pair N=1: all streams failed
+  pair N=2  aggregate    26.17 tok/s   per-stream  13.08   medTTFT  0.60s   (2/2)
+  pair N=4  aggregate    35.08 tok/s   per-stream   8.77   medTTFT  1.11s   (4/4)
+  pair N=8  aggregate    60.87 tok/s   per-stream   7.61   medTTFT  3.27s   (8/8)

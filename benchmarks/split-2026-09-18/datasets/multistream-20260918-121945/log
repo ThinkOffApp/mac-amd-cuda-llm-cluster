@@ -1,0 +1,11 @@
+multistream | model Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf | gen 96 | slots 8
+== arm mac ==
+   mac N=1: all streams failed
+   mac N=2: all streams failed
+   mac N=4: all streams failed
+   mac N=8: all streams failed
+== arm pair ==
+  pair N=1: all streams failed
+  pair N=2: all streams failed
+  pair N=4: all streams failed
+  pair N=8: all streams failed
