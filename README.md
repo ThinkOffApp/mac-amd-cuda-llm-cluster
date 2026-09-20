@@ -615,9 +615,80 @@ electrically**, and OWC quote the enclosure at up to about 6000 MB/s. On this pa
 then, the **enclosure sets the ceiling rather than the card** — worth knowing before
 reading the card's headline figure as something we expect to reach.
 
-**The plan is a comparison, not a replacement:** the 25-gigabit ConnectX-4 route we
-already have, measured against the 100-gigabit ConnectX-5 route once it lands.
-Neither arm of that comparison has been run.
+**The interconnect plan is a comparison, not a replacement:** the 25-gigabit
+ConnectX-4 route we already have, measured against the 100-gigabit ConnectX-5 route
+once it lands. Neither arm of that comparison has been run.
+
+## What we are testing next: models that fit in no single machine
+
+The models worth pointing this cluster at are the ones that fit nowhere in it on
+their own. The largest single box here holds 128 GB, so **anything bigger than that
+is the actual subject**, and everything smaller is a control.
+
+**None of this has been run.** It is a plan. The model sizes are read from published
+model files; everything about what will actually execute is unverified.
+
+### Three totals, and they are not the same number
+
+Treating these as interchangeable is exactly the kind of error this repository
+exists to avoid, so all three are stated separately:
+
+| figure | what it actually is |
+|---|---|
+| **512 GB** | raw installed memory, four boxes at 128 GB each. **Not usable capacity** — no run will ever see this number. |
+| **≈493 GB** (459 GiB) | what the runtimes can address, added up: 107 GiB on the Mac, 110 GiB on the Strix Halo, 121 GiB on each of the two Sparks (measured 20 Sep 2026) |
+| **384 GB** | the practical target for inference that never swaps. Deliberately conservative, and the figure the ladder below is trying to approach. |
+
+The distance between the first and second is the ordinary gap between memory a
+machine contains and memory a GPU runtime is allowed to hold — and the per-box
+figures agree with the device budgets already recorded independently in the
+[capacity section](#capacity-the-case-where-the-ratio-does-not-exist) above. The
+distance between the second and third is deliberate headroom for everything that is
+not model weights.
+
+### The ladder
+
+Climb model sizes one rung at a time and find where it stops working.
+
+**The first rung is chosen so that failure is cheap.** DeepSeek V4-Flash-0731
+UD-IQ4_XS, at 127.3 GiB, sits just past the single-box line. It is the least
+expensive test that spreading a model across machines works at all: if the transport
+is broken, this breaks immediately, before any long run has been paid for.
+
+From there the rungs climb through quantizations of DeepSeek, Qwen3.8-Flash-Next and
+GLM-5.3-Flash, to see how close to the 384 GB mark inference can get while staying
+non-swapping.
+
+One rung has effectively been climbed already. The capacity section above records
+**GLM-5.3-Flash UD-Q4_K_XL at 185.98 GiB running across two boxes that could not hold
+it individually** — no speedup to quote, but the model ran where it otherwise could
+not. That result is the reason this ladder looks worth building.
+
+### Two questions, and the second one is open
+
+**Speed, first.** Prefill and generation throughput as the model grows and more boxes
+are brought in. This is the familiar question, and most of this README is already
+about it.
+
+**Whether splitting the work makes total memory use *smaller*, second — and this is
+the non-obvious half.** We do not know. Spreading a model across machines plausibly
+adds per-box overhead, and it plausibly avoids duplication a single box would have to
+pay for. Those pull in opposite directions, and **nobody here has measured which one
+wins.** It is written as an open question because that is what it is, and settling it
+is part of what these runs are for.
+
+### What a size on this ladder does not prove
+
+A model's summed weight size establishes **candidate fit, and nothing beyond it.** It
+does not establish:
+
+- that every backend involved supports that model's architecture,
+- that a layer split divides into proportions each box can actually hold,
+- or that each device's share of the key-value cache fits alongside its share of the
+  weights.
+
+None of these are hypothetical. The pitfalls and flags sections above record what
+each of them looks like when it goes wrong.
 
 ## Hardware used
 
