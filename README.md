@@ -622,8 +622,10 @@ once it lands. Neither arm of that comparison has been run.
 ## What we are testing next: models that fit in no single machine
 
 The models worth pointing this cluster at are the ones that fit nowhere in it on
-their own. The largest single box here holds 128 GB, so **anything bigger than that
-is the actual subject**, and everything smaller is a control.
+their own. The most any single box here can hold is about **121 GiB**, once the
+runtime's own overhead is counted, so anything above that line is the actual subject
+and everything below it is a control. That addressable figure, not the installed
+memory figure, is the one the model sizes below are compared against.
 
 **None of this has been run.** It is a plan. The model sizes are read from published
 model files; everything about what will actually execute is unverified.
@@ -663,6 +665,69 @@ One rung has effectively been climbed already. The capacity section above record
 **GLM-5.3-Flash UD-Q4_K_XL at 185.98 GiB running across two boxes that could not hold
 it individually** — no speedup to quote, but the model ran where it otherwise could
 not. That result is the reason this ladder looks worth building.
+
+### The rungs
+
+Sizes are in GiB, summed across shards where a quantization ships in several parts,
+and read from the published model files rather than estimated. **The line to compare
+against is 121 GiB.** DeepSeek V4-Flash-0731 was published 2026-07-31;
+Qwen3.8-Flash-Next and GLM-5.3-Flash both 2026-08-26.
+
+**These are candidates, not predictions.** A size says a model might fit. It does not
+say it will run, and the precision of these figures should not be mistaken for
+confidence about that — see the limits at the end of this section.
+
+**DeepSeek V4-Flash-0731**
+
+| GiB | quantization | |
+|---:|---|---|
+| 97.1 | UD-IQ3_XXS | below the line — control |
+| 108.1 | UD-IQ3_S | below the line |
+| 119.3 | UD-Q3_K_M | below the line, barely |
+| **127.3** | **UD-IQ4_XS** | **the first rung** |
+| 127.3 | UD-IQ4_NL | |
+| 144.3 | MXFP4 | |
+| 144.4 | UD-Q4_K_XL | |
+| 150.8 | UD-Q8_K_XL | |
+
+**Qwen3.8-Flash-Next**
+
+| GiB | quantization | |
+|---:|---|---|
+| **76.3** | **UD-IQ3_XXS** | **below the line — and running right now** |
+| 103.7 | UD-Q4_K_XL | below the line |
+| 147.4 | UD-Q5_K_XL | |
+| 157.5 | UD-Q6_K_XL | |
+| 175.3 | Q8_0 | |
+| 329.7 | BF16 | unquantised |
+
+**GLM-5.3-Flash**
+
+| GiB | quantization | |
+|---:|---|---|
+| 86.7 | UD-IQ1_S | below the line |
+| 101.3 | UD-Q2_K_XL | below the line |
+| 112.1 | UD-IQ3_XXS | below the line |
+| 137.4 | UD-Q3_K_XL | |
+| 146.1 | UD-IQ4_XS | |
+| 186.0 | UD-Q4_K_XL | already run across two boxes, see the capacity section |
+| 223.8 | UD-Q5_K_XL | |
+| 271.8 | UD-Q6_K_XL | |
+| 317.6 | Q8_0 | |
+| 597.6 | BF16 | **ruled out on arithmetic alone** |
+
+**One rung already has a live baseline, which makes it the most useful place to start
+asking about quality.** The 76.3 GiB Qwen file is what the Strix Halo box is serving
+today — it is visible on the fleet dashboard pictured earlier in this README, beside
+that machine's name. Climbing the same family to Q8_0 at 175.3 GiB, or to the
+unquantised BF16 at 329.7, would compare against something measured daily rather than
+against nothing.
+
+**One row is excluded before any of this starts, and it is listed because it is
+excluded.** GLM-5.3-Flash at BF16 is 597.6 GiB. That is larger than all four boxes
+added together, and far larger than the roughly 459 GiB the runtimes can actually
+address. No split, no transport and no backend changes that. The ceiling is real, and
+recording it here is cheaper than having someone rediscover it on a plan later.
 
 ### Two questions, and the second one is open
 
