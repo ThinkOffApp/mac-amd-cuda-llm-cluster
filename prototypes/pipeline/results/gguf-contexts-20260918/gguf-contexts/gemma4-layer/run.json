@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/Users/petrus/Documents/Codex/2026-09-16/che/work/gguf-contexts",
+    "/Users/petrus/Documents/Codex/2026-09-16/che/work/models/gemma-4-e4b/gemma-4-E4B-it-Q4_K_M.gguf",
+    "layer",
+    "127.0.0.1:29591",
+    "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/heterogeneous-tp/engine-gemma-e4b/solo",
+    "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/gguf-contexts/gemma4-layer/report.json"
+  ],
+  "exit_code": 0,
+  "source_sha256": "7a8f1660abd26da1bec1609b1c5ecc38199853873b9cc74f54f91dc3310cc439",
+  "engine_commit": "bdcbaaf6e7520b68c8c60ff724c67409970d70e1"
+}

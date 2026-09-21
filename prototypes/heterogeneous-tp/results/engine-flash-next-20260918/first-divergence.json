@@ -1,0 +1,20 @@
+[
+  {
+    "prompt": "The capital of France is",
+    "first_failing_step_zero_based": 3,
+    "max_abs_logit_error": 1.4703989028930664,
+    "tokens_match": true
+  },
+  {
+    "prompt": "In a shocking finding, scientists discovered",
+    "first_failing_step_zero_based": 11,
+    "max_abs_logit_error": 0.761870265007019,
+    "tokens_match": true
+  },
+  {
+    "prompt": "def add(a, b):",
+    "first_failing_step_zero_based": null,
+    "max_abs_logit_error": 0.0007474422454833984,
+    "tokens_match": true
+  }
+]

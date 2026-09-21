@@ -108,6 +108,12 @@ model, precision, context and workload; we have not demonstrated that target.
   against an unsharded CPU reference (maximum absolute error `9.54e-7`).
   The two-rank CPU control also passed. These are two processes on one machine,
   not a successful cross-host GPU test or a speed benchmark.
+- **Physical Mac–Spark correctness passed:** the same FP32 MLP now runs with
+  Mac MPS rank 0 and Spark CUDA rank 1 over a framed TCP backend. Both ranks
+  passed at 1, 17 and 128 tokens; maximum absolute error was `9.54e-7`.
+  [Raw result](prototypes/heterogeneous-tp/results/mac-spark-tcp-20260918.json).
+  This is a small CPU-staged collective, not a full LLM or performance result.
+  The existing Spark GLM service stayed running and its post-test health was 200.
 - **First Mini–AMD attempt:** initialization failed before GPU computation,
   with a Gloo UV address-size mismatch (`136 vs 177`), using Mini PyTorch
   2.11.0 and AMD PyTorch 2.12.0a0. PyTorch's platform defaults select different
@@ -124,7 +130,7 @@ model, precision, context and workload; we have not demonstrated that target.
   API. Repair/relaunch is underway. No successful served-token result from this
   recipe is recorded here yet.
 
-Next gates are a physical mixed-host correctness run, a transformer block,
+Next gates are the Mini–AMD correctness run, a transformer block,
 a small complete model, then repeatable end-to-end timing. Experimental RDMA
 drivers and hardware compatibility are separate work; they are not prerequisites
 for the first correctness gate.

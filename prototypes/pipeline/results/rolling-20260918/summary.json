@@ -1,0 +1,29 @@
+[
+  {
+    "schedule": "alternating",
+    "exit_codes": [
+      0,
+      0
+    ],
+    "valid": true,
+    "ordering_valid": true
+  },
+  {
+    "schedule": "barrier",
+    "exit_codes": [
+      0,
+      0
+    ],
+    "valid": true,
+    "ordering_valid": true
+  },
+  {
+    "schedule": "rolling",
+    "exit_codes": [
+      0,
+      0
+    ],
+    "valid": true,
+    "ordering_valid": true
+  }
+]

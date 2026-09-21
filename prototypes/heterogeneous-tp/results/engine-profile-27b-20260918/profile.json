@@ -1,0 +1,996 @@
+{
+  "scope": "Instrumented same-physical-GPU Metal + loopback Metal RPC. Synchronization alters scheduling. No pure-wire or physical-pair performance claim. Collective input bytes sum local participant tensors, not network bytes.",
+  "correctness_valid": true,
+  "phases": {
+    "prefill": {
+      "steps": 3,
+      "wall_us": 988034,
+      "median_step_us": 243601,
+      "prepare_us": 14789,
+      "initial_wait_us": 27,
+      "compute_us": 423920,
+      "collective_us": 514258,
+      "collectives": 384,
+      "collective_input_bytes": 94371840,
+      "total_us": 953044,
+      "collective_share_of_decode_call_wall": 0.5204861371167389,
+      "unattributed_us": 35040
+    },
+    "decode": {
+      "steps": 45,
+      "wall_us": 8179732,
+      "median_step_us": 180289,
+      "prepare_us": 11626,
+      "initial_wait_us": 395,
+      "compute_us": 2665893,
+      "collective_us": 5401107,
+      "collectives": 5760,
+      "collective_input_bytes": 235929600,
+      "total_us": 8079687,
+      "collective_share_of_decode_call_wall": 0.6603036627605893,
+      "unattributed_us": 100711
+    }
+  },
+  "steps": [
+    {
+      "prompt": 0,
+      "step": 0,
+      "input_tokens": 5,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 7009,
+          "initial_wait_us": 10,
+          "compute_us": 233246,
+          "collective_us": 254064,
+          "collectives": 128,
+          "collective_input_bytes": 26214400,
+          "total_us": 494352
+        }
+      ],
+      "wall_us": 514075
+    },
+    {
+      "prompt": 0,
+      "step": 1,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 4448,
+          "initial_wait_us": 12,
+          "compute_us": 83737,
+          "collective_us": 154415,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 242632
+        }
+      ],
+      "wall_us": 252163
+    },
+    {
+      "prompt": 0,
+      "step": 2,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 9,
+          "compute_us": 55691,
+          "collective_us": 116075,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 171787
+        }
+      ],
+      "wall_us": 173861
+    },
+    {
+      "prompt": 0,
+      "step": 3,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 10,
+          "compute_us": 53717,
+          "collective_us": 112561,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 166297
+        }
+      ],
+      "wall_us": 168359
+    },
+    {
+      "prompt": 0,
+      "step": 4,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 7,
+          "compute_us": 56985,
+          "collective_us": 114975,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 171980
+        }
+      ],
+      "wall_us": 174309
+    },
+    {
+      "prompt": 0,
+      "step": 5,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 7,
+          "compute_us": 66704,
+          "collective_us": 139324,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 206058
+        }
+      ],
+      "wall_us": 207826
+    },
+    {
+      "prompt": 0,
+      "step": 6,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 8,
+          "compute_us": 60449,
+          "collective_us": 124570,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 185044
+        }
+      ],
+      "wall_us": 187611
+    },
+    {
+      "prompt": 0,
+      "step": 7,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 12,
+          "compute_us": 58212,
+          "collective_us": 119496,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 177731
+        }
+      ],
+      "wall_us": 180210
+    },
+    {
+      "prompt": 0,
+      "step": 8,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 10,
+          "compute_us": 60186,
+          "collective_us": 124030,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 184241
+        }
+      ],
+      "wall_us": 185982
+    },
+    {
+      "prompt": 0,
+      "step": 9,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 6,
+          "compute_us": 60002,
+          "collective_us": 118629,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 178645
+        }
+      ],
+      "wall_us": 180289
+    },
+    {
+      "prompt": 0,
+      "step": 10,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 8,
+          "compute_us": 59220,
+          "collective_us": 123897,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 183139
+        }
+      ],
+      "wall_us": 185186
+    },
+    {
+      "prompt": 0,
+      "step": 11,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 9,
+          "compute_us": 59397,
+          "collective_us": 119229,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 178646
+        }
+      ],
+      "wall_us": 180669
+    },
+    {
+      "prompt": 0,
+      "step": 12,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 12,
+          "compute_us": 58457,
+          "collective_us": 121244,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 179728
+        }
+      ],
+      "wall_us": 181487
+    },
+    {
+      "prompt": 0,
+      "step": 13,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 8,
+          "compute_us": 57408,
+          "collective_us": 119771,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 177199
+        }
+      ],
+      "wall_us": 178737
+    },
+    {
+      "prompt": 0,
+      "step": 14,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 15,
+          "compute_us": 57836,
+          "collective_us": 120956,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 178822
+        }
+      ],
+      "wall_us": 180746
+    },
+    {
+      "prompt": 0,
+      "step": 15,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 8,
+          "compute_us": 59550,
+          "collective_us": 120926,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 180494
+        }
+      ],
+      "wall_us": 181106
+    },
+    {
+      "prompt": 1,
+      "step": 0,
+      "input_tokens": 7,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 4108,
+          "initial_wait_us": 5,
+          "compute_us": 99222,
+          "collective_us": 132615,
+          "collectives": 128,
+          "collective_input_bytes": 36700160,
+          "total_us": 235964
+        }
+      ],
+      "wall_us": 243601
+    },
+    {
+      "prompt": 1,
+      "step": 1,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 3539,
+          "initial_wait_us": 9,
+          "compute_us": 57208,
+          "collective_us": 116842,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 177611
+        }
+      ],
+      "wall_us": 185151
+    },
+    {
+      "prompt": 1,
+      "step": 2,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 1,
+          "initial_wait_us": 11,
+          "compute_us": 55601,
+          "collective_us": 115383,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 171010
+        }
+      ],
+      "wall_us": 172150
+    },
+    {
+      "prompt": 1,
+      "step": 3,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 1,
+          "initial_wait_us": 12,
+          "compute_us": 57168,
+          "collective_us": 118530,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 175725
+        }
+      ],
+      "wall_us": 178283
+    },
+    {
+      "prompt": 1,
+      "step": 4,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 6,
+          "compute_us": 55373,
+          "collective_us": 115542,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 170938
+        }
+      ],
+      "wall_us": 173010
+    },
+    {
+      "prompt": 1,
+      "step": 5,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 1,
+          "initial_wait_us": 7,
+          "compute_us": 55019,
+          "collective_us": 117841,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 172886
+        }
+      ],
+      "wall_us": 174996
+    },
+    {
+      "prompt": 1,
+      "step": 6,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 1,
+          "initial_wait_us": 9,
+          "compute_us": 58769,
+          "collective_us": 121744,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 180536
+        }
+      ],
+      "wall_us": 182941
+    },
+    {
+      "prompt": 1,
+      "step": 7,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 5,
+          "compute_us": 56903,
+          "collective_us": 114695,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 171611
+        }
+      ],
+      "wall_us": 173844
+    },
+    {
+      "prompt": 1,
+      "step": 8,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 1,
+          "initial_wait_us": 8,
+          "compute_us": 54778,
+          "collective_us": 115650,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 170453
+        }
+      ],
+      "wall_us": 172925
+    },
+    {
+      "prompt": 1,
+      "step": 9,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 8,
+          "compute_us": 59160,
+          "collective_us": 115544,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 174733
+        }
+      ],
+      "wall_us": 177627
+    },
+    {
+      "prompt": 1,
+      "step": 10,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 12,
+          "compute_us": 59853,
+          "collective_us": 121419,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 181297
+        }
+      ],
+      "wall_us": 183493
+    },
+    {
+      "prompt": 1,
+      "step": 11,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 6,
+          "compute_us": 56349,
+          "collective_us": 118580,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 174942
+        }
+      ],
+      "wall_us": 176513
+    },
+    {
+      "prompt": 1,
+      "step": 12,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 7,
+          "compute_us": 58032,
+          "collective_us": 115422,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 173476
+        }
+      ],
+      "wall_us": 175400
+    },
+    {
+      "prompt": 1,
+      "step": 13,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 9,
+          "compute_us": 61615,
+          "collective_us": 120017,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 181659
+        }
+      ],
+      "wall_us": 182605
+    },
+    {
+      "prompt": 1,
+      "step": 14,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 1,
+          "initial_wait_us": 9,
+          "compute_us": 58655,
+          "collective_us": 119136,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 177816
+        }
+      ],
+      "wall_us": 179231
+    },
+    {
+      "prompt": 1,
+      "step": 15,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 11,
+          "compute_us": 59206,
+          "collective_us": 116603,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 175828
+        }
+      ],
+      "wall_us": 177476
+    },
+    {
+      "prompt": 2,
+      "step": 0,
+      "input_tokens": 6,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 3672,
+          "initial_wait_us": 12,
+          "compute_us": 91452,
+          "collective_us": 127579,
+          "collectives": 128,
+          "collective_input_bytes": 31457280,
+          "total_us": 222728
+        }
+      ],
+      "wall_us": 230358
+    },
+    {
+      "prompt": 2,
+      "step": 1,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 3632,
+          "initial_wait_us": 10,
+          "compute_us": 59736,
+          "collective_us": 119770,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 183175
+        }
+      ],
+      "wall_us": 189919
+    },
+    {
+      "prompt": 2,
+      "step": 2,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 6,
+          "compute_us": 57910,
+          "collective_us": 114684,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 172618
+        }
+      ],
+      "wall_us": 175066
+    },
+    {
+      "prompt": 2,
+      "step": 3,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 9,
+          "compute_us": 60070,
+          "collective_us": 119352,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 179446
+        }
+      ],
+      "wall_us": 181864
+    },
+    {
+      "prompt": 2,
+      "step": 4,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 7,
+          "compute_us": 61894,
+          "collective_us": 121035,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 182955
+        }
+      ],
+      "wall_us": 183645
+    },
+    {
+      "prompt": 2,
+      "step": 5,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 11,
+          "compute_us": 60624,
+          "collective_us": 120938,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 181594
+        }
+      ],
+      "wall_us": 183039
+    },
+    {
+      "prompt": 2,
+      "step": 6,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 1,
+          "initial_wait_us": 6,
+          "compute_us": 61790,
+          "collective_us": 120148,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 181958
+        }
+      ],
+      "wall_us": 183557
+    },
+    {
+      "prompt": 2,
+      "step": 7,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 7,
+          "compute_us": 59275,
+          "collective_us": 116780,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 176079
+        }
+      ],
+      "wall_us": 177700
+    },
+    {
+      "prompt": 2,
+      "step": 8,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 7,
+          "compute_us": 65151,
+          "collective_us": 134387,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 199568
+        }
+      ],
+      "wall_us": 200379
+    },
+    {
+      "prompt": 2,
+      "step": 9,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 6,
+          "compute_us": 57537,
+          "collective_us": 116138,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 173693
+        }
+      ],
+      "wall_us": 175701
+    },
+    {
+      "prompt": 2,
+      "step": 10,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 12,
+          "compute_us": 61237,
+          "collective_us": 118076,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 179338
+        }
+      ],
+      "wall_us": 180849
+    },
+    {
+      "prompt": 2,
+      "step": 11,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 9,
+          "compute_us": 56384,
+          "collective_us": 117250,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 173651
+        }
+      ],
+      "wall_us": 174782
+    },
+    {
+      "prompt": 2,
+      "step": 12,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 10,
+          "compute_us": 60098,
+          "collective_us": 118000,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 178121
+        }
+      ],
+      "wall_us": 180404
+    },
+    {
+      "prompt": 2,
+      "step": 13,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 11,
+          "compute_us": 58837,
+          "collective_us": 120206,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 179069
+        }
+      ],
+      "wall_us": 180546
+    },
+    {
+      "prompt": 2,
+      "step": 14,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 7,
+          "compute_us": 57669,
+          "collective_us": 117383,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 175073
+        }
+      ],
+      "wall_us": 176355
+    },
+    {
+      "prompt": 2,
+      "step": 15,
+      "input_tokens": 1,
+      "graphs": [
+        {
+          "nodes": 3750,
+          "ranks": 2,
+          "subgraphs": 129,
+          "prepare_us": 0,
+          "initial_wait_us": 7,
+          "compute_us": 56441,
+          "collective_us": 113914,
+          "collectives": 128,
+          "collective_input_bytes": 5242880,
+          "total_us": 170385
+        }
+      ],
+      "wall_us": 171740
+    }
+  ]
+}

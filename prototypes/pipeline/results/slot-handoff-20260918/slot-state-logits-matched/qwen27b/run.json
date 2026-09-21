@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/Users/petrus/Documents/Codex/2026-09-16/che/work/gguf-state-check",
+    "/Volumes/t705/ModelArchive/Qwen3.8-27B-GGUF/Qwen3.8-27B-UD-Q4_K_XL.gguf",
+    "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/slot-fresh/qwen27b/slots/before-final-prompt-token.bin",
+    "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/slot-state-logits-matched/qwen27b/prompt.json",
+    "0",
+    "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/slot-state-logits-matched/qwen27b/report.json",
+    "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/slot-state-logits/qwen27b/matched-plan.json"
+  ],
+  "exit_code": 0,
+  "source_sha256": "cb43860bb24d10f730ac65e773a9284fa674d4b3e8bb366bec5b804ca9f999cf"
+}

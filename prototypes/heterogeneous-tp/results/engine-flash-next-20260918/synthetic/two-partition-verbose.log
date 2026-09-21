@@ -1,0 +1,46 @@
+main: using seed 1234
+|     Model arch.|      Device|Config|   NMSE vs. CPU|Roundtrip|
+|----------------|------------|------|---------------|---------|
+|        qwen4exp|Apple M5 Max|   MoE|0.00.050.955 W load: adding 128 dummy tokens
+0.00.090.807 W load: adding 128 dummy tokens
+0.00.118.751 W resolve_fused_ops: layer 0 is assigned to device MTL0 but fused DeepSeek V4 HC pre is assigned to device CPU (usually due to missing support)
+0.00.118.756 W resolve_fused_ops: fused DeepSeek V4 HC pre not supported, set to disabled
+0.00.119.311 W resolve_fused_ops: layer 0 is assigned to device MTL0 but fused DeepSeek V4 HC post is assigned to device CPU (usually due to missing support)
+0.00.119.312 W resolve_fused_ops: fused DeepSeek V4 HC post not supported, set to disabled
+0.00.140.843 W load: adding 128 dummy tokens
+0.00.142.718 W resolve_fused_ops: layer 0 is assigned to device MTL0 but fused DeepSeek V4 HC pre is assigned to device CPU (usually due to missing support)
+0.00.142.721 W resolve_fused_ops: fused DeepSeek V4 HC pre not supported, set to disabled
+0.00.143.137 W resolve_fused_ops: layer 0 is assigned to device MTL0 but fused DeepSeek V4 HC post is assigned to device CPU (usually due to missing support)
+0.00.143.138 W resolve_fused_ops: fused DeepSeek V4 HC post not supported, set to disabled
+  [1;32mOK[0m (2.14e-07)|       [1;32mOK[0m|
+|        qwen4exp|  Accelerate|   MoE|0.00.154.711 W load: adding 128 dummy tokens
+0.00.182.560 W resolve_fused_ops: layer 1 is assigned to device BLAS but Flash Attention is assigned to device CPU (usually due to missing support)
+0.00.182.562 W resolve_fused_ops: Flash Attention not supported, set to disabled
+0.00.182.636 W resolve_fused_ops: layer 0 is assigned to device BLAS but fused DeepSeek V4 HC pre is assigned to device CPU (usually due to missing support)
+0.00.182.637 W resolve_fused_ops: fused DeepSeek V4 HC pre not supported, set to disabled
+0.00.182.768 W resolve_fused_ops: layer 0 is assigned to device BLAS but fused DeepSeek V4 HC post is assigned to device CPU (usually due to missing support)
+0.00.182.773 W resolve_fused_ops: fused DeepSeek V4 HC post not supported, set to disabled
+0.00.196.281 W load: adding 128 dummy tokens
+0.00.198.280 W resolve_fused_ops: layer 1 is assigned to device BLAS but Flash Attention is assigned to device CPU (usually due to missing support)
+0.00.198.282 W resolve_fused_ops: Flash Attention not supported, set to disabled
+0.00.198.361 W resolve_fused_ops: layer 0 is assigned to device BLAS but fused DeepSeek V4 HC pre is assigned to device CPU (usually due to missing support)
+0.00.198.362 W resolve_fused_ops: fused DeepSeek V4 HC pre not supported, set to disabled
+0.00.198.503 W resolve_fused_ops: layer 0 is assigned to device BLAS but fused DeepSeek V4 HC post is assigned to device CPU (usually due to missing support)
+0.00.198.507 W resolve_fused_ops: fused DeepSeek V4 HC post not supported, set to disabled
+  [1;32mOK[0m (0.00e+00)|       [1;32mOK[0m|
+|        qwen4exp|Apple M5 Max|   MoE|0.00.209.424 W load: adding 128 dummy tokens
+0.00.254.725 W load: adding 128 dummy tokens
+  [1;32mOK[0m (9.59e-14)|       [1;32mOK[0m|
+|        qwen4exp|        Meta|   MoE|0.00.270.740 W load: adding 128 dummy tokens
+0.00.299.244 W llama_init_from_model: SPLIT_MODE_TENSOR being used for a single device is not recommended
+0.00.299.641 W resolve_fused_ops: layer 0 is assigned to device Meta() but fused DeepSeek V4 HC pre is assigned to device CPU (usually due to missing support)
+0.00.299.642 W resolve_fused_ops: fused DeepSeek V4 HC pre not supported, set to disabled
+0.00.299.804 W resolve_fused_ops: layer 0 is assigned to device Meta() but fused DeepSeek V4 HC post is assigned to device CPU (usually due to missing support)
+0.00.299.805 W resolve_fused_ops: fused DeepSeek V4 HC post not supported, set to disabled
+  [1;32mOK[0m (2.14e-07)|     [1;33mSKIP[0m|
+|        qwen4exp|Meta-local-2|   MoE|0.00.313.889 W load: adding 128 dummy tokens
+0.00.343.865 W resolve_fused_ops: layer 0 is assigned to device Meta() but fused DeepSeek V4 HC pre is assigned to device CPU (usually due to missing support)
+0.00.343.869 W resolve_fused_ops: fused DeepSeek V4 HC pre not supported, set to disabled
+0.00.344.065 W resolve_fused_ops: layer 0 is assigned to device Meta() but fused DeepSeek V4 HC post is assigned to device CPU (usually due to missing support)
+0.00.344.067 W resolve_fused_ops: fused DeepSeek V4 HC post not supported, set to disabled
+  [1;32mOK[0m (2.14e-07)|     [1;33mSKIP[0m|

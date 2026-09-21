@@ -1,0 +1,147 @@
+{
+  "passed": false,
+  "transport": "CPU tcp",
+  "dtype": "float32",
+  "atol": 2e-05,
+  "rtol": 0.0002,
+  "block": "prenorm decoder, causal, GELU MLP, KV cache",
+  "note": "payload_bytes_per_collective is ONE payload; the two-rank exchange sends each both ways, so aggregate link payload per decoded token is 4x that, before framing and setup. No speed claim follows from these byte counts.",
+  "ranks": [
+    {
+      "rank": 0,
+      "device": "cpu",
+      "requested": "cpu",
+      "torch": "2.11.0",
+      "hip": null,
+      "cuda": null,
+      "host": "Petruss-Mini",
+      "heads": 8,
+      "local_heads": 4,
+      "dim": 128,
+      "hidden": 256,
+      "local_hidden": 128,
+      "collectives_per_block": 2,
+      "collectives_total": 66,
+      "cases": [
+        {
+          "prefix_len": 1,
+          "chunks": 1,
+          "steps": 4,
+          "passed": false,
+          "no_future_visibility": "n/a: needs prefix_len>1",
+          "max_abs_error": 3.0533950328826904,
+          "payload_bytes_per_collective": 512,
+          "aggregate_link_payload_bytes_per_decoded_token": 2048
+        },
+        {
+          "prefix_len": 17,
+          "chunks": 1,
+          "steps": 4,
+          "passed": false,
+          "no_future_visibility": true,
+          "max_abs_error": 2.0101447105407715,
+          "payload_bytes_per_collective": 512,
+          "aggregate_link_payload_bytes_per_decoded_token": 2048
+        },
+        {
+          "prefix_len": 17,
+          "chunks": 2,
+          "steps": 4,
+          "passed": false,
+          "no_future_visibility": false,
+          "max_abs_error": 2.1374552249908447,
+          "payload_bytes_per_collective": 512,
+          "aggregate_link_payload_bytes_per_decoded_token": 2048
+        },
+        {
+          "prefix_len": 128,
+          "chunks": 1,
+          "steps": 4,
+          "passed": false,
+          "no_future_visibility": true,
+          "max_abs_error": 0.8217737674713135,
+          "payload_bytes_per_collective": 512,
+          "aggregate_link_payload_bytes_per_decoded_token": 2048
+        },
+        {
+          "prefix_len": 128,
+          "chunks": 2,
+          "steps": 4,
+          "passed": false,
+          "no_future_visibility": false,
+          "max_abs_error": 1.2663908004760742,
+          "payload_bytes_per_collective": 512,
+          "aggregate_link_payload_bytes_per_decoded_token": 2048
+        }
+      ]
+    },
+    {
+      "rank": 1,
+      "device": "cpu",
+      "requested": "cpu",
+      "torch": "2.11.0",
+      "hip": null,
+      "cuda": null,
+      "host": "Petruss-Mini",
+      "heads": 8,
+      "local_heads": 4,
+      "dim": 128,
+      "hidden": 256,
+      "local_hidden": 128,
+      "collectives_per_block": 2,
+      "collectives_total": 66,
+      "cases": [
+        {
+          "prefix_len": 1,
+          "chunks": 1,
+          "steps": 4,
+          "passed": false,
+          "no_future_visibility": "n/a: needs prefix_len>1",
+          "max_abs_error": 3.0533950328826904,
+          "payload_bytes_per_collective": 512,
+          "aggregate_link_payload_bytes_per_decoded_token": 2048
+        },
+        {
+          "prefix_len": 17,
+          "chunks": 1,
+          "steps": 4,
+          "passed": false,
+          "no_future_visibility": true,
+          "max_abs_error": 2.0101447105407715,
+          "payload_bytes_per_collective": 512,
+          "aggregate_link_payload_bytes_per_decoded_token": 2048
+        },
+        {
+          "prefix_len": 17,
+          "chunks": 2,
+          "steps": 4,
+          "passed": false,
+          "no_future_visibility": false,
+          "max_abs_error": 2.1374552249908447,
+          "payload_bytes_per_collective": 512,
+          "aggregate_link_payload_bytes_per_decoded_token": 2048
+        },
+        {
+          "prefix_len": 128,
+          "chunks": 1,
+          "steps": 4,
+          "passed": false,
+          "no_future_visibility": true,
+          "max_abs_error": 0.8217737674713135,
+          "payload_bytes_per_collective": 512,
+          "aggregate_link_payload_bytes_per_decoded_token": 2048
+        },
+        {
+          "prefix_len": 128,
+          "chunks": 2,
+          "steps": 4,
+          "passed": false,
+          "no_future_visibility": false,
+          "max_abs_error": 1.2663908004760742,
+          "payload_bytes_per_collective": 512,
+          "aggregate_link_payload_bytes_per_decoded_token": 2048
+        }
+      ]
+    }
+  ]
+}

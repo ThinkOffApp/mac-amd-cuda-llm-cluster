@@ -1,0 +1,101 @@
+[
+  {
+    "tag": "tp-b2-cpu",
+    "codes": [
+      0,
+      0
+    ],
+    "command": [
+      "/Users/petrus/Documents/Codex/2026-09-16/che/work/tp-venv/bin/python",
+      "batch_tp.py",
+      "--mode",
+      "tp",
+      "--batch",
+      "2",
+      "--device",
+      "cpu",
+      "--prompt-tokens",
+      "128",
+      "--new-tokens",
+      "8",
+      "--warmups",
+      "1",
+      "--runs",
+      "2"
+    ]
+  },
+  {
+    "tag": "tp-b8-cpu",
+    "codes": [
+      0,
+      0
+    ],
+    "command": [
+      "/Users/petrus/Documents/Codex/2026-09-16/che/work/tp-venv/bin/python",
+      "batch_tp.py",
+      "--mode",
+      "tp",
+      "--batch",
+      "8",
+      "--device",
+      "cpu",
+      "--prompt-tokens",
+      "128",
+      "--new-tokens",
+      "8",
+      "--warmups",
+      "1",
+      "--runs",
+      "2"
+    ]
+  },
+  {
+    "tag": "tp-b16-cpu",
+    "codes": [
+      0,
+      0
+    ],
+    "command": [
+      "/Users/petrus/Documents/Codex/2026-09-16/che/work/tp-venv/bin/python",
+      "batch_tp.py",
+      "--mode",
+      "tp",
+      "--batch",
+      "16",
+      "--device",
+      "cpu",
+      "--prompt-tokens",
+      "128",
+      "--new-tokens",
+      "8",
+      "--warmups",
+      "1",
+      "--runs",
+      "2"
+    ]
+  },
+  {
+    "tag": "solo-b8-mps",
+    "codes": [
+      0
+    ],
+    "command": [
+      "/Users/petrus/Documents/Codex/2026-09-16/che/work/tp-venv/bin/python",
+      "batch_tp.py",
+      "--mode",
+      "solo",
+      "--batch",
+      "8",
+      "--device",
+      "mps",
+      "--prompt-tokens",
+      "128",
+      "--new-tokens",
+      "8",
+      "--warmups",
+      "1",
+      "--runs",
+      "2"
+    ]
+  }
+]

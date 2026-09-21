@@ -1,0 +1,98 @@
+{
+  "ranks": [
+    {
+      "mode": "tp",
+      "rank": 0,
+      "world": 2,
+      "host": "Petruss-Mini",
+      "device": "cpu",
+      "requested": "cpu",
+      "torch": "2.11.0",
+      "hip": null,
+      "libraries": {
+        "transformers": "5.16.1",
+        "tokenizers": "0.23.2"
+      },
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+      "weights_sha256_prefix": "248dfc3911869ec4",
+      "prompt_tokens": 64,
+      "new_tokens": 4,
+      "warmups": 0,
+      "runs": 1,
+      "batch": 1,
+      "torch_threads": 1,
+      "config": "tp",
+      "cpu_staged": true,
+      "dtype": "float32",
+      "correctness_gate_passed": true,
+      "both_ranks_correct": false,
+      "all_timed_runs_matched_reference": true,
+      "valid": false,
+      "generated_ids": [
+        340,
+        2405,
+        13,
+        3887
+      ],
+      "reference_ids": [
+        340,
+        2405,
+        13,
+        3887
+      ],
+      "reference_count": 4,
+      "tokenizer_sha256_prefix": "8414cab924d8b9b3",
+      "config_sha256_prefix": "0daed7749b4f02b8",
+      "timings": [],
+      "coordinator_statistic": "rank 0 total_wall_s; per-rank raw timings are kept in ranks[] and not averaged",
+      "note": "Timings are only reported when the correctness gate passes. Load, tokenize, hash and the reference check are outside every timed region. The reference uses its own KV cache."
+    },
+    {
+      "mode": "tp",
+      "rank": 1,
+      "world": 2,
+      "host": "Petruss-Mini",
+      "device": "cpu",
+      "requested": "cpu",
+      "torch": "2.11.0",
+      "hip": null,
+      "libraries": {
+        "transformers": "5.16.1",
+        "tokenizers": "0.23.2"
+      },
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+      "weights_sha256_prefix": "248dfc3911869ec4",
+      "prompt_tokens": 64,
+      "new_tokens": 4,
+      "warmups": 0,
+      "runs": 1,
+      "batch": 1,
+      "torch_threads": 1,
+      "config": "tp",
+      "cpu_staged": true,
+      "dtype": "float32",
+      "correctness_gate_passed": false,
+      "both_ranks_correct": false,
+      "all_timed_runs_matched_reference": true,
+      "valid": false,
+      "generated_ids": [
+        340,
+        2405,
+        13,
+        3887
+      ],
+      "reference_ids": [
+        340,
+        2405,
+        13,
+        3887
+      ],
+      "reference_count": 4,
+      "tokenizer_sha256_prefix": "8414cab924d8b9b3",
+      "config_sha256_prefix": "0daed7749b4f02b8",
+      "timings": [],
+      "coordinator_statistic": "rank 0 total_wall_s; per-rank raw timings are kept in ranks[] and not averaged",
+      "note": "Timings are only reported when the correctness gate passes. Load, tokenize, hash and the reference check are outside every timed region. The reference uses its own KV cache."
+    }
+  ]
+}

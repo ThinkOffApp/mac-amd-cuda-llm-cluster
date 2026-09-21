@@ -1,0 +1,2 @@
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 45707.75it/s]
+{"valid": true, "schedule": "rolling", "out": "/Users/petrus/Documents/Codex/2026-09-16/che/outputs/rolling-pipeline/rolling.json"}

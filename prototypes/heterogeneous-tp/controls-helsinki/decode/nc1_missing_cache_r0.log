@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/private/tmp/het-tp/ctl.py", line 252, in <module>
+    main()
+    ~~~~^^
+  File "/private/tmp/het-tp/ctl.py", line 200, in main
+    out = cached_forward(x_all[pos:pos + 1].to(device), cache, pos)
+  File "/private/tmp/het-tp/ctl.py", line 156, in cached_forward
+    assert cache['k'].shape == (local_heads, expected, head_dim), \
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: K cache (4, 1, 16) != (4, 2, 16)

@@ -1,0 +1,5 @@
+[nc1_missing_cache] exit=1 FAILED AS REQUIRED -- K cache overwritten instead of appended
+[nc2_wrong_cache] exit=1 FAILED AS REQUIRED -- V cache right shape, contents time-reversed
+[nc3_offbyone_future] exit=1 FAILED AS REQUIRED -- causal mask offset +1, future token visible
+[nc4_offbyone_self] exit=1 FAILED AS REQUIRED -- causal mask offset -1, own token masked
+[nc5_norm_weight_dropped] exit=1 FAILED AS REQUIRED -- RMSNorm weight multiply omitted from sharded path

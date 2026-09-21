@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf",
+    "size_bytes": 10946624,
+    "mtime_ns": 1789597436834524629,
+    "sha256": "5ce89370720f8bf90890f439361282104c1aa1482d4013bb9a50923e758e71a4",
+    "hash_seconds": 0.004558086395263672
+  },
+  {
+    "name": "Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf",
+    "size_bytes": 49835229856,
+    "mtime_ns": 1789604788282839134,
+    "sha256": "577a38a2392b40ca2193cea502e1d92f60b8cd370675d308e0ec21885d9daaa7",
+    "hash_seconds": 18.53760576248169
+  },
+  {
+    "name": "Qwen3.8-Flash-Next-UD-IQ4_XS-00003-of-00003.gguf",
+    "size_bytes": 43836407744,
+    "mtime_ns": 1789604729786365800,
+    "sha256": "d4634e6d84f0ebb0940be15c90d3790bf6464e3dea3a1cddc567dc0e83ad8833",
+    "hash_seconds": 16.159218311309814
+  }
+]

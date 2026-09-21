@@ -1,0 +1,10 @@
+{
+  "repository": "unsloth/gemma-4-E4B-it-GGUF",
+  "revision": "bfc15c382204943c3a8fff0c750b94ae2364d7a3",
+  "filename": "gemma-4-E4B-it-Q4_K_M.gguf",
+  "expected_sha256": "85a896a047553e842f25297ee5b031d64ff30147d9c4af17b1e4b394cd1fab87",
+  "expected_size": 4977171584,
+  "verified_sha256": "85a896a047553e842f25297ee5b031d64ff30147d9c4af17b1e4b394cd1fab87",
+  "verified_size": 4977171584,
+  "download_finished": 1789719827.5745568
+}

@@ -1,0 +1,82 @@
+{
+  "passed": true,
+  "transport": "CPU tcp",
+  "dtype": "float32",
+  "atol": 2e-05,
+  "rtol": 0.0002,
+  "block": "prenorm decoder, causal, GELU MLP",
+  "ranks": [
+    {
+      "rank": 0,
+      "device": "mps",
+      "requested": "mps",
+      "torch": "2.11.0",
+      "hip": null,
+      "cuda": null,
+      "host": "Petruss-Mini",
+      "heads": 8,
+      "local_heads": 4,
+      "dim": 128,
+      "hidden": 256,
+      "local_hidden": 128,
+      "collectives_per_block": 2,
+      "collectives_total": 6,
+      "cases": [
+        {
+          "tokens": 1,
+          "passed": true,
+          "max_abs_error": 9.5367431640625e-07,
+          "collective_bytes": 512
+        },
+        {
+          "tokens": 17,
+          "passed": true,
+          "max_abs_error": 1.430511474609375e-06,
+          "collective_bytes": 8704
+        },
+        {
+          "tokens": 128,
+          "passed": true,
+          "max_abs_error": 1.9073486328125e-06,
+          "collective_bytes": 65536
+        }
+      ]
+    },
+    {
+      "rank": 1,
+      "device": "cuda",
+      "requested": "rocm",
+      "torch": "2.12.0a0+rocm7.13.0a20260411",
+      "hip": "7.13.60980",
+      "cuda": null,
+      "host": "bosgamem5",
+      "heads": 8,
+      "local_heads": 4,
+      "dim": 128,
+      "hidden": 256,
+      "local_hidden": 128,
+      "collectives_per_block": 2,
+      "collectives_total": 6,
+      "cases": [
+        {
+          "tokens": 1,
+          "passed": true,
+          "max_abs_error": 1.1920928955078125e-06,
+          "collective_bytes": 512
+        },
+        {
+          "tokens": 17,
+          "passed": true,
+          "max_abs_error": 1.6689300537109375e-06,
+          "collective_bytes": 8704
+        },
+        {
+          "tokens": 128,
+          "passed": true,
+          "max_abs_error": 1.6689300537109375e-06,
+          "collective_bytes": 65536
+        }
+      ]
+    }
+  ]
+}

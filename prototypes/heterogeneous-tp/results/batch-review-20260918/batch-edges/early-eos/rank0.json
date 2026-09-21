@@ -1,0 +1,648 @@
+{
+  "ranks": [
+    {
+      "rank": 0,
+      "world": 2,
+      "host": "Petruss-MBP.box",
+      "mode": "tp",
+      "device": "cpu",
+      "torch": "2.14.0",
+      "hip": null,
+      "model": "openai-community/gpt2",
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+      "weight_sha256": "248dfc3911869ec493c76e65bf2fcf7f615828b0254c12b473182f0f81d3a707",
+      "source_sha256": "a665ac5ac004be3b3d79979e1927cb40eb7ebe25ac091365aeca955e47301fa5",
+      "batch": 4,
+      "prompt_tokens": 12,
+      "prompt_ids": [
+        [
+          383,
+          2106,
+          286,
+          14492,
+          318,
+          257,
+          890,
+          1621,
+          546,
+          661,
+          508,
+          2227
+        ],
+        [
+          554,
+          262,
+          3726,
+          262,
+          9151,
+          373,
+          6565,
+          290,
+          262,
+          6766,
+          2029,
+          340
+        ],
+        [
+          1375,
+          4721,
+          262,
+          3420,
+          6364,
+          780,
+          262,
+          23959,
+          1657,
+          550,
+          587,
+          5445
+        ],
+        [
+          3887,
+          1430,
+          326,
+          468,
+          1683,
+          587,
+          3194,
+          4909,
+          379,
+          1551,
+          530,
+          7457
+        ]
+      ],
+      "new_tokens": 8,
+      "layers": 12,
+      "warmups": 1,
+      "threads": 1,
+      "generation_head": "last-root",
+      "reference_ids": [
+        [
+          284,
+          50256
+        ],
+        [
+          373,
+          5901,
+          351,
+          15114,
+          13,
+          383,
+          6766,
+          373
+        ],
+        [
+          13,
+          198,
+          198,
+          1,
+          40,
+          1101,
+          7926,
+          11
+        ],
+        [
+          13,
+          198,
+          198,
+          464,
+          1917,
+          318,
+          326,
+          262
+        ]
+      ],
+      "initial_ids": [
+        [
+          284,
+          50256
+        ],
+        [
+          373,
+          5901,
+          351,
+          15114,
+          13,
+          383,
+          6766,
+          373
+        ],
+        [
+          13,
+          198,
+          198,
+          1,
+          40,
+          1101,
+          7926,
+          11
+        ],
+        [
+          13,
+          198,
+          198,
+          464,
+          1917,
+          318,
+          326,
+          262
+        ]
+      ],
+      "correctness_checked": true,
+      "valid": true,
+      "all_sequences_match_reference": true,
+      "runs": [
+        {
+          "run_index": 0,
+          "produced_ids": [
+            [
+              284,
+              50256
+            ],
+            [
+              373,
+              5901,
+              351,
+              15114,
+              13,
+              383,
+              6766,
+              373
+            ],
+            [
+              13,
+              198,
+              198,
+              1,
+              40,
+              1101,
+              7926,
+              11
+            ],
+            [
+              13,
+              198,
+              198,
+              464,
+              1917,
+              318,
+              326,
+              262
+            ]
+          ],
+          "total_wall_s": 0.10650195900234394,
+          "generated_tokens_total": 26,
+          "end_to_end_tokens_per_s": 244.12696483289835,
+          "decode_tokens_total": 22,
+          "decode_elapsed_s": 0.084786958002951,
+          "aggregate_decode_tokens_per_s": 259.4738686017523,
+          "per_sequence": [
+            {
+              "generated_tokens": 2,
+              "ttft_s": 0.02170495901373215,
+              "latency_s": 0.033393209014320746,
+              "decode_tokens": 1,
+              "decode_s": 0.011688250000588596,
+              "decode_tokens_per_s": 85.55600709684016
+            },
+            {
+              "generated_tokens": 8,
+              "ttft_s": 0.02170495901373215,
+              "latency_s": 0.10649191701668315,
+              "decode_tokens": 7,
+              "decode_s": 0.084786958002951,
+              "decode_tokens_per_s": 82.55986728237575
+            },
+            {
+              "generated_tokens": 8,
+              "ttft_s": 0.02170495901373215,
+              "latency_s": 0.10649191701668315,
+              "decode_tokens": 7,
+              "decode_s": 0.084786958002951,
+              "decode_tokens_per_s": 82.55986728237575
+            },
+            {
+              "generated_tokens": 8,
+              "ttft_s": 0.02170495901373215,
+              "latency_s": 0.10649191701668315,
+              "decode_tokens": 7,
+              "decode_s": 0.084786958002951,
+              "decode_tokens_per_s": 82.55986728237575
+            }
+          ],
+          "reduction_counters": {
+            "collectives": 192,
+            "payload_bytes": 5603328
+          }
+        },
+        {
+          "run_index": 1,
+          "produced_ids": [
+            [
+              284,
+              50256
+            ],
+            [
+              373,
+              5901,
+              351,
+              15114,
+              13,
+              383,
+              6766,
+              373
+            ],
+            [
+              13,
+              198,
+              198,
+              1,
+              40,
+              1101,
+              7926,
+              11
+            ],
+            [
+              13,
+              198,
+              198,
+              464,
+              1917,
+              318,
+              326,
+              262
+            ]
+          ],
+          "total_wall_s": 0.11108416700153612,
+          "generated_tokens_total": 26,
+          "end_to_end_tokens_per_s": 234.05675805842304,
+          "decode_tokens_total": 22,
+          "decode_elapsed_s": 0.08814454200910404,
+          "aggregate_decode_tokens_per_s": 249.5900426566142,
+          "per_sequence": [
+            {
+              "generated_tokens": 2,
+              "ttft_s": 0.022928624995984137,
+              "latency_s": 0.03551412498927675,
+              "decode_tokens": 1,
+              "decode_s": 0.012585499993292615,
+              "decode_tokens_per_s": 79.45651746318744
+            },
+            {
+              "generated_tokens": 8,
+              "ttft_s": 0.022928624995984137,
+              "latency_s": 0.11107316700508818,
+              "decode_tokens": 7,
+              "decode_s": 0.08814454200910404,
+              "decode_tokens_per_s": 79.41501357255906
+            },
+            {
+              "generated_tokens": 8,
+              "ttft_s": 0.022928624995984137,
+              "latency_s": 0.11107316700508818,
+              "decode_tokens": 7,
+              "decode_s": 0.08814454200910404,
+              "decode_tokens_per_s": 79.41501357255906
+            },
+            {
+              "generated_tokens": 8,
+              "ttft_s": 0.022928624995984137,
+              "latency_s": 0.11107316700508818,
+              "decode_tokens": 7,
+              "decode_s": 0.08814454200910404,
+              "decode_tokens_per_s": 79.41501357255906
+            }
+          ],
+          "reduction_counters": {
+            "collectives": 192,
+            "payload_bytes": 5603328
+          }
+        }
+      ],
+      "invalid_runs": []
+    },
+    {
+      "rank": 1,
+      "world": 2,
+      "host": "Petruss-MBP.box",
+      "mode": "tp",
+      "device": "cpu",
+      "torch": "2.14.0",
+      "hip": null,
+      "model": "openai-community/gpt2",
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+      "weight_sha256": "248dfc3911869ec493c76e65bf2fcf7f615828b0254c12b473182f0f81d3a707",
+      "source_sha256": "a665ac5ac004be3b3d79979e1927cb40eb7ebe25ac091365aeca955e47301fa5",
+      "batch": 4,
+      "prompt_tokens": 12,
+      "prompt_ids": [
+        [
+          383,
+          2106,
+          286,
+          14492,
+          318,
+          257,
+          890,
+          1621,
+          546,
+          661,
+          508,
+          2227
+        ],
+        [
+          554,
+          262,
+          3726,
+          262,
+          9151,
+          373,
+          6565,
+          290,
+          262,
+          6766,
+          2029,
+          340
+        ],
+        [
+          1375,
+          4721,
+          262,
+          3420,
+          6364,
+          780,
+          262,
+          23959,
+          1657,
+          550,
+          587,
+          5445
+        ],
+        [
+          3887,
+          1430,
+          326,
+          468,
+          1683,
+          587,
+          3194,
+          4909,
+          379,
+          1551,
+          530,
+          7457
+        ]
+      ],
+      "new_tokens": 8,
+      "layers": 12,
+      "warmups": 1,
+      "threads": 1,
+      "generation_head": "last-root",
+      "reference_ids": [
+        [
+          284,
+          50256
+        ],
+        [
+          373,
+          5901,
+          351,
+          15114,
+          13,
+          383,
+          6766,
+          373
+        ],
+        [
+          13,
+          198,
+          198,
+          1,
+          40,
+          1101,
+          7926,
+          11
+        ],
+        [
+          13,
+          198,
+          198,
+          464,
+          1917,
+          318,
+          326,
+          262
+        ]
+      ],
+      "initial_ids": [
+        [
+          284,
+          50256
+        ],
+        [
+          373,
+          5901,
+          351,
+          15114,
+          13,
+          383,
+          6766,
+          373
+        ],
+        [
+          13,
+          198,
+          198,
+          1,
+          40,
+          1101,
+          7926,
+          11
+        ],
+        [
+          13,
+          198,
+          198,
+          464,
+          1917,
+          318,
+          326,
+          262
+        ]
+      ],
+      "correctness_checked": true,
+      "valid": true,
+      "all_sequences_match_reference": true,
+      "runs": [
+        {
+          "run_index": 0,
+          "produced_ids": [
+            [
+              284,
+              50256
+            ],
+            [
+              373,
+              5901,
+              351,
+              15114,
+              13,
+              383,
+              6766,
+              373
+            ],
+            [
+              13,
+              198,
+              198,
+              1,
+              40,
+              1101,
+              7926,
+              11
+            ],
+            [
+              13,
+              198,
+              198,
+              464,
+              1917,
+              318,
+              326,
+              262
+            ]
+          ],
+          "total_wall_s": 0.1065207080100663,
+          "generated_tokens_total": 26,
+          "end_to_end_tokens_per_s": 244.08399536307041,
+          "decode_tokens_total": 22,
+          "decode_elapsed_s": 0.08477637500618584,
+          "aggregate_decode_tokens_per_s": 259.50625983234994,
+          "per_sequence": [
+            {
+              "generated_tokens": 2,
+              "ttft_s": 0.021733250003308058,
+              "latency_s": 0.033389082993380725,
+              "decode_tokens": 1,
+              "decode_s": 0.011655832990072668,
+              "decode_tokens_per_s": 85.79395405302265
+            },
+            {
+              "generated_tokens": 8,
+              "ttft_s": 0.021733250003308058,
+              "latency_s": 0.1065096250094939,
+              "decode_tokens": 7,
+              "decode_s": 0.08477637500618584,
+              "decode_tokens_per_s": 82.57017358302043
+            },
+            {
+              "generated_tokens": 8,
+              "ttft_s": 0.021733250003308058,
+              "latency_s": 0.1065096250094939,
+              "decode_tokens": 7,
+              "decode_s": 0.08477637500618584,
+              "decode_tokens_per_s": 82.57017358302043
+            },
+            {
+              "generated_tokens": 8,
+              "ttft_s": 0.021733250003308058,
+              "latency_s": 0.1065096250094939,
+              "decode_tokens": 7,
+              "decode_s": 0.08477637500618584,
+              "decode_tokens_per_s": 82.57017358302043
+            }
+          ],
+          "reduction_counters": {
+            "collectives": 192,
+            "payload_bytes": 5603328
+          }
+        },
+        {
+          "run_index": 1,
+          "produced_ids": [
+            [
+              284,
+              50256
+            ],
+            [
+              373,
+              5901,
+              351,
+              15114,
+              13,
+              383,
+              6766,
+              373
+            ],
+            [
+              13,
+              198,
+              198,
+              1,
+              40,
+              1101,
+              7926,
+              11
+            ],
+            [
+              13,
+              198,
+              198,
+              464,
+              1917,
+              318,
+              326,
+              262
+            ]
+          ],
+          "total_wall_s": 0.11110366700449958,
+          "generated_tokens_total": 26,
+          "end_to_end_tokens_per_s": 234.01567833892491,
+          "decode_tokens_total": 22,
+          "decode_elapsed_s": 0.0881647499918472,
+          "aggregate_decode_tokens_per_s": 249.53283485785863,
+          "per_sequence": [
+            {
+              "generated_tokens": 2,
+              "ttft_s": 0.02292683400446549,
+              "latency_s": 0.035511416994268075,
+              "decode_tokens": 1,
+              "decode_s": 0.012584582989802584,
+              "decode_tokens_per_s": 79.46230723817469
+            },
+            {
+              "generated_tokens": 8,
+              "ttft_s": 0.02292683400446549,
+              "latency_s": 0.11109158399631269,
+              "decode_tokens": 7,
+              "decode_s": 0.0881647499918472,
+              "decode_tokens_per_s": 79.39681109113684
+            },
+            {
+              "generated_tokens": 8,
+              "ttft_s": 0.02292683400446549,
+              "latency_s": 0.11109158399631269,
+              "decode_tokens": 7,
+              "decode_s": 0.0881647499918472,
+              "decode_tokens_per_s": 79.39681109113684
+            },
+            {
+              "generated_tokens": 8,
+              "ttft_s": 0.02292683400446549,
+              "latency_s": 0.11109158399631269,
+              "decode_tokens": 7,
+              "decode_s": 0.0881647499918472,
+              "decode_tokens_per_s": 79.39681109113684
+            }
+          ],
+          "reduction_counters": {
+            "collectives": 192,
+            "payload_bytes": 5603328
+          }
+        }
+      ],
+      "invalid_runs": []
+    }
+  ]
+}

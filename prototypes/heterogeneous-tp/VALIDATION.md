@@ -1,1 +1,3 @@
 Validated 2026-09-17 on one Mac, PyTorch 2.14.0, NumPy 2.4.6. Two local ranks passed at token counts 1, 17 and 128 on both MPS and CPU. MPS maximum absolute error: 9.54e-7; CPU: 8.35e-7. Both torchrun commands exited 0. Two processes used the same physical Mac GPU; cross-host, CUDA and ROCm execution remain unvalidated. No speed result. Initial run failed at reporting due to missing NumPy; requirements-mac.txt includes the dependency.
+
+Update 2026-09-18 Berlin time: physical Mac MPS + Spark CUDA passed with --transport tcp at all three token counts, both exit0, maximum error9.54e-7; see results/mac-spark-tcp-20260918.json. Gloo CPU control retested after backend selection changes. Mini–AMD and full model inference remain unvalidated.
