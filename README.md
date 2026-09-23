@@ -12,6 +12,47 @@ cable, with an NVIDIA GB10 on the same bench. Benchmark results are labelled
 with their configurations. Now building tensor parallelism across Metal, ROCm
 and CUDA, aiming to speed up both prompt processing and output generation.
 
+
+## Contents
+
+  - [What this is, in plain words](#what-this-is-in-plain-words)
+  - [Related upstream work](#related-upstream-work)
+  - [⚠ Transport: what is RDMA here, and what is not](#-transport-what-is-rdma-here-and-what-is-not)
+  - [Development update — 17 September 2026](#development-update--17-september-2026)
+  - [Two desks, two halves of this repo](#two-desks-two-halves-of-this-repo)
+  - [The whole fleet, and the software that watches it](#the-whole-fleet-and-the-software-that-watches-it)
+- [The measured result (GLM-5.3-Flash 321B MoE, pp512 / tg128 tok/s)](#the-measured-result-glm-53-flash-321b-moe-pp512--tg128-toks)
+- [A third backend: NVIDIA GB10 vs Apple Metal (16-17 Sep 2026)](#a-third-backend-nvidia-gb10-vs-apple-metal-16-17-sep-2026)
+- [Splitting Mac + Spark: when it helps, when it does not (17 Sep 2026)](#splitting-mac--spark-when-it-helps-when-it-does-not-17-sep-2026)
+  - [Prefill: the split wins, but only past a crossover](#prefill-the-split-wins-but-only-past-a-crossover)
+  - [Generation: no split we tested won](#generation-no-split-we-tested-won)
+  - [Capacity: the case where the ratio does not exist](#capacity-the-case-where-the-ratio-does-not-exist)
+  - [What we could not test](#what-we-could-not-test)
+- [Measurements added 16-18 September 2026](#measurements-added-16-18-september-2026)
+  - [The link, and the number an RDMA transport has to beat](#the-link-and-the-number-an-rdma-transport-has-to-beat)
+  - [Mac + Spark split, on one commit, on a quiet machine](#mac--spark-split-on-one-commit-on-a-quiet-machine)
+  - [The -ts ratio sweep the 17 Sep section said we had not done](#the--ts-ratio-sweep-the-17-sep-section-said-we-had-not-done)
+  - [Three boxes: a second Spark helps prefill, a third box helps nothing](#three-boxes-a-second-spark-helps-prefill-a-third-box-helps-nothing)
+  - [Prefill on one box, decode on the other: a KV hand-off over sockets](#prefill-on-one-box-decode-on-the-other-a-kv-hand-off-over-sockets)
+  - [The two-Spark GLM serve: read the transport per run](#the-two-spark-glm-serve-read-the-transport-per-run)
+  - [Dead ends, recorded so nobody repeats them](#dead-ends-recorded-so-nobody-repeats-them)
+- [The non-obvious flags](#the-non-obvious-flags)
+- [Setup](#setup)
+- [Honest pitfalls (each cost us real time)](#honest-pitfalls-each-cost-us-real-time)
+- [The interconnect: three paths, and what actually limits each one](#the-interconnect-three-paths-and-what-actually-limits-each-one)
+  - [The three paths at a glance](#the-three-paths-at-a-glance)
+  - [Path 1: the self-assembled adapter](#path-1-the-self-assembled-adapter)
+  - [Path 2: the Plyisty adapter, which we own](#path-2-the-plyisty-adapter-which-we-own)
+  - [Path 3: the Helios enclosure and ConnectX-5, ordered](#path-3-the-helios-enclosure-and-connectx-5-ordered)
+  - [What the money actually buys](#what-the-money-actually-buys)
+- [What we are testing next: models that fit in no single machine](#what-we-are-testing-next-models-that-fit-in-no-single-machine)
+  - [Three totals, and they are not the same number](#three-totals-and-they-are-not-the-same-number)
+  - [The ladder](#the-ladder)
+  - [The rungs](#the-rungs)
+  - [Two questions, and the second one is open](#two-questions-and-the-second-one-is-open)
+  - [What a size on this ladder does not prove](#what-a-size-on-this-ladder-does-not-prove)
+- [Hardware used](#hardware-used)
+
 ### What this is, in plain words
 
 Apple, AMD and NVIDIA GPUs on the same bench, joined by ordinary cables, running
@@ -1177,7 +1218,7 @@ each of them looks like when it goes wrong.
 - **Links:** one Thunderbolt 4 cable (MacBook to Strix Halo); 10 GbE (MacBook to
   Spark 1); one QSFP56 direct-attach cable carrying 200 GbE (Spark 1 to Spark 2)
 - **Network hardware in hand and on order** is described in
-  [The interconnect](#the-interconnect-what-we-have-and-what-is-on-the-way) above
+  [The interconnect](#the-interconnect-three-paths-and-what-actually-limits-each-one) above
 
 Measured on 30-31 Aug 2026, remeasured on 10-11 Sep 2026, GB10 added 16 Sep 2026,
 Mac + GB10 split measured 17 Sep 2026.
