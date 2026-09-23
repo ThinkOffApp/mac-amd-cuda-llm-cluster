@@ -29,7 +29,7 @@ and CUDA, aiming to speed up both prompt processing and output generation.
   - [The three paths at a glance](#the-three-paths-at-a-glance)
   - [Path 1: the self-assembled adapter](#path-1-the-self-assembled-adapter)
   - [Path 2: the Plyisty adapter, which we own](#path-2-the-plyisty-adapter-which-we-own)
-  - [Path 3: the Helios enclosure and ConnectX-5, ordered](#path-3-the-helios-enclosure-and-connectx-5-ordered)
+  - [Path 3: the Helios enclosure and ConnectX-5, in hand, measured 23 Sep 2026](#path-3-the-helios-enclosure-and-connectx-5-in-hand-measured-23-sep-2026)
   - [What the money actually buys](#what-the-money-actually-buys)
 - [What we are testing next: models that fit in no single machine](#what-we-are-testing-next-models-that-fit-in-no-single-machine)
 - [Hardware used](#hardware-used)
@@ -258,10 +258,12 @@ the Thunderbolt tunnel, the PCIe link behind it, and the network card itself —
 **the smallest of the three sets the ceiling.** Laid side by side, the bottleneck
 stops being something a reader has to work out.
 
-**No speed in this section was measured by us.** Every figure below is either a
-published specification or someone else's measurement, attributed where it appears.
-We own one of these three paths and have ordered another, and **neither has been
-tested.** The machines they are meant to join are pictured
+**Path 3 below is now measured by us.** The other figures in this section are still
+either a published specification or someone else's measurement, attributed where it
+appears. We own two of these three paths: Path 2 (Plyisty) is identified and
+link-negotiated but not yet benchmarked end to end, and Path 3 (the Helios enclosure) is
+now in hand and measured against a real peer, on 23 Sep 2026. The machines they are meant
+to join are pictured
 [earlier in this README](#the-whole-fleet-and-the-software-that-watches-it).
 
 ### The three paths at a glance
@@ -270,18 +272,22 @@ tested.** The machines they are meant to join are pictured
 |---|---|---|---|---|---|---|
 | **1. ADT-Link, self-assembled** — not ours | USB4 Gen3x2, 40 Gb/s raw, **~32 usable** on a Thunderbolt 3/4 host | Gen4 x4 | ConnectX-4, 40GbE | ~200-300 EUR assembled | **28 Gbit/s, Ostrov's figure** on his own hardware, on a Gen3 adapter | **the tunnel** |
 | **2. Plyisty** — ours, in hand | Thunderbolt 3/4, 40 Gb/s raw, **~32 usable** | OCP 2.0 module, bridged to Thunderbolt | ConnectX-4 Lx, **dual 25GbE** | **240 EUR, paid** | identity and link measured by us 23 Sep (ConnectX-4 Lx, PCIe Gen3 x4); throughput not yet. 20.7 one-way / 25.4 saturated are **Kohlschütter's figures** | **the tunnel** |
-| **3. OWC Helios 5S + MCX516A-CDAT** — ordered | Thunderbolt 5, **80 Gb/s** data | Gen4, slot **x16 mechanical / x4 electrical**, ~63 Gb/s | ConnectX-5 Ex, dual 100GbE, **200 Gb/s** capable | **over 800 EUR, paid** for the pair | nothing. OWC publish ~6000 MB/s, about 48 Gb/s | **PCIe width and the enclosure — not the card** |
+| **3. OWC Helios 5S + MCX516A-CDAT** — in hand, measured 23 Sep 2026 | Thunderbolt 5, **80 Gb/s** data, confirmed at USB4 v2 link speed | Gen4 x4, **16 GT/s**, confirmed; ~63 Gb/s raw ceiling | ConnectX-5 Ex, dual 100GbE, **200 Gb/s** capable, port 2 tested | **over 800 EUR, paid** for the pair | **50.5 Gbit/s into the Mac** (ours, MCDMA RDMA READ); 20.0-28.7 Gbit/s (ours, plain TCP, 1-4 streams) | **likely the Thunderbolt 5 / PCIe Gen4 x4 tunnel — not the card** |
 
 **Read down the "network card" column and the point makes itself: the card is the
 fastest component in every path and the limit in none of them.** A card rated at 200
-gigabits reaches perhaps 48. A dual-25-gigabit card reaches perhaps 28. What actually
-constrains all three is the Thunderbolt tunnel, or the PCIe width sitting in front of
-it. **Anyone shopping by the number printed on the box — "100 gigabit!" — will buy the
-wrong thing**, and that is what this table exists to prevent.
+gigabits reaches **50.5 Gbit/s into the Mac under RDMA** (ours, measured 23 Sep 2026)
+and 20-29 Gbit/s under plain TCP (ours). A dual-25-gigabit card reaches perhaps 28
+(Ostrov's figure, on his own hardware, unverified by us). What actually constrains all
+three is the Thunderbolt tunnel, or the PCIe width sitting in front of it. **Anyone
+shopping by the number printed on the box — "100 gigabit!" — will buy the wrong
+thing**, and that is what this table exists to prevent.
 
 **Connector width is not electrical width.** The Helios slot is physically a full x16
 and electrically an x4. The card could use sixteen lanes; it is given four. That is
-exactly the trap the table above exposes, and nothing on a spec sheet flags it for you.
+exactly the trap the table above exposes, and nothing on a spec sheet flags it for
+you — and it is exactly what we measured on 23 Sep 2026: the card trains at Gen4 x4,
+16 GT/s, not the x16 the slot is mechanically wired for.
 
 ### Path 1: the self-assembled adapter
 
@@ -350,18 +356,31 @@ What we measured on the MacBook Pro (M5 Max, macOS 27.0 build 26A428):
 SFP28 direct-attach cable to a DGX Spark's ConnectX-7 through a QSFP28-to-SFP28 (QSA)
 adapter, since the Spark's ports are QSFP.
 
-### Path 3: the Helios enclosure and ConnectX-5, ordered
+**One more data point, 23 Sep 2026:** while validating the Helios card below, Ash Hart's
+MCDMA kext also bound the Plyisty's ConnectX-4 Lx, presenting it as `mcrdma0`/`mcrdma1`.
+RDMA over it is still untested — we have no SFP28 cable to a GX10 yet.
 
-An OWC Mercury Helios 5S (Thunderbolt 5) holding a ConnectX-5 Ex MCX516A-CDAT, over 800 EUR paid,
-not yet arrived; its x4 electrical slot, not the 200-gigabit card, sets the ceiling at about
-6000 MB/s. [Details](docs/interconnect.md#path-3-the-helios-enclosure-and-connectx-5-ordered).
+### Path 3: the Helios enclosure and ConnectX-5, in hand, measured 23 Sep 2026
+
+An OWC Mercury Helios 5S (Thunderbolt 5, firmware 61.61, negotiating an 80 Gb/s USB4 v2
+link) holding a Mellanox ConnectX-5 Ex (PCI ID 15b3:1019, the card MCDMA validates),
+over 800 EUR paid, now in hand and tested against an ASUS Ascent GX10's ConnectX-7 over a
+QSFP112 DAC borrowed from the GX10 pair. Under Apple's stock Ethernet driver, plain TCP
+reached 20.0-28.7 Gbit/s; under Ash Hart's experimental MCDMA kext, RDMA reached
+50.5 Gbit/s into the Mac and 26-27 Gbit/s out, matching Ash's own Mac Studio figures on
+the inbound side. The likely shared constraint is the Thunderbolt 5 / PCIe Gen4 x4 tunnel
+(itself confirmed at 16 GT/s), not the 100-gigabit-per-port card, but this is one port of
+two and the second is untested.
+[Details](docs/interconnect.md#path-3-the-helios-enclosure-and-connectx-5-in-hand-measured-23-sep-2026).
 
 ### What the money actually buys
 
-About 200-300 EUR buys roughly 32 gigabits and over 800 EUR roughly 48, because the Thunderbolt
-tunnel caps every path; the extra money buys Thunderbolt 5, a finished enclosure and a card that is
-not the bottleneck. [The full comparison](docs/interconnect.md#what-the-money-actually-buys), and
-the open question of whether an ADT-Link can replace the Helios, are in the interconnect doc.
+About 200-300 EUR buys roughly 32 gigabits and over 800 EUR now measures at 20-29 gigabits under
+plain TCP or 50.5 into the Mac under RDMA (ours, 23 Sep 2026), because the Thunderbolt tunnel looks
+like the likely shared constraint on every path; the extra money buys Thunderbolt 5, a finished
+enclosure and a card that outruns what either transport pulls through it.
+[The full comparison](docs/interconnect.md#what-the-money-actually-buys), and the open question of
+whether an ADT-Link can replace the Helios, are in the interconnect doc.
 
 ## What we are testing next: models that fit in no single machine
 
