@@ -894,7 +894,7 @@ tested.** The machines they are meant to join are pictured
 | | Thunderbolt tunnel | PCIe link | network card | price | measured so far | **what binds it** |
 |---|---|---|---|---|---|---|
 | **1. ADT-Link, self-assembled** — not ours | USB4 Gen3x2, 40 Gb/s raw, **~32 usable** on a Thunderbolt 3/4 host | Gen4 x4 | ConnectX-4, 40GbE | ~200-300 EUR assembled | **28 Gbit/s, Ostrov's figure** on his own hardware, on a Gen3 adapter | **the tunnel** |
-| **2. Plyisty** — ours, in hand | Thunderbolt 3/4, 40 Gb/s raw, **~32 usable** | OCP 2.0 module, bridged to Thunderbolt | ConnectX-4 Lx, **dual 25GbE** | **240 EUR, paid** | nothing by us. 20.7 one-way / 25.4 saturated, **Kohlschütter's figures** | **the tunnel** |
+| **2. Plyisty** — ours, in hand | Thunderbolt 3/4, 40 Gb/s raw, **~32 usable** | OCP 2.0 module, bridged to Thunderbolt | ConnectX-4 Lx, **dual 25GbE** | **240 EUR, paid** | identity and link measured by us 23 Sep (ConnectX-4 Lx, PCIe Gen3 x4); throughput not yet. 20.7 one-way / 25.4 saturated are **Kohlschütter's figures** | **the tunnel** |
 | **3. OWC Helios 5S + MCX516A-CDAT** — ordered | Thunderbolt 5, **80 Gb/s** data | Gen4, slot **x16 mechanical / x4 electrical**, ~63 Gb/s | ConnectX-5 Ex, dual 100GbE, **200 Gb/s** capable | **over 800 EUR, paid** for the pair | nothing. OWC publish ~6000 MB/s, about 48 Gb/s | **PCIe width and the enclosure — not the card** |
 
 **Read down the "network card" column and the point makes itself: the card is the
@@ -958,6 +958,37 @@ in full rather than shortening to "the card cannot do RDMA", which is simply fal
 
 One practical catch as well: both 25-gigabit ports share a single Thunderbolt tunnel,
 so bonding the two does not yield 50 gigabits.
+
+**Ours, opened and plugged in on 23 Sep 2026.** Our unit is the same design Kohlschütter
+found: a Thunderbolt 3 carrier board (it reports itself to macOS as vendor "PX", device
+"Thunderbolt To Ethernet") holding a Mellanox ConnectX-4 Lx OCP 2.0 card, model
+**CX4421A**, the dual-port version, made in Israel.
+
+<p>
+  <img src="images/plyisty-case.jpg" alt="The Plyisty adapter in its case with the supplied USB4 cable" width="32%">
+  <img src="images/plyisty-top.jpg" alt="Carrier board: USB-C, two SFP28 cages, Thunderbolt controller under a copper heatsink" width="32%">
+  <img src="images/plyisty-underside.jpg" alt="Underside: the Mellanox ConnectX-4 Lx OCP card, model CX4421A" width="32%">
+</p>
+
+What we measured on the MacBook Pro (M5 Max, macOS 27.0 build 26A428):
+
+- PCI **15b3:1015**, subsystem 15b3:0021, two functions: ConnectX-4 Lx, both ports.
+- PCIe link **x4 at 8.0 GT/s**, Gen3 x4, about 31.5 Gbit/s before protocol overhead,
+  so one 25-gigabit port can run at full rate and the second shares what is left.
+- Apple's built-in DriverKit driver (`AppleEthernetMLX5`) binds it with nothing to
+  install. Two interfaces appear, "Thunderbolt Ethernet Slot 0, Port 1" and "Port 2",
+  offering 25GBase-CR/KR among their media.
+- The MAC printed on the card, 50:6B:4B:DB:80:18, is the MAC macOS reports for one of
+  the two interfaces, so the photos and the measurement are the same unit.
+- **The gotcha:** on macOS 27 the adapter stays completely dark, and Thunderbolt reports
+  "No device connected", until you approve it in the "Allow accessory to connect"
+  prompt, or under System Settings, Privacy and Security, Allow accessories to connect.
+- A Thunderbolt 5 NVMe enclosure stayed mounted with the adapter plugged in beside it;
+  an older Thunderbolt 3 10G adapter had knocked the same enclosure off this laptop.
+
+**Not measured yet:** a link to a peer, iperf3 throughput, RDMA. The first link is an
+SFP28 direct-attach cable to a DGX Spark's ConnectX-7 through a QSFP28-to-SFP28 (QSA)
+adapter, since the Spark's ports are QSFP.
 
 ### Path 3: the Helios enclosure and ConnectX-5, ordered
 
