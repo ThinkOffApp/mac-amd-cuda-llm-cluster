@@ -225,6 +225,17 @@ one?**
 Every sweep, the per-pass tables and what we could not test:
 [docs/measurements-mac-spark-split.md](docs/measurements-mac-spark-split.md).
 
+## Measurements added 23-24 September 2026: prefill on the GX10, decode on the Mac, over RDMA
+
+Splitting by **phase** over our Helios + ConnectX-5 RDMA link works. The GX10 prefills, the KV cache
+crosses in about a second, and the Mac decodes. With Qwen3-4B (MXFP4 on the Mac) and a 28k-token
+prompt, a 128-token reply took **9.24 s against 12.90 s on the Mac alone (28% less time)**. On prompts
+under about 8k tokens it is even. This was the first hardware run of the remote-prefill path in
+[jundot/omlx#3870](https://github.com/jundot/omlx/pull/3870). Along the way we found and fixed a
+checksum bottleneck in the vLLM connector, submitted as [ashhart/MCDMA#5](https://github.com/ashhart/MCDMA/pull/5).
+Tables, the tuning steps and the comparison with Ash Hart's Studio run:
+[docs/measurements-2026-09-24-rdma-prefill.md](docs/measurements-2026-09-24-rdma-prefill.md).
+
 ## Measurements added 16-18 September 2026
 
 The 10 GbE cable runs at line rate but a 4 KiB round trip takes 244 µs; a second Spark buys
@@ -415,6 +426,7 @@ Every table, sweep and dated log that used to sit in this README, moved verbatim
 - [docs/measurements-mac-spark-split.md](docs/measurements-mac-spark-split.md): the Mac + GB10 split, prefill crossover sweeps, generation, the 186 GiB capacity run, what we could not test.
 - [docs/measurements-gb10-vs-metal.md](docs/measurements-gb10-vs-metal.md): GB10 vs Metal on dense and sparse models, context sweep, cache sizes, file-copy rate.
 - [docs/measurements-2026-09-16-18.md](docs/measurements-2026-09-16-18.md): link latency, same-commit rerun, `-ts` sweep, three boxes, KV hand-off, two-Spark GLM serve, dead ends.
+- [docs/measurements-2026-09-24-rdma-prefill.md](docs/measurements-2026-09-24-rdma-prefill.md): prefill on the GX10, decode on the Mac over MCDMA RDMA, BF16 and MXFP4, tuning, against Ash Hart's Studio run.
 - [docs/interconnect.md](docs/interconnect.md): per-link measurements, the 200 GbE trap, the latency correction, Paths 1 and 3, prices, ADT-Link vs Helios.
 - [docs/pitfalls-and-flags.md](docs/pitfalls-and-flags.md): the non-obvious flags and the pitfalls that cost us time.
 - [docs/model-ladder.md](docs/model-ladder.md): the plan for models that fit in no single machine.
