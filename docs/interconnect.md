@@ -108,31 +108,80 @@ Prices vary in how firm they are, so each says which it is:
 | 3D-printed frame | — | self-designed |
 | direct-attach cable or transceiver | 20-30 EUR | **estimate, not looked up** |
 
-### Path 3: the Helios enclosure and ConnectX-5, ordered
+### Path 3: the Helios enclosure and ConnectX-5, in hand, measured 23 Sep 2026
 
 An [OWC Mercury Helios 5S](https://www.owc.com/solutions/mercury-helios-5s) — a
-Thunderbolt 5 enclosure — holding a Mellanox
-[MCX516A-CDAT](https://docs.nvidia.com/networking/display/connectx5en/specifications),
-a ConnectX-5 Ex with dual 100-gigabit ports on PCIe Gen4 x16. **Over 800 EUR for the
-two together, again a price actually paid.**
+Thunderbolt 5 enclosure, firmware 61.61 — holding a Mellanox ConnectX-5 Ex (PCI ID
+15b3:1019, the card MCDMA validates), on PCIe Gen4 x16 mechanical. **Over 800 EUR for
+the two together, again a price actually paid.**
 
-**Nothing here has been measured. The hardware has not arrived, and no benchmark in
-this repository involves it.** What follows is arithmetic on published specifications,
-not a result of ours.
+**Now in hand and measured against a real peer, on 23 Sep 2026.** Peer: an ASUS Ascent
+GX10 (GB10), ConnectX-7, firmware 28.45.4028, port 2. Cable: an NVIDIA QSFP112 DAC
+borrowed from the GX10 pair, negotiating 100GBASE-CR4 with RS-FEC — two generic
+QSFPTEK QSFP28 DACs with blank transceiver compliance codes were rejected by the
+ConnectX-7 ("Unsupported cable") and are not usable. macOS 27 gates the accessory:
+the PCIe device only appeared after clicking "Allow accessory to connect".
 
-The card is rated for 200 gigabits per second across its two ports together, but only
-in a full-width slot. The Helios slot is **x16 mechanically and x4 electrically**, and
-OWC quote the enclosure at up to about 6000 MB/s. On this path, then, the **enclosure
-sets the ceiling rather than the card** — worth knowing before reading the card's
-headline figure as something we expect to reach.
+**PCIe link, read from the host, not the enclosure's spec sheet:** Gen4 x4, 16 GT/s,
+max payload 128 B, max read request 512 B. The slot is mechanically x16 but the card
+trains at x4 — exactly the trap the "connector width is not electrical width" note in
+the README warns about, now confirmed rather than assumed.
+
+**Throughput.** Under Apple's built-in Ethernet driver (DriverKit MLX5, no install),
+TCP iperf3, 10 s runs, MTU 1500 (the driver's max is 2034): Mac → GX10 20.0 Gbit/s at
+1 stream, 28.7 Gbit/s at 4 streams; GX10 → Mac 20.7 / 21.2. Run-to-run variation was
+several Gbit/s (an earlier pair of runs on the other port gave 25.9/29.1 out and
+19.0/13.3 in). All of the above is ours, plain TCP, no RDMA.
+
+Under Ash Hart's [MCDMA](https://github.com/ashhart/MCDMA) 0.1.18 (his experimental
+macOS RDMA kext; requires SIP disabled and Reduced Security, and while it owns the
+card that port carries no TCP/IP), all three posting modes — kernel, direct,
+BlueFlame-64 — passed four-way verified RDMA WRITE/READ. Sustained bandwidth with
+Ash's own recipe (4 MiB, depth 1, 8 GiB per trial, 3 rounds), ours: into the Mac
+50.5 Gbit/s (Mac READ) / 50.9 (GX10 WRITE); out of the Mac 27.3 (Mac WRITE) / 26.2
+(GX10 READ); a repeat sweep gave 26.5/26.1 out. Longer single runs: a 96 GiB Mac READ
+held 50.5; a 64 GiB outbound run varied 25.7 to 32.9 between repeats. For comparison,
+Ash's own Mac Studio M3 Ultra figures from his 17 Sep report (**his, not ours**) were
+50.5 / 51.0 in and 29.4 / 24.2 out — our MacBook matches the Studio on the inbound
+side.
+
+**Latency** (4 KiB, path MTU 1024, BlueFlame-64, 1000 samples, completion time at
+queue depth 1, not one-way wire latency), ours: about 20 minutes after boot, Mac WRITE
+7.3-7.8 µs, Mac READ 5.5-6.0 µs, GX10 WRITE 3.1-3.6 µs, GX10 READ 5.5-6.1 µs. Runs
+taken 5-6 minutes after boot ran about 2 µs slower on the Mac side (Mac WRITE 9.9 µs).
+A Metal GPU keepalive A/B showed no clear effect, but that comparison ran on a busy
+machine and is not a clean test.
+
+**A second cable does not add speed, on Ash's evidence, not a rule we have verified.**
+Ash measured both ConnectX-5 ports at once sharing the enclosure and got 51.2 Gbit/s
+total into his Studio (**his figure**), which is the sum of two independently timed
+READ rates, not a controlled 50/50 split — his own report says those bounded runs do
+not establish an exact hardware ceiling. Our MacBook's second port is untested. What
+his numbers do show is that a second cable connects a second peer rather than adding
+throughput to the first; whether it would ever add speed here, and by how much, is
+open.
+
+**Reading the numbers together:** RDMA into the Mac (50.5 Gbit/s) is about 2.4x plain
+TCP (20-21 Gbit/s); RDMA out of the Mac (26-27 Gbit/s) lands close to TCP's 4-stream
+rate (28.7 Gbit/s). The Thunderbolt 5 / PCIe Gen4 x4 tunnel is the likely shared
+constraint behind both, not the 100-gigabit-per-port card, but we have not isolated
+the tunnel from the card or the driver stack to prove that split.
+
+Our full contributed report, with the raw captures, is being submitted to Ash as
+[`docs/validation-2026-09-23-macbook-gx10.md`](https://github.com/ThinkOffApp/MACDMA/blob/docs/macbook-gx10-validation/docs/validation-2026-09-23-macbook-gx10.md)
+on branch `docs/macbook-gx10-validation` of
+[ThinkOffApp/MACDMA](https://github.com/ThinkOffApp/MACDMA).
 
 ### What the money actually buys
 
-The prices above span roughly four to one, and the speeds do not. Because all three
-paths are capped by the Thunderbolt tunnel rather than by the card, the real comparison
-is about **200-300 EUR for roughly 32 gigabits against over 800 EUR for roughly 48.**
-Paying three to four times as much does not return three to four times the throughput,
-and it very definitely does not buy 100 gigabits against 25.
+The prices above span roughly four to one, and the speeds do not. All three paths look
+likely capped by the Thunderbolt tunnel rather than by the card — though for Path 3
+that is our read of the numbers, not an isolated measurement — so the real comparison
+is about **200-300 EUR for roughly 32 gigabits against over 800 EUR for 20-29 gigabits
+under plain TCP (ours, measured 23 Sep 2026) or 50.5 gigabits into the Mac under RDMA
+via Ash Hart's MCDMA (ours, same date).** Paying three to four times as much does not
+return three to four times the plain-TCP throughput, and it very definitely does not
+buy 100 gigabits against 25 without the RDMA kext.
 
 What the extra money does buy is a Thunderbolt 5 tunnel rather than a Thunderbolt 4
 one, a finished enclosure with its own power and cooling rather than a bare board and a
@@ -160,13 +209,14 @@ the page states nothing about a case, cooling, or 75 W slot power. For a ~15-25 
 that is workable but it is a loose board and a PSU on the desk, not a swap of like for like.
 The price difference should be read with that in mind.
 Raised by [Benjamin Ostrov](https://github.com/b-ostrov/MelonDMA) on 20 Sep 2026, on the reasoning
-that an ADT-Link is far cheaper. We have **not** benchmarked either enclosure, and what follows is
-vendor and controller ceilings chained together, not an A/B:
+that an ADT-Link is far cheaper. We have **not** benchmarked the ADT-Link enclosure, and the
+ADT-Link row below is still vendor and controller ceilings chained together, not a measurement.
+The Helios row now carries our own 23 Sep 2026 figures instead of OWC's spec:
 
-| | host tunnel | PCIe | vendor figure |
+| | host tunnel | PCIe | throughput |
 |---|---|---|---|
-| OWC Mercury Helios 5S | Thunderbolt 5, 80 Gb/s | 4.0 x4 electrical (x16 mechanical) | up to 6000 MB/s ≈ 48 Gb/s |
-| ADT-Link UT3G / UT4G | USB4 Gen3x2, 40 Gb/s (32 on a TB3/TB4 host) | 4.0 x4 | ≈30.5 Gb/s usable on USB4v1 |
+| OWC Mercury Helios 5S | Thunderbolt 5, 80 Gb/s, confirmed | Gen4 x4, 16 GT/s, confirmed (x16 mechanical) | **ours, 23 Sep 2026:** 20-29 Gb/s plain TCP, 50.5 Gb/s into the Mac under MCDMA RDMA |
+| ADT-Link UT3G / UT4G | USB4 Gen3x2, 40 Gb/s (32 on a TB3/TB4 host) | 4.0 x4 | ≈30.5 Gb/s usable on USB4v1 — vendor figure, not measured by us |
 
 Both are PCIe Gen4 x4 on the card side, so on paper the difference is entirely upstream: the
 ADT-Link's ASMedia ASM2464PDX is a USB4 Gen3x2 controller, while the Helios is Thunderbolt 5. On a
@@ -177,6 +227,14 @@ For scale, the card itself is not the constraint in either case: an
 [MCX516A-CDAT](https://docs.nvidia.com/networking/display/connectx5en/specifications) is
 dual-port 100GbE on PCIe Gen4 **x16**, 200 Gb/s aggregate. Through either x4 path it cannot reach
 even one full port.
+
+**Update, 23 Sep 2026:** step 1 below is now partly answered for the Helios side by the
+[Path 3 measurement above](#path-3-the-helios-enclosure-and-connectx-5-in-hand-measured-23-sep-2026) —
+the Thunderbolt 5 / PCIe Gen4 x4 tunnel looks like the likely shared constraint on both TCP and
+RDMA runs, well under the card's 100-gigabit-per-port rating. That is a link-level bandwidth
+test against a GX10, not inference wire utilisation, and we have not isolated the tunnel from
+the card or driver stack to prove the split; step 1 for the ADT-Link side, and steps 2-4, are
+still open.
 
 **The experiment that would settle it**, in the order it should be run:
 
