@@ -331,7 +331,7 @@ pairs, 64 KiB messages, 10 s, Linux on the Strix Halo box, peer an ASUS Ascent G
 | 4. Helios 5S + ConnectX-5 Ex, one 100G port, direct cable | Strix Halo (Bosgame M5) | GX10 | **29.4 Gbit/s** (4 MiB messages) | 27 Sep 2026 |
 | 4. Helios 5S + ConnectX-5 Ex | MacBook Pro M5 Max (MCDMA kext) | GX10 | 50.5 Gbit/s into the Mac | 23 Sep 2026, [Path 3](#path-3-the-helios-enclosure-and-connectx-5-in-hand-measured-23-sep-2026) |
 
-The second port adds nothing: with both ports running, each gets half and the total stays at 20.9 Gbit/s, so the limit sits in front of the card (the Thunderbolt 3 bridge and its PCIe link), not in the 25G ports. Adapters 1 and 3 have no RDMA numbers here.
+In this test the second port added nothing: with both ports running, each got half and the total stayed at 20.9 Gbit/s. That points to a shared limit in front of the 25G ports, most likely the Thunderbolt 3 bridge and its PCIe link, but we have not isolated it, and other settings (message size, queue pairs, MTU) were not varied. Adapters 1 and 3 have no RDMA numbers here.
 
 **The Plyisty cooling fix.** Run bare, the Plyisty overheated and shut down. With an aluminium
 heatsink, a thermal pad and a USB-powered Noctua fan on top it stays cool. The parts, as one
