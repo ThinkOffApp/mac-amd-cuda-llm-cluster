@@ -27,6 +27,7 @@ and CUDA, aiming to speed up both prompt processing and output generation.
 - [Setup](#setup)
 - [The interconnect: three paths, and what actually limits each one](#the-interconnect-three-paths-and-what-actually-limits-each-one)
   - [The three paths at a glance](#the-three-paths-at-a-glance)
+  - [The adapters on the bench, 7 October 2026](#the-adapters-on-the-bench-7-october-2026)
   - [Path 1: the self-assembled adapter](#path-1-the-self-assembled-adapter)
   - [Path 2: the Plyisty adapter, which we own](#path-2-the-plyisty-adapter-which-we-own)
   - [Path 3: the Helios enclosure and ConnectX-5, in hand, measured 23 Sep 2026](#path-3-the-helios-enclosure-and-connectx-5-in-hand-measured-23-sep-2026)
@@ -282,7 +283,7 @@ to join are pictured
 | | Thunderbolt tunnel | PCIe link | network card | price | measured so far | **what binds it** |
 |---|---|---|---|---|---|---|
 | **1. ADT-Link, self-assembled** — not ours | USB4 Gen3x2, 40 Gb/s raw, **~32 usable** on a Thunderbolt 3/4 host | Gen4 x4 | ConnectX-4, 40GbE | ~200-300 EUR assembled | **28 Gbit/s, Ostrov's figure** on his own hardware, on a Gen3 adapter | **the tunnel** |
-| **2. Plyisty** — ours, in hand | Thunderbolt 3/4, 40 Gb/s raw, **~32 usable** | OCP 2.0 module, bridged to Thunderbolt | ConnectX-4 Lx, **dual 25GbE** | **240 EUR, paid** | identity and link measured by us 23 Sep (ConnectX-4 Lx, PCIe Gen3 x4); throughput not yet. 20.7 one-way / 25.4 saturated are **Kohlschütter's figures** | **the tunnel** |
+| **2. Plyisty** — ours, in hand | Thunderbolt 3/4, 40 Gb/s raw, **~32 usable** | OCP 2.0 module, bridged to Thunderbolt | ConnectX-4 Lx, **dual 25GbE** | **240 EUR, paid** | identity and link measured by us 23 Sep (ConnectX-4 Lx, PCIe Gen3 x4); **20.9 Gbit/s RDMA, one port, on the Strix Halo box** (ours, 6-7 Oct). 20.7 one-way / 25.4 saturated are **Kohlschütter's figures** | **the tunnel** |
 | **3. OWC Helios 5S + MCX516A-CDAT** — in hand, measured 23 Sep 2026 | Thunderbolt 5, **80 Gb/s** data, confirmed at USB4 v2 link speed | Gen4 x4, **16 GT/s**, confirmed; ~63 Gb/s raw ceiling | ConnectX-5 Ex, dual 100GbE, **200 Gb/s** capable, port 2 tested | **over 800 EUR, paid** for the pair | **50.5 Gbit/s into the Mac** (ours, MCDMA RDMA READ); 20.0-28.7 Gbit/s (ours, plain TCP, 1-4 streams) | **likely the Thunderbolt 5 / PCIe Gen4 x4 tunnel — not the card** |
 
 **Read down the "network card" column and the point makes itself: the card is the
@@ -299,6 +300,51 @@ and electrically an x4. The card could use sixteen lanes; it is given four. That
 exactly the trap the table above exposes, and nothing on a spec sheet flags it for
 you — and it is exactly what we measured on 23 Sep 2026: the card trains at Gen4 x4,
 16 GT/s, not the x16 the slot is mechanically wired for.
+
+### The adapters on the bench, 7 October 2026
+
+<p>
+  <img src="images/network-adapters-2026-10-07.jpg" alt="Four network adapters on a table, left to right: a QNAP Thunderbolt 3 10GbE adapter, the Plyisty dual 25G adapter under an added aluminium heatsink and Noctua 80 mm fan, a ConnectX-4 card on an OCuLink/M.2 riser, and the OWC Helios 5S enclosure" width="100%">
+</p>
+
+Left to right, in the owner's own words (Petrus, 7 Oct 2026, posted on X):
+
+> My network adapters that I develop three platform model clustering with @ashxhart Tensorfold:
+>
+> 1 Ancient 10 Gbps TB3: loudest fan of them all, does not support RDMA: out
+>
+> 2 Plyisty 2x25 Gb with ConnectX: overheated and shut down. But with heatsink and fan added stays very cool! Use it for my Strix halo to Mikrotik. 30 Gbps bandwidth in practise. Total price about 250€
+>
+> 3 ConnectX4 I built from parts with oculink /M2 connection. Should be faster than (2) but not tested yet.
+>
+> 4 Helios 5s + ConnectX 5 with TB5. Use it for MacBook.
+>
+> And the 4 sparks don't need any of them they already have ConnectX 7!
+
+**What we have measured on these, with the conditions** (RDMA write, `ib_write_bw`, 4 queue
+pairs, 64 KiB messages, 10 s, Linux on the Strix Halo box, peer an ASUS Ascent GX10's ConnectX-7):
+
+| adapter | on | to | measured | date |
+|---|---|---|---|---|
+| 2. Plyisty, one 25G port, through the MikroTik switch | Strix Halo (Bosgame M5) | GX10 | **20.9 Gbit/s** | 7 Oct 2026, and 20.9 on 6 Oct |
+| 4. Helios 5S + ConnectX-5 Ex, one 100G port, direct cable | Strix Halo (Bosgame M5) | GX10 | **29.4 Gbit/s** (4 MiB messages) | 27 Sep 2026 |
+| 4. Helios 5S + ConnectX-5 Ex | MacBook Pro M5 Max (MCDMA kext) | GX10 | 50.5 Gbit/s into the Mac | 23 Sep 2026, [Path 3](#path-3-the-helios-enclosure-and-connectx-5-in-hand-measured-23-sep-2026) |
+
+Both 25G ports together have not been measured yet. Adapters 1 and 3 have no RDMA numbers here.
+
+**The Plyisty cooling fix.** Run bare, the Plyisty overheated and shut down. With an aluminium
+heatsink, a thermal pad and a USB-powered Noctua fan on top it stays cool. The parts, as one
+amazon.de basket (prices read 7 Oct 2026, about 273 EUR in total; they change):
+
+- Plyisty dual 25G Thunderbolt adapter (B0DX6VWLH8)
+- Aluminium heatsink, 23 fins, 100 x 69 x 36 mm (B0989QGY1R)
+- Noctua NF-A8 5V with USB power cable (B07DXNT9J9)
+- Aairhut 13 W/mK thermal pads, 0.5 / 1.0 / 1.5 mm (B0CDMDGC6J)
+
+[Add all four to an amazon.de basket](https://www.amazon.de/gp/aws/cart/add.html?AssociateTag=thinkoff-21&ASIN.1=B0DX6VWLH8&Quantity.1=1&ASIN.2=B0989QGY1R&Quantity.2=1&ASIN.3=B07DXNT9J9&Quantity.3=1&ASIN.4=B0CDMDGC6J&Quantity.4=1)
+
+*This is an affiliate link: as an Amazon Associate we earn from qualifying purchases.* On
+7 Oct 2026 the adapter was unavailable on amazon.com and amazon.co.uk.
 
 ### Path 1: the self-assembled adapter
 
