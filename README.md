@@ -16,6 +16,7 @@ and CUDA, aiming to speed up both prompt processing and output generation.
 
   - [What this is, in plain words](#what-this-is-in-plain-words)
   - [Related upstream work](#related-upstream-work)
+  - [Working with Ash Hart's projects](#working-with-ash-harts-projects)
   - [⚠ Transport: what is RDMA here, and what is not](#-transport-what-is-rdma-here-and-what-is-not)
   - [Development update — 17 September 2026](#development-update--17-september-2026)
   - [Two desks, two halves of this repo](#two-desks-two-halves-of-this-repo)
@@ -27,6 +28,7 @@ and CUDA, aiming to speed up both prompt processing and output generation.
 - [Setup](#setup)
 - [The interconnect: three paths, and what actually limits each one](#the-interconnect-three-paths-and-what-actually-limits-each-one)
   - [The three paths at a glance](#the-three-paths-at-a-glance)
+  - [The adapters on the bench, 7 October 2026](#the-adapters-on-the-bench-7-october-2026)
   - [Path 1: the self-assembled adapter](#path-1-the-self-assembled-adapter)
   - [Path 2: the Plyisty adapter, which we own](#path-2-the-plyisty-adapter-which-we-own)
   - [Path 3: the Helios enclosure and ConnectX-5, in hand, measured 23 Sep 2026](#path-3-the-helios-enclosure-and-connectx-5-in-hand-measured-23-sep-2026)
@@ -100,6 +102,47 @@ of **244 µs round trip** against Ash Hart's 6–8 µs RDMA figures, roughly 16�
 on a measurement boundary neither side has stated. The distribution, the raw samples and the
 20 Sep 2026 correction of an earlier 350 µs figure:
 [docs/interconnect.md](docs/interconnect.md#latency-against-rdma-and-the-20-sep-2026-correction).
+
+### Working with Ash Hart's projects
+
+Since mid-September most of our work has gone into Ash Hart's projects rather than this
+repository: **[TensorFold](https://github.com/ashhart/TensorFold)**, an inference engine whose
+batched replies must equal its one-at-a-time replies bit for bit, and
+**[MCDMA](https://github.com/ashhart/MCDMA)**, his RDMA transport between Macs and NVIDIA boxes.
+Ash's engine runs on Apple Metal and NVIDIA CUDA. Our part is the third platform, AMD
+(Strix Halo, ROCm), plus independent hardware runs and reports on his Mac and CUDA work. The
+software is his and his contributors'; what is ours is listed below, with links. ThinkOffApp is
+in the TensorFold 1.0.0 contributor list (7 Oct 2026).
+
+**TensorFold**
+
+| when | what we did | outcome |
+|---|---|---|
+| 26 Sep 2026 | [#7](https://github.com/ashhart/TensorFold/issues/7): independent run on a second M5 Max 128 GB, Qwen3.8-27B and Nemotron, with an exactness check | closed by Ash with thanks |
+| 30 Sep 2026 | [#144](https://github.com/ashhart/TensorFold/pull/144): ROCm support for Qwen3.8-27B on Strix Halo (gfx1151), including a fix for tied top-k ids on ROCm | closed 6 Oct: the Python engine was frozen and new work moved to the native Zig engine; Ash said the HIP fixes carry over with credit |
+| 4 Oct 2026 | [#394](https://github.com/ashhart/TensorFold/issues/394): the Zig preview server failed to start on macOS 27 (Metal 4.1) | fixed by Ash in #395 and #418 |
+| 5 Oct 2026 | [#426](https://github.com/ashhart/TensorFold/issues/426): proposal for a native Zig HIP backend on gfx1151 | Ash set the first step: admission, one exact matmul, and a test that fails when one bit moves |
+| 7 Oct 2026 | [#463](https://github.com/ashhart/TensorFold/pull/463): model-free Zig HIP runtime and GPU qualification (draft) | outside testers passed it on gfx1201 (Radeon AI PRO R9700) and gfx1150 (Radeon 890M); awaiting Ash's review |
+
+TensorFold 1.0.0 (7 Oct 2026) qualifies Apple Metal and the NVIDIA GB10 only. AMD is not in it
+yet; #463 is the start of that backend.
+
+**MCDMA**, through our fork [ThinkOffApp/MACDMA](https://github.com/ThinkOffApp/MACDMA)
+
+| when | what we did | status |
+|---|---|---|
+| 23 Sep 2026 | [#5](https://github.com/ashhart/MCDMA/pull/5): six setup notes from a MacBook + GX10 rig | open |
+| 23 Sep 2026 | [#6](https://github.com/ashhart/MCDMA/pull/6): MacBook Pro M5 Max to ASUS GX10 validation report for 0.1.18 (50.5 Gbit/s into the Mac) | open |
+| 26 Sep 2026 | [#7](https://github.com/ashhart/MCDMA/pull/7): Linux RDMA pair support in `run_bw.py`, an `mcdma-rpcd` client, and a llama.cpp KV-cache handoff | open |
+
+On 26 Sep 2026 MCDMA's bandwidth tool ran between the Strix Halo box (Helios + ConnectX-5 Ex) and
+a GX10 at 29.75 Gbit/s with no byte errors, Linux at both ends (our measurement).
+
+**oMLX** ([jundot/omlx](https://github.com/jundot/omlx), Ash's cluster pull requests): we ran
+[#3870](https://github.com/jundot/omlx/pull/3870), the stage hops and token relay over MCDMA, on
+real hardware twice (24 and 27 Sep 2026), a MacBook Pro M5 Max (Metal) as rank 0 and a GX10
+(CUDA) as rank 1 over a direct ConnectX link. After the first run Ash split the pull request
+along the lines our review suggested.
 
 ### ⚠ Transport: what is RDMA here, and what is not
 
@@ -282,7 +325,7 @@ to join are pictured
 | | Thunderbolt tunnel | PCIe link | network card | price | measured so far | **what binds it** |
 |---|---|---|---|---|---|---|
 | **1. ADT-Link, self-assembled** — not ours | USB4 Gen3x2, 40 Gb/s raw, **~32 usable** on a Thunderbolt 3/4 host | Gen4 x4 | ConnectX-4, 40GbE | ~200-300 EUR assembled | **28 Gbit/s, Ostrov's figure** on his own hardware, on a Gen3 adapter | **the tunnel** |
-| **2. Plyisty** — ours, in hand | Thunderbolt 3/4, 40 Gb/s raw, **~32 usable** | OCP 2.0 module, bridged to Thunderbolt | ConnectX-4 Lx, **dual 25GbE** | **240 EUR, paid** | identity and link measured by us 23 Sep (ConnectX-4 Lx, PCIe Gen3 x4); throughput not yet. 20.7 one-way / 25.4 saturated are **Kohlschütter's figures** | **the tunnel** |
+| **2. Plyisty** — ours, in hand | Thunderbolt 3/4, 40 Gb/s raw, **~32 usable** | OCP 2.0 module, bridged to Thunderbolt | ConnectX-4 Lx, **dual 25GbE** | **240 EUR, paid** | identity and link measured by us 23 Sep (ConnectX-4 Lx, PCIe Gen3 x4); **20.9 Gbit/s RDMA, one port, on the Strix Halo box** (ours, 6-7 Oct). 20.7 one-way / 25.4 saturated are **Kohlschütter's figures** | **the tunnel** |
 | **3. OWC Helios 5S + MCX516A-CDAT** — in hand, measured 23 Sep 2026 | Thunderbolt 5, **80 Gb/s** data, confirmed at USB4 v2 link speed | Gen4 x4, **16 GT/s**, confirmed; ~63 Gb/s raw ceiling | ConnectX-5 Ex, dual 100GbE, **200 Gb/s** capable, port 2 tested | **over 800 EUR, paid** for the pair | **50.5 Gbit/s into the Mac** (ours, MCDMA RDMA READ); 20.0-28.7 Gbit/s (ours, plain TCP, 1-4 streams) | **likely the Thunderbolt 5 / PCIe Gen4 x4 tunnel — not the card** |
 
 **Read down the "network card" column and the point makes itself: the card is the
@@ -299,6 +342,52 @@ and electrically an x4. The card could use sixteen lanes; it is given four. That
 exactly the trap the table above exposes, and nothing on a spec sheet flags it for
 you — and it is exactly what we measured on 23 Sep 2026: the card trains at Gen4 x4,
 16 GT/s, not the x16 the slot is mechanically wired for.
+
+### The adapters on the bench, 7 October 2026
+
+<p>
+  <img src="images/network-adapters-2026-10-07.jpg" alt="Four network adapters on a table, left to right: a QNAP Thunderbolt 3 10GbE adapter, the Plyisty dual 25G adapter under an added aluminium heatsink and Noctua 80 mm fan, a ConnectX-4 card on an OCuLink/M.2 riser, and the OWC Helios 5S enclosure" width="100%">
+</p>
+
+Left to right, in the owner's own words (Petrus, 7 Oct 2026, posted on X):
+
+> My network adapters that I develop three platform model clustering with @ashxhart Tensorfold:
+>
+> 1 Ancient 10 Gbps TB3: loudest fan of them all, does not support RDMA: out
+>
+> 2 Plyisty 2x25 Gb with ConnectX: overheated and shut down. But with heatsink and fan added stays very cool! Use it for my Strix halo to Mikrotik. 30 Gbps bandwidth in practise. Total price about 250€
+>
+> 3 ConnectX4 I built from parts with oculink /M2 connection. Should be faster than (2) but not tested yet.
+>
+> 4 Helios 5s + ConnectX 5 with TB5. Use it for MacBook.
+>
+> And the 4 sparks don't need any of them they already have ConnectX 7!
+
+**What we have measured on these, with the conditions** (RDMA write, `ib_write_bw`, 4 queue
+pairs, 64 KiB messages, 10 s, Linux on the Strix Halo box, peer an ASUS Ascent GX10's ConnectX-7):
+
+| adapter | on | to | measured | date |
+|---|---|---|---|---|
+| 2. Plyisty, one 25G port, through the MikroTik switch | Strix Halo (Bosgame M5) | GX10 | **20.9 Gbit/s** | 7 Oct 2026, and 20.9 on 6 Oct |
+| 2. Plyisty, **both** 25G ports at once, through the MikroTik switch | Strix Halo (Bosgame M5) | GX10, two ports | **10.4 + 10.4 = 20.9 Gbit/s in total** | 7 Oct 2026 |
+| 4. Helios 5S + ConnectX-5 Ex, one 100G port, direct cable | Strix Halo (Bosgame M5) | GX10 | **29.4 Gbit/s** (4 MiB messages) | 27 Sep 2026 |
+| 4. Helios 5S + ConnectX-5 Ex | MacBook Pro M5 Max (MCDMA kext) | GX10 | 50.5 Gbit/s into the Mac | 23 Sep 2026, [Path 3](#path-3-the-helios-enclosure-and-connectx-5-in-hand-measured-23-sep-2026) |
+
+In this test the second port added nothing: with both ports running, each got half and the total stayed at 20.9 Gbit/s. That points to a shared limit in front of the 25G ports, most likely the Thunderbolt 3 bridge and its PCIe link, but we have not isolated it, and other settings (message size, queue pairs, MTU) were not varied. Adapters 1 and 3 have no RDMA numbers here.
+
+**The Plyisty cooling fix.** Run bare, the Plyisty overheated and shut down. With an aluminium
+heatsink, a thermal pad and a USB-powered Noctua fan on top it stays cool. The parts, as one
+amazon.de basket (prices read 7 Oct 2026, about 273 EUR in total; they change):
+
+- Plyisty dual 25G Thunderbolt adapter (B0DX6VWLH8)
+- Aluminium heatsink, 23 fins, 100 x 69 x 36 mm (B0989QGY1R)
+- Noctua NF-A8 5V with USB power cable (B07DXNT9J9)
+- Aairhut 13 W/mK thermal pads, 0.5 / 1.0 / 1.5 mm (B0CDMDGC6J)
+
+[Add all four to an amazon.de basket](https://www.amazon.de/gp/aws/cart/add.html?AssociateTag=thinkoff-21&ASIN.1=B0DX6VWLH8&Quantity.1=1&ASIN.2=B0989QGY1R&Quantity.2=1&ASIN.3=B07DXNT9J9&Quantity.3=1&ASIN.4=B0CDMDGC6J&Quantity.4=1)
+
+*This is an affiliate link: as an Amazon Associate we earn from qualifying purchases.* On
+7 Oct 2026 the adapter was unavailable on amazon.com and amazon.co.uk.
 
 ### Path 1: the self-assembled adapter
 
