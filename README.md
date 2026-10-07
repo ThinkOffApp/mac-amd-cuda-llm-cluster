@@ -314,8 +314,9 @@ stops being something a reader has to work out.
 
 **Path 3 below is now measured by us.** The other figures in this section are still
 either a published specification or someone else's measurement, attributed where it
-appears. We own two of these three paths: Path 2 (Plyisty) is identified and
-link-negotiated but not yet benchmarked end to end, and Path 3 (the Helios enclosure) is
+appears. We own two of these three paths: Path 2 (Plyisty) is identified, and
+measured end to end on the Strix Halo box under Linux (20.9 Gbit/s RDMA, 6-7 Oct 2026) but not
+yet on the Mac, and Path 3 (the Helios enclosure) is
 now in hand and measured against a real peer, on 23 Sep 2026. The machines they are meant
 to join are pictured
 [earlier in this README](#the-whole-fleet-and-the-software-that-watches-it).
@@ -363,15 +364,17 @@ Left to right, in the owner's own words (Petrus, 7 Oct 2026, posted on X):
 >
 > And the 4 sparks don't need any of them they already have ConnectX 7!
 
-**What we have measured on these, with the conditions** (RDMA write, `ib_write_bw`, 4 queue
-pairs, 64 KiB messages, 10 s, Linux on the Strix Halo box, peer an ASUS Ascent GX10's ConnectX-7):
+**What we have measured on these.** The two Strix Halo rows are RDMA write with `ib_write_bw`,
+4 queue pairs, 10 s, Linux on the Strix Halo box, peer an ASUS Ascent GX10's ConnectX-7; message
+size is in each row. The Mac row is a different test, MCDMA's own READ recipe, described in
+[Path 3](#path-3-the-helios-enclosure-and-connectx-5-in-hand-measured-23-sep-2026):
 
 | adapter | on | to | measured | date |
 |---|---|---|---|---|
-| 2. Plyisty, one 25G port, through the MikroTik switch | Strix Halo (Bosgame M5) | GX10 | **20.9 Gbit/s** | 7 Oct 2026, and 20.9 on 6 Oct |
-| 2. Plyisty, **both** 25G ports at once, through the MikroTik switch | Strix Halo (Bosgame M5) | GX10, two ports | **10.4 + 10.4 = 20.9 Gbit/s in total** | 7 Oct 2026 |
+| 2. Plyisty, one 25G port, through the MikroTik switch | Strix Halo (Bosgame M5) | GX10 | **20.9 Gbit/s** (64 KiB messages) | 7 Oct 2026, and 20.9 on 6 Oct |
+| 2. Plyisty, **both** 25G ports at once, through the MikroTik switch | Strix Halo (Bosgame M5) | GX10, two ports | **10.4 + 10.4 = 20.9 Gbit/s in total** (64 KiB messages) | 7 Oct 2026 |
 | 4. Helios 5S + ConnectX-5 Ex, one 100G port, direct cable | Strix Halo (Bosgame M5) | GX10 | **29.4 Gbit/s** (4 MiB messages) | 27 Sep 2026 |
-| 4. Helios 5S + ConnectX-5 Ex | MacBook Pro M5 Max (MCDMA kext) | GX10 | 50.5 Gbit/s into the Mac | 23 Sep 2026, [Path 3](#path-3-the-helios-enclosure-and-connectx-5-in-hand-measured-23-sep-2026) |
+| 4. Helios 5S + ConnectX-5 Ex | MacBook Pro M5 Max (MCDMA kext) | GX10 | 50.5 Gbit/s into the Mac (MCDMA READ, not `ib_write_bw`) | 23 Sep 2026, [Path 3](#path-3-the-helios-enclosure-and-connectx-5-in-hand-measured-23-sep-2026) |
 
 In this test the second port added nothing: with both ports running, each got half and the total stayed at 20.9 Gbit/s. That points to a shared limit in front of the 25G ports, most likely the Thunderbolt 3 bridge and its PCIe link, but we have not isolated it, and other settings (message size, queue pairs, MTU) were not varied. Adapters 1 and 3 have no RDMA numbers here.
 
@@ -410,9 +413,8 @@ a **Mellanox ConnectX-4 Lx EN** on an OCP 2.0 module — MCX4411A in the single-
 version, MCX4421A in the dual — bridged to Thunderbolt by a carrier board, and
 reporting itself in `lspci` as an MT27710. On a MacBook Pro he measured 20.7 Gbit/s in
 one direction and 25.4 Gbit/s with both directions saturated. **Those are his
-measurements on his machine, not ours.** We have published no numbers of our own for
-this adapter, and the owner's position on it is simply that he has no idea how well it
-works until he tests it.
+measurements on his machine, not ours.** Our own numbers for this adapter are on the Strix Halo box under Linux
+([7 Oct 2026](#the-adapters-on-the-bench-7-october-2026)); on the Mac it is still unmeasured.
 
 **The part that matters most, and it is a subtle one.** The ConnectX-4 Lx silicon
 supports RDMA over Ethernet and SR-IOV. On macOS **neither can be configured**: the
@@ -452,13 +454,14 @@ What we measured on the MacBook Pro (M5 Max, macOS 27.0 build 26A428):
 - A Thunderbolt 5 NVMe enclosure stayed mounted with the adapter plugged in beside it;
   an older Thunderbolt 3 10G adapter had knocked the same enclosure off this laptop.
 
-**Not measured yet:** a link to a peer, iperf3 throughput, RDMA. The first link is an
-SFP28 direct-attach cable to a DGX Spark's ConnectX-7 through a QSFP28-to-SFP28 (QSA)
-adapter, since the Spark's ports are QSFP.
+**Not measured yet on the Mac:** a link to a peer, iperf3 throughput, RDMA. (On the Strix Halo
+box under Linux the adapter has since been measured: 20.9 Gbit/s RDMA to a GX10, one port or
+both, [7 Oct 2026](#the-adapters-on-the-bench-7-october-2026).)
 
 **One more data point, 23 Sep 2026:** while validating the Helios card below, Ash Hart's
 MCDMA kext also bound the Plyisty's ConnectX-4 Lx, presenting it as `mcrdma0`/`mcrdma1`.
-RDMA over it is still untested — we have no SFP28 cable to a GX10 yet.
+RDMA through MCDMA on the Mac is still untested; the RDMA numbers we have for this adapter are
+from Linux.
 
 ### Path 3: the Helios enclosure and ConnectX-5, in hand, measured 23 Sep 2026
 
