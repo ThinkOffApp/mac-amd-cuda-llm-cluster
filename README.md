@@ -16,6 +16,7 @@ and CUDA, aiming to speed up both prompt processing and output generation.
 
   - [What this is, in plain words](#what-this-is-in-plain-words)
   - [Related upstream work](#related-upstream-work)
+  - [Working with Ash Hart's projects](#working-with-ash-harts-projects)
   - [⚠ Transport: what is RDMA here, and what is not](#-transport-what-is-rdma-here-and-what-is-not)
   - [Development update — 17 September 2026](#development-update--17-september-2026)
   - [Two desks, two halves of this repo](#two-desks-two-halves-of-this-repo)
@@ -101,6 +102,47 @@ of **244 µs round trip** against Ash Hart's 6–8 µs RDMA figures, roughly 16�
 on a measurement boundary neither side has stated. The distribution, the raw samples and the
 20 Sep 2026 correction of an earlier 350 µs figure:
 [docs/interconnect.md](docs/interconnect.md#latency-against-rdma-and-the-20-sep-2026-correction).
+
+### Working with Ash Hart's projects
+
+Since mid-September most of our work has gone into Ash Hart's projects rather than this
+repository: **[TensorFold](https://github.com/ashhart/TensorFold)**, an inference engine whose
+batched replies must equal its one-at-a-time replies bit for bit, and
+**[MCDMA](https://github.com/ashhart/MCDMA)**, his RDMA transport between Macs and NVIDIA boxes.
+Ash's engine runs on Apple Metal and NVIDIA CUDA. Our part is the third platform, AMD
+(Strix Halo, ROCm), plus independent hardware runs and reports on his Mac and CUDA work. The
+software is his and his contributors'; what is ours is listed below, with links. ThinkOffApp is
+in the TensorFold 1.0.0 contributor list (7 Oct 2026).
+
+**TensorFold**
+
+| when | what we did | outcome |
+|---|---|---|
+| 26 Sep 2026 | [#7](https://github.com/ashhart/TensorFold/issues/7): independent run on a second M5 Max 128 GB, Qwen3.8-27B and Nemotron, with an exactness check | closed by Ash with thanks |
+| 30 Sep 2026 | [#144](https://github.com/ashhart/TensorFold/pull/144): ROCm support for Qwen3.8-27B on Strix Halo (gfx1151), including a fix for tied top-k ids on ROCm | closed 6 Oct: the Python engine was frozen and new work moved to the native Zig engine; Ash said the HIP fixes carry over with credit |
+| 4 Oct 2026 | [#394](https://github.com/ashhart/TensorFold/issues/394): the Zig preview server failed to start on macOS 27 (Metal 4.1) | fixed by Ash in #395 and #418 |
+| 5 Oct 2026 | [#426](https://github.com/ashhart/TensorFold/issues/426): proposal for a native Zig HIP backend on gfx1151 | Ash set the first step: admission, one exact matmul, and a test that fails when one bit moves |
+| 7 Oct 2026 | [#463](https://github.com/ashhart/TensorFold/pull/463): model-free Zig HIP runtime and GPU qualification (draft) | outside testers passed it on gfx1201 (Radeon AI PRO R9700) and gfx1150 (Radeon 890M); awaiting Ash's review |
+
+TensorFold 1.0.0 (7 Oct 2026) qualifies Apple Metal and the NVIDIA GB10 only. AMD is not in it
+yet; #463 is the start of that backend.
+
+**MCDMA**, through our fork [ThinkOffApp/MACDMA](https://github.com/ThinkOffApp/MACDMA)
+
+| when | what we did | status |
+|---|---|---|
+| 23 Sep 2026 | [#5](https://github.com/ashhart/MCDMA/pull/5): six setup notes from a MacBook + GX10 rig | open |
+| 23 Sep 2026 | [#6](https://github.com/ashhart/MCDMA/pull/6): MacBook Pro M5 Max to ASUS GX10 validation report for 0.1.18 (50.5 Gbit/s into the Mac) | open |
+| 26 Sep 2026 | [#7](https://github.com/ashhart/MCDMA/pull/7): Linux RDMA pair support in `run_bw.py`, an `mcdma-rpcd` client, and a llama.cpp KV-cache handoff | open |
+
+On 26 Sep 2026 MCDMA's bandwidth tool ran between the Strix Halo box (Helios + ConnectX-5 Ex) and
+a GX10 at 29.75 Gbit/s with no byte errors, Linux at both ends (our measurement).
+
+**oMLX** ([jundot/omlx](https://github.com/jundot/omlx), Ash's cluster pull requests): we ran
+[#3870](https://github.com/jundot/omlx/pull/3870), the stage hops and token relay over MCDMA, on
+real hardware twice (24 and 27 Sep 2026), a MacBook Pro M5 Max (Metal) as rank 0 and a GX10
+(CUDA) as rank 1 over a direct ConnectX link. After the first run Ash split the pull request
+along the lines our review suggested.
 
 ### ⚠ Transport: what is RDMA here, and what is not
 
