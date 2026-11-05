@@ -12,6 +12,11 @@ cable, with an NVIDIA GB10 on the same bench. Benchmark results are labelled
 with their configurations. Now building tensor parallelism across Metal, ROCm
 and CUDA, aiming to speed up both prompt processing and output generation.
 
+> **The 25G Thunderbolt adapter we use:** the Plyisty dual 25G adapter with the heatsink, fan and
+> thermal pads that keep it cool, about 273 EUR on 7 Oct 2026.
+> **[Add all four to an amazon.de basket](https://www.amazon.de/gp/aws/cart/add.html?AssociateTag=thinkoff-21&ASIN.1=B0DX6VWLH8&Quantity.1=1&ASIN.2=B0989QGY1R&Quantity.2=1&ASIN.3=B07DXNT9J9&Quantity.3=1&ASIN.4=B0CDMDGC6J&Quantity.4=1)**
+> *This is an affiliate link: as an Amazon Associate we earn from qualifying purchases.*
+
 ## Contents
 
   - [What this is, in plain words](#what-this-is-in-plain-words)
@@ -397,6 +402,9 @@ hardware. Parts, prices and how firm each price is:
 [docs/interconnect.md](docs/interconnect.md#path-1-the-self-assembled-adapter).
 
 ### Path 2: the Plyisty adapter, which we own
+
+**[Add the adapter and its cooling parts to an amazon.de basket](https://www.amazon.de/gp/aws/cart/add.html?AssociateTag=thinkoff-21&ASIN.1=B0DX6VWLH8&Quantity.1=1&ASIN.2=B0989QGY1R&Quantity.2=1&ASIN.3=B07DXNT9J9&Quantity.3=1&ASIN.4=B0CDMDGC6J&Quantity.4=1)**, about 273 EUR on
+7 Oct 2026. *This is an affiliate link: as an Amazon Associate we earn from qualifying purchases.* [What the cooling parts are for](#the-adapters-on-the-bench-7-october-2026).
 
 A dual-port Thunderbolt-to-SFP28 adapter, sold under several names ("PX Thunderbolt to
 Ethernet", "thunderbolt 25G" and others). We bought the one branded **Plyisty**, at
