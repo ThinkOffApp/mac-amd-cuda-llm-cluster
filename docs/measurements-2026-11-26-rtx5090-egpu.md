@@ -20,7 +20,8 @@ repeated on a second day.
 | Host | Link the host reported | Result |
 |---|---|---|
 | HX 470, USB4 | USB4, 40 Gb/s (2 lanes of 20) | Card enumerates and `nvidia-smi` works. The host then hard-freezes within minutes, also when the card is idle. No model was ever loaded. |
-| MacBook, Thunderbolt 5 | USB4 v2, 80 Gb/s; PCIe x4 at 16 GT/s | Card works through tinygrad's TinyGPU driver, once per power cycle of the dock. A second start fails at card initialisation. |
+| MacBook, Thunderbolt 5, tinygrad 0.14.0 | USB4 v2, 80 Gb/s; PCIe x4 at 16 GT/s | Card works through tinygrad's TinyGPU driver, once per power cycle of the dock. A second start fails at card initialisation. |
+| MacBook, Thunderbolt 5, macuda | same | llama.cpp's CUDA backend runs on the card: Llama 3.1 8B Q8 decodes at 158 tok/s, on a cold start and on two warm starts after it. |
 
 ## Host 1: Linux over USB4
 
@@ -82,7 +83,7 @@ one warm-up, tinygrad's generic kernel with no kernel search:
 | M5 Max through Metal (`DEV=METAL`) | 76.4 ms | 76.6, 102.4, 76.4, 76.8, 76.4 | about 14,400 |
 
 The two are level on this test. That measures tinygrad's untuned matmul on both
-devices, not what either device can do. No language model was run.
+devices, not what either device can do. No language model was run through tinygrad.
 
 The limit found: the first start after the dock is powered on works. Every later
 start fails in the driver's card initialisation with
@@ -96,9 +97,41 @@ cycles. Forcing the driver's own full-reset path before initialisation (the
 branch it takes when it finds the card already booted) did not change the
 outcome. Power cycling the dock restores one more start.
 
+## Host 2, second driver: macuda
+
+[macuda](https://github.com/Davinchy/macuda) (commit `e797e31`) is a C user-space driver for the same TinyGPU
+extension, with a CUDA runtime layer and llama.cpp's CUDA backend built against it. The dock was plugged directly
+into the MacBook. Built with the same `cuda-nvcc 12.8` container; one local change was needed under Colima, which
+shares only the home folder with the container (the kernel build's output folder had to move out of `/tmp`).
+
+Model: `Meta-Llama-3.1-8B-Instruct-Q8_0.gguf`, 8,540,775,840 bytes, all layers on the card. Command:
+`sh tools/nv_shim_step.sh A bench <model> 128`, which runs `llama-bench -ngl 99 -p 256 -n 128 -r 3`.
+
+| Start | Decode (tok/s) | Prompt (tok/s) |
+|---|---|---|
+| Cold, after a dock power cycle | 158.6 | about 9,300 |
+| Warm, second start | 158.0 | about 9,300 |
+| Warm, third start | 158.3 | about 9,300 |
+
+Plain greedy generation of 64 tokens (`llama-simple`) ran at 135.8 tok/s. macuda's README lists 161.0 ± 1.0 tok/s for the same model file on its
+author's setup. Its health check (`tools/preflight.sh`) reported OK after every run. Unlike
+tinygrad 0.14.0, repeated starts worked without power cycling the dock.
+
+## A TensorFold kernel on the card
+
+TensorFold's CUDA backend talks to the CUDA driver API (77 `cu*` functions), which macuda does not export; it
+exports the `cuda*` runtime functions llama.cpp uses. A small translation library on top of macuda's driver
+(about 330 lines of C, a Mach-O library under the file name `libcuda.so.1`) now exports all 77. 58 do real work;
+19 refuse by name (15 graph functions, 3 for mapping pinned host memory, 1 for event timing).
+
+Through it, the `tf_l2_rows` kernel from the TensorFold 1.3.5 Linux release image (unchanged bytes, the sm_120
+entry of its five-architecture `norms` image) ran on the 5090: 10 shapes, 367,936 bf16 output values, all equal
+bit for bit to a host model that repeats the kernel's fp32 operation order. This is a focused test program, not
+TensorFold's kernel contract and not TensorFold itself, and it says nothing about speed.
+
 ## Not done
 
-- No model has run on the 5090 from either host.
+- No TensorFold model has run on the 5090. TensorFold has no macOS CUDA build yet.
+- No model has run on the 5090 from the HX 470.
 - OCuLink is untested on the HX 470.
-- The other open user-space driver for this setup, macuda, is untried.
-- None of this has been repeated on another day or with another cable.
+- The macuda figures are one evening, one model, one cable. None of this has been repeated on another day.

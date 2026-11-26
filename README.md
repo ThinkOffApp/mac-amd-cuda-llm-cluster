@@ -526,7 +526,7 @@ Every table, sweep and dated log that used to sit in this README, moved verbatim
 - [docs/measurements-gb10-vs-metal.md](docs/measurements-gb10-vs-metal.md): GB10 vs Metal on dense and sparse models, context sweep, cache sizes, file-copy rate.
 - [docs/measurements-2026-09-16-18.md](docs/measurements-2026-09-16-18.md): link latency, same-commit rerun, `-ts` sweep, three boxes, KV hand-off, two-Spark GLM serve, dead ends.
 - [docs/measurements-2026-09-24-rdma-prefill.md](docs/measurements-2026-09-24-rdma-prefill.md): prefill on the GX10, decode on the Mac over MCDMA RDMA, BF16 and MXFP4, tuning, against Ash Hart's Studio run.
-- [docs/measurements-2026-11-26-rtx5090-egpu.md](docs/measurements-2026-11-26-rtx5090-egpu.md): an RTX 5090 in a Thunderbolt 5 dock on a Linux mini PC and on the MacBook, first evening: host freezes over USB4, one start per power cycle through TinyGPU on macOS, one matmul timing.
+- [docs/measurements-2026-11-26-rtx5090-egpu.md](docs/measurements-2026-11-26-rtx5090-egpu.md): an RTX 5090 in a Thunderbolt 5 dock on a Linux mini PC and on the MacBook, first evening: host freezes over USB4; on macOS one start per power cycle through tinygrad, then llama.cpp at 158 tok/s through macuda, and one TensorFold kernel bit-exact through a new driver translation library.
 - [docs/interconnect.md](docs/interconnect.md): per-link measurements, the 200 GbE trap, the latency correction, Paths 1 and 3, prices, ADT-Link vs Helios.
 - [docs/pitfalls-and-flags.md](docs/pitfalls-and-flags.md): the non-obvious flags and the pitfalls that cost us time.
 - [docs/model-ladder.md](docs/model-ladder.md): the plan for models that fit in no single machine.
