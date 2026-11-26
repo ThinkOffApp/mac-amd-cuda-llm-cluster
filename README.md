@@ -506,6 +506,8 @@ does not prove: [docs/model-ladder.md](docs/model-ladder.md).
 - **Two ASUS Ascent GX10**, NVIDIA GB10, 124,544 MiB reported each, CUDA 13 (the
   first added 16 Sep 2026, the second in Berlin). Rows naming a single Spark were
   measured on one of them.
+- **MSI GeForce RTX 5090**, 32 GB, in a Minisforum DEG2 Thunderbolt 5 dock with its own
+  1200 W supply (added 26 Nov 2026; first results only, see the dated page below)
 - **Links:** one Thunderbolt 4 cable (MacBook to Strix Halo); 10 GbE (MacBook to
   Spark 1); one QSFP56 direct-attach cable carrying 200 GbE (Spark 1 to Spark 2)
 - **Network hardware in hand and on order** is described in
@@ -524,6 +526,7 @@ Every table, sweep and dated log that used to sit in this README, moved verbatim
 - [docs/measurements-gb10-vs-metal.md](docs/measurements-gb10-vs-metal.md): GB10 vs Metal on dense and sparse models, context sweep, cache sizes, file-copy rate.
 - [docs/measurements-2026-09-16-18.md](docs/measurements-2026-09-16-18.md): link latency, same-commit rerun, `-ts` sweep, three boxes, KV hand-off, two-Spark GLM serve, dead ends.
 - [docs/measurements-2026-09-24-rdma-prefill.md](docs/measurements-2026-09-24-rdma-prefill.md): prefill on the GX10, decode on the Mac over MCDMA RDMA, BF16 and MXFP4, tuning, against Ash Hart's Studio run.
+- [docs/measurements-2026-11-26-rtx5090-egpu.md](docs/measurements-2026-11-26-rtx5090-egpu.md): an RTX 5090 in a Thunderbolt 5 dock on a Linux mini PC and on the MacBook, first evening: host freezes over USB4, one start per power cycle through TinyGPU on macOS, one matmul timing.
 - [docs/interconnect.md](docs/interconnect.md): per-link measurements, the 200 GbE trap, the latency correction, Paths 1 and 3, prices, ADT-Link vs Helios.
 - [docs/pitfalls-and-flags.md](docs/pitfalls-and-flags.md): the non-obvious flags and the pitfalls that cost us time.
 - [docs/model-ladder.md](docs/model-ladder.md): the plan for models that fit in no single machine.
