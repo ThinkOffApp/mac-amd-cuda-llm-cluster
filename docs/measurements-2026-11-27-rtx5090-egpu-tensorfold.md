@@ -184,17 +184,21 @@ On Linux the same patched build does batch across streams. On an NVIDIA GB10, wh
 ran at 30.1 tok/s and eight streams at 198.5 tok/s in total. So the flat result above points to the Mac
 driver route, not to the patches. It has not been measured on a 5090 under Linux.
 
-## H. Exactness, as far as tested (preliminary)
+## H. Exactness, as far as tested
 
-Not on the 5090. On the GB10 under Linux, raw prompts through `/v1/completions`, 200 greedy tokens:
+Not on the 5090. On the GB10 under Linux, raw prompts through `/v1/completions`, 200 greedy tokens, no drafter,
+kernels built with nvcc 13.0 and without `-Dnative-fp-decode`:
 
-- The patched build gave the same tokens as its base `dc2ca8a1` at seven prompt lengths from 12 to 4,962
-  tokens.
+- The base `dc2ca8a1` with all 28 patches gave the same tokens as the base alone at three prompt lengths: 12, 484
+  and 4,962 tokens. A tree with only the first 10 patches also matched the base, at seven lengths from 12 to 4,962
+  tokens. (An earlier version of this page reported the seven-length result as covering the full recipe. It covered
+  the first 10 patches; the full recipe was then tested at the three lengths.)
 - That base and upstream main `ac4cb4f53` agree on short prompts (12 and 484 tokens) and differ on long ones
   (4,962 tokens). Where they part depends on the text, around 490 to 500 tokens.
 
-This is preliminary. Which of the 28 patches were in the tested tree is being re-checked. Until that is done,
-read the first point as "a patched tree matched its base", not as a statement about the full recipe.
+So on the prompts tested the 28 patches do not change the output of the branch they are built on, and that branch
+is not token-identical to upstream main on long prompts. Three prompts is a small sample, the 8-bit settings were
+not part of it, and none of it was run on the 5090.
 
 On the 5090 itself, the only exactness statements are the ones in sections B to E: text from one run compared
 with text from another run on the same card.
