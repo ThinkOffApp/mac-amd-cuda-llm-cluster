@@ -43,17 +43,17 @@ this fixed prompt is the one to compare against.
 
 Most of what makes the numbers below possible is not ours.
 
-- **Ash Hart: [TensorFold](https://github.com/ashhart/TensorFold)**, the inference engine. We reported a first
+- **Ash Hart ([@ashhart](https://github.com/ashhart)): [TensorFold](https://github.com/ashhart/TensorFold)**, the inference engine. We reported a first
   result on his [RFC #4186](https://github.com/ashhart/TensorFold/issues/4186). The maintainer said yes
   in principle to a macOS CUDA target behind an explicit option, off by default, and wants the kernel contract
   and a comparison of token hashes against Linux first. Neither exists yet (see [Not done](#not-done)).
-- **Mia (MiaAI-Lab):
+- **Mia ([@MiaAI-Lab](https://github.com/MiaAI-Lab)):
   [Inkling-2-Mini-RTX-5090-TensorFold](https://github.com/MiaAI-Lab/Inkling-2-Mini-RTX-5090-TensorFold)**,
   Apache-2.0. 28 patches on `jschmied/TensorFold@dc2ca8a1785df6ee5c8489ee7cd18e29cf7b4568`. The speed patches
   are hers. Sections D to H use her recipe.
-- **incoai: the draft model `incoai/Inkling-2-Mini-DFlash2`**, revision
+- **Inco AI ([@incoai](https://github.com/incoai)): the draft model `incoai/Inkling-2-Mini-DFlash2`**, revision
   `4f9088ea66c21f2b99ed657d1941c306b03e84d2`, Apache-2.0. Every DFlash2 row below uses it.
-- **Davinchy: [macuda](https://github.com/Davinchy/macuda)**, commit `e797e31`, the user-space NVIDIA driver
+- **Antonio Torres ([@Davinchy](https://github.com/Davinchy)): [macuda](https://github.com/Davinchy/macuda)**, commit `e797e31`, the user-space NVIDIA driver
   for macOS. Every run on this page goes through it.
 - **Thinking Machines: the model `thinkingmachines/Inkling-2-Mini`.**
 - **satellitedown: ingine.** We did not run it. Its figures appear below only as its README states them.
