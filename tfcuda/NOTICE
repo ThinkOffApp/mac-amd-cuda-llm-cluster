@@ -1,0 +1,23 @@
+tfcuda is MIT-licensed (see LICENSE). This source repository contains no third-party code.
+
+It builds against and links:
+
+macuda - https://github.com/Davinchy/macuda - MIT License
+  Copyright (c) 2026 Antonio Torres
+  The driver this library is built on. The built dylib (out/libcuda.so.1) statically links macuda's libtinynv
+  (cuda-shim/build/shim/nv/libtinynv.a) and its copy and keep-alive kernel objects (copy1d_cubin.o,
+  keepalive_cubin.o). macuda's own NOTICE states that libtinynv is a C port of the user-space NVIDIA driver in
+  tinygrad (https://github.com/tinygrad/tinygrad, MIT License, Copyright (c) 2024, the tiny corp), whose notice
+  applies to those portions.
+
+Zstandard (zstd) - https://github.com/facebook/zstd
+  Copyright (c) Meta Platforms, Inc. and affiliates.
+  Dual-licensed: BSD-3-Clause or GPLv2, at the user's option. tfcuda uses zstd under the BSD-3-Clause licence.
+  The built dylib statically links libzstd.a (used to inflate compressed fatbin entries).
+
+Binary distributions of out/libcuda.so.1 must be accompanied by the licence texts of macuda (MIT), tinygrad (MIT)
+and zstd (BSD-3-Clause), in addition to this project's LICENSE.
+
+TensorFold (https://github.com/ashhart/TensorFold, by Ash Hart) is not included or linked. tfcuda implements the
+CUDA driver API functions TensorFold resolves, and the tests run TensorFold's kernel images, which are not part of
+this repository.
