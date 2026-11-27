@@ -170,7 +170,7 @@ looks complete and then stops the card.
 ## G. Several streams
 
 All streams through one server, Mia's 16-bit settings on the rebuilt kernels, 200 tokens per stream, three rounds
-each. The server log shows the requests running together (queue times 0.00 to 0.04 s).
+each. The server log shows the requests running together (queue times 0.00 to 0.08 s).
 
 | Streams | Drafter | Total (tok/s) |
 |---|---|---|
