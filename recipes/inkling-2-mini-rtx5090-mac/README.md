@@ -26,6 +26,10 @@ with nvcc 13.3.73 and `-Dnative-fp-decode=true`. The prompts are in [`ask.py`](a
 
 - Exact: Mia's 16-bit settings: bf16 KV cache, the three `TF_INKLING2_*` switches below unset.
 - Fast: Mia's 8-bit defaults: `--kv-cache fp8`, `TF_INKLING2_ATTN_FP8=1 TF_INKLING2_PREFILL_TC=1 TF_INKLING2_ATTN_FP8_TC=1`.
+- What is counted: Inkling 2 Mini thinks before it answers, and in these 200-token runs all 200 tokens are still
+  thinking (the final answer field is empty). So tok/s here is the speed of the model's reasoning text on each prompt.
+  "Code" means a coding prompt, not a finished code answer; the reasoning on it is more predictable, which is why the
+  drafter helps more there.
 
 Speed with a drafter depends strongly on how predictable the text is: code and copying go fastest. Without a drafter
 the exact mode does 122 tok/s on the prose prompt.
