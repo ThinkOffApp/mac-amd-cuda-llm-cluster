@@ -16,16 +16,21 @@ Nothing of the model runs on the Mac's own GPU or CPU. The Mac drives the card; 
 ## One stream: exact and fast mode on three prompts
 
 All with the DFlash2 drafter, one stream, greedy, 200 tokens, three timed runs after one warm-up. Kernels rebuilt
-with nvcc 13.3.73 and `-Dnative-fp-decode=true`. The prompts are in [`ask.py`](ask.py).
+with nvcc 13.3.73 and `-Dnative-fp-decode=true`. The prompts are in [`ask.py`](ask.py). Prose and code
+rows include a second, clean-room build made from a fresh clone by following the steps below (27 Nov 2026).
 
 | Prompt | Exact (16-bit) tok/s | Fast (8-bit) tok/s |
 |---|---|---|
-| prose (the eGPU question) | 211.7 to 214.7 | 199.5 to 206.7 |
-| code (parse_csv with tests) | 352.3 to 352.6 | 293.5 to 293.8 |
+| prose (the eGPU question) | 211.7 to 214.7 | 199.3 to 207.4 |
+| code (parse_csv with tests) | 352.3 to 361.6 | 293.5 to 297.5 |
 | document reproduction (repeat a given text) | 386.6 to 387.7 | 164.3 to 169.5 |
 
 - Exact: Mia's 16-bit settings: bf16 KV cache, the three `TF_INKLING2_*` switches below unset.
 - Fast: Mia's 8-bit defaults: `--kv-cache fp8`, `TF_INKLING2_ATTN_FP8=1 TF_INKLING2_PREFILL_TC=1 TF_INKLING2_ATTN_FP8_TC=1`.
+- What is counted: Inkling 2 Mini thinks before it answers, and in these 200-token runs all 200 tokens are still
+  thinking (the final answer field is empty). So tok/s here is the speed of the model's reasoning text on each prompt.
+  "Code" means a coding prompt, not a finished code answer; the reasoning on it is more predictable, which is why the
+  drafter helps more there.
 
 Speed with a drafter depends strongly on how predictable the text is: code and copying go fastest. Without a drafter
 the exact mode does 122 tok/s on the prose prompt.
