@@ -177,12 +177,14 @@ each. The server log shows the requests running together (queue times 0.00 to 0.
 | 1 | none | 115 to 122 |
 | 8 | none | 516 to 565 |
 | 8 | DFlash2 | 523 to 619 |
+| 11 | none, 16-bit | 667 to 692 |
+| 20 | none, 8-bit cache and attention | 891 to 909 |
 
 Eight streams gave about 4.6 times one stream. These runs had TensorFold's host memory-pressure governor switched
 off (`TENSORFOLD_MEMORY_PRESSURE=0`). That governor reads macOS's own memory pressure, not the card's memory, and on
 our busy MacBook it reported pressure and let only one stream run at a time. An earlier version of this page took
 those queued runs (118 to 170 tok/s total for 8 to 20 streams) for a limit of the Mac driver route; that was wrong.
-More than 8 streams were not tried. 64 streams do not fit in 32 GB at the smallest window (about 0.9 GiB per stream
+20 streams is the most that fit. 64 streams do not fit in 32 GB at the smallest window (about 0.9 GiB per stream
 at 16-bit, 0.5 GiB at 8-bit).
 
 For comparison, on Linux on an NVIDIA GB10 (not a 5090), the same patched build ran one stream at 30.1 tok/s and
@@ -231,12 +233,12 @@ a Mac driver route she did not target.
 
 ## Not done
 
-- No kernel-contract run. The maintainer wants it first.
+- No complete kernel-contract run. A filtered part of it (41 kernels, 41 planted controls caught, none missed) passed on the card. The full run stopped after four minutes on an MMU fault right after cluster-launch refusals; the cause is not known yet.
 - No comparison against a Linux sm_120 run of the same prompts on this card. Nothing on this page shows that
   the Mac route produces the tokens Linux produces.
 - No measurement of ingine by us.
 - Sleep, and unplugging and reconnecting the dock, are untested.
-- Several streams on a 5090 under Linux are untested, and more than 8 streams were not tried on this route.
+- Several streams on a 5090 under Linux are untested.
 - Only Inkling 2 Mini has run end to end through TensorFold on this route. Qwen3.5-2B fails on a cluster
   launch.
 - The translation library is not published.
