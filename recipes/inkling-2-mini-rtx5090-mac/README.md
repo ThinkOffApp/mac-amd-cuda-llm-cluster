@@ -16,12 +16,13 @@ Nothing of the model runs on the Mac's own GPU or CPU. The Mac drives the card; 
 ## One stream: exact and fast mode on three prompts
 
 All with the DFlash2 drafter, one stream, greedy, 200 tokens, three timed runs after one warm-up. Kernels rebuilt
-with nvcc 13.3.73 and `-Dnative-fp-decode=true`. The prompts are in [`ask.py`](ask.py).
+with nvcc 13.3.73 and `-Dnative-fp-decode=true`. The prompts are in [`ask.py`](ask.py). Prose and code
+rows include a second, clean-room build made from a fresh clone by following the steps below (27 Nov 2026).
 
 | Prompt | Exact (16-bit) tok/s | Fast (8-bit) tok/s |
 |---|---|---|
-| prose (the eGPU question) | 211.7 to 214.7 | 199.5 to 206.7 |
-| code (parse_csv with tests) | 352.3 to 352.6 | 293.5 to 293.8 |
+| prose (the eGPU question) | 211.7 to 214.7 | 199.3 to 207.4 |
+| code (parse_csv with tests) | 352.3 to 361.6 | 293.5 to 297.5 |
 | document reproduction (repeat a given text) | 386.6 to 387.7 | 164.3 to 169.5 |
 
 - Exact: Mia's 16-bit settings: bf16 KV cache, the three `TF_INKLING2_*` switches below unset.
