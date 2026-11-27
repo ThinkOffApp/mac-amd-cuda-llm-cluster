@@ -4,6 +4,8 @@ One card, one dock, two hosts, one evening. This page records what happened, in
 order, including what did not work. Nothing here is tuned, and nothing has been
 repeated on a second day.
 
+Continued in [measurements-2026-11-27-rtx5090-egpu-tensorfold.md](measurements-2026-11-27-rtx5090-egpu-tensorfold.md), where a whole model runs through TensorFold on the card.
+
 ## Hardware
 
 - **Card:** MSI GeForce RTX 5090, 32 GB (PCI `10de:2b85`, subsystem `1462:5306`).

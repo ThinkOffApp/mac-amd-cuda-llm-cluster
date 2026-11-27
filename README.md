@@ -29,6 +29,7 @@ and CUDA, aiming to speed up both prompt processing and output generation.
 - [The measured result (GLM-5.3-Flash 321B MoE, pp512 / tg128 tok/s)](#the-measured-result-glm-53-flash-321b-moe-pp512--tg128-toks)
 - [A third backend: NVIDIA GB10 vs Apple Metal (16-17 Sep 2026)](#a-third-backend-nvidia-gb10-vs-apple-metal-16-17-sep-2026)
 - [Splitting Mac + Spark: when it helps, when it does not (17 Sep 2026)](#splitting-mac--spark-when-it-helps-when-it-does-not-17-sep-2026)
+- [Measurements added 26-27 November 2026: an RTX 5090 in a Thunderbolt 5 dock](#measurements-added-26-27-november-2026-an-rtx-5090-in-a-thunderbolt-5-dock)
 - [Measurements added 16-18 September 2026](#measurements-added-16-18-september-2026)
 - [Setup](#setup)
 - [The interconnect: three paths, and what actually limits each one](#the-interconnect-three-paths-and-what-actually-limits-each-one)
@@ -272,6 +273,19 @@ one?**
 
 Every sweep, the per-pass tables and what we could not test:
 [docs/measurements-mac-spark-split.md](docs/measurements-mac-spark-split.md).
+
+## Measurements added 26-27 November 2026: an RTX 5090 in a Thunderbolt 5 dock
+
+An RTX 5090 in a Minisforum DEG2 dock runs from the MacBook over Thunderbolt 5 through
+[macuda](https://github.com/Davinchy/macuda), Davinchy's user-space NVIDIA driver for macOS. On 27 Nov 2026
+[TensorFold](https://github.com/ashhart/TensorFold)'s CUDA server ran Inkling 2 Mini on it, whole model on the
+card, one stream, greedy, 200 tokens: 74.5 to 75.2 tok/s on upstream main with no drafter, and 211.7 to
+214.7 tok/s on prose with [Mia's 28 patches](https://github.com/MiaAI-Lab/Inkling-2-Mini-RTX-5090-TensorFold)
+and incoai's DFlash2 draft model, 16-bit settings, drafted text byte-identical to undrafted. The speed patches
+and the draft model are theirs. Not done: no kernel-contract run, no comparison against Linux on this card, and
+several streams add no throughput on this route. Our driver translation library is not released yet.
+First evening: [docs/measurements-2026-11-26-rtx5090-egpu.md](docs/measurements-2026-11-26-rtx5090-egpu.md).
+Second day, all tables: [docs/measurements-2026-11-27-rtx5090-egpu-tensorfold.md](docs/measurements-2026-11-27-rtx5090-egpu-tensorfold.md).
 
 ## Measurements added 23-24 September 2026: prefill on the GX10, decode on the Mac, over RDMA
 
@@ -527,6 +541,7 @@ Every table, sweep and dated log that used to sit in this README, moved verbatim
 - [docs/measurements-2026-09-16-18.md](docs/measurements-2026-09-16-18.md): link latency, same-commit rerun, `-ts` sweep, three boxes, KV hand-off, two-Spark GLM serve, dead ends.
 - [docs/measurements-2026-09-24-rdma-prefill.md](docs/measurements-2026-09-24-rdma-prefill.md): prefill on the GX10, decode on the Mac over MCDMA RDMA, BF16 and MXFP4, tuning, against Ash Hart's Studio run.
 - [docs/measurements-2026-11-26-rtx5090-egpu.md](docs/measurements-2026-11-26-rtx5090-egpu.md): an RTX 5090 in a Thunderbolt 5 dock on a Linux mini PC and on the MacBook, first evening: host freezes over USB4; on macOS one start per power cycle through tinygrad, then llama.cpp at 158 tok/s through macuda, and one TensorFold kernel bit-exact through a new driver translation library.
+- [docs/measurements-2026-11-27-rtx5090-egpu-tensorfold.md](docs/measurements-2026-11-27-rtx5090-egpu-tensorfold.md): the second day on the same dock, MacBook only: TensorFold's CUDA server running Inkling 2 Mini on the 5090 through macuda, upstream and with Mia's patches and incoai's draft model, prompt reading, several streams, a build trap, other people's stated figures, and what is not done.
 - [docs/interconnect.md](docs/interconnect.md): per-link measurements, the 200 GbE trap, the latency correction, Paths 1 and 3, prices, ADT-Link vs Helios.
 - [docs/pitfalls-and-flags.md](docs/pitfalls-and-flags.md): the non-obvious flags and the pitfalls that cost us time.
 - [docs/model-ladder.md](docs/model-ladder.md): the plan for models that fit in no single machine.
