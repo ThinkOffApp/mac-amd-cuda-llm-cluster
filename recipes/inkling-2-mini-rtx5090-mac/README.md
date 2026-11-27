@@ -103,7 +103,13 @@ Then, once the server answers, run `python3 ask.py 8766 inkling-2-mini 200` four
 
 ## Credits
 
-Mia ([MiaAI-Lab](https://github.com/MiaAI-Lab)) for the TensorFold patches that give the speed; incoai for the DFlash2
-draft model; Ash Hart for [TensorFold](https://github.com/ashhart/TensorFold); Antonio Torres for
-[macuda](https://github.com/Davinchy/macuda); Thinking Machines for Inkling 2 Mini. All measurements and every table:
+- Mia, [@MiaAI-Lab](https://github.com/MiaAI-Lab): the 28 TensorFold patches that give the speed.
+- Inco AI, [@incoai](https://github.com/incoai): the DFlash2 draft model.
+- Ash Hart, [@ashhart](https://github.com/ashhart): [TensorFold](https://github.com/ashhart/TensorFold).
+- Jürgen Schmied, [@jschmied](https://github.com/jschmied): the TensorFold branch Mia's patches are built on.
+- Antonio Torres, [@Davinchy](https://github.com/Davinchy): [macuda](https://github.com/Davinchy/macuda), the
+  user-space NVIDIA driver for macOS this route runs on.
+- Thinking Machines: Inkling 2 Mini.
+
+All measurements and every table:
 [docs/measurements-2026-11-27-rtx5090-egpu-tensorfold.md](../../docs/measurements-2026-11-27-rtx5090-egpu-tensorfold.md).

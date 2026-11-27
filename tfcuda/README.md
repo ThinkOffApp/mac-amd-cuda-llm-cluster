@@ -135,9 +135,9 @@ Status: 75 tok/s with TensorFold 1.3.6 and with TensorFold main.
 
 ## Credits
 
-- [macuda](https://github.com/Davinchy/macuda) by Antonio Torres: the user-space NVIDIA driver `libtinynv`, its copy
+- [macuda](https://github.com/Davinchy/macuda) by Antonio Torres ([@Davinchy](https://github.com/Davinchy)): the user-space NVIDIA driver `libtinynv`, its copy
   and keep-alive kernels, SDK selection and the shared-memory and occupancy rules this library follows. MIT licence.
-- [TensorFold](https://github.com/ashhart/TensorFold) by Ash Hart: the inference engine whose driver API surface this
+- [TensorFold](https://github.com/ashhart/TensorFold) by Ash Hart ([@ashhart](https://github.com/ashhart)): the inference engine whose driver API surface this
   library implements, and whose kernels the tests use.
 
 ## Licence
