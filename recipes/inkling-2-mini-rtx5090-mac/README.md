@@ -26,9 +26,10 @@ One stream, greedy, 200 tokens, the prompt in [`ask.py`](ask.py):
 Both with the DFlash2 drafter, three timed runs after one warm-up. Without a drafter the exact mode does 122 tok/s.
 On this route the fast mode reads long prompts faster but generates this prompt slightly slower.
 
-"Exact" here means Mia's bf16 settings: drafted text was byte-identical to undrafted text, and on three tested
-prompts her 28 patches gave the same tokens as the branch they are built on. That branch itself differs from
-upstream TensorFold main on long prompts, so this is not a claim of identity with upstream.
+"Exact" here means Mia's bf16 settings. On the 5090, drafted text was byte-identical to undrafted text. Separately,
+on a Linux GB10 box (not the 5090), her 28 patches gave the same tokens as the branch they are built on, on three
+tested prompts. That branch itself differs from upstream TensorFold main on long prompts, so this is not a claim of
+identity with upstream.
 
 About the 227 tok/s figure that was quoted elsewhere: that was the exact mode on a different, conversational prompt
 typed into a chat page. Speed with a drafter depends on the text; use the fixed prompt above to compare.
