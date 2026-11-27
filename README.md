@@ -282,8 +282,8 @@ An RTX 5090 in a Minisforum DEG2 dock runs from the MacBook over Thunderbolt 5 t
 card, one stream, greedy, 200 tokens: 74.5 to 75.2 tok/s on upstream main with no drafter, and 211.7 to
 214.7 tok/s on prose with [Mia's 28 patches](https://github.com/MiaAI-Lab/Inkling-2-Mini-RTX-5090-TensorFold)
 and incoai's DFlash2 draft model, 16-bit settings, drafted text byte-identical to undrafted. The speed patches
-and the draft model are theirs. Not done: no kernel-contract run, no comparison against Linux on this card, and
-several streams add no throughput on this route. Our driver translation library is not released yet.
+and the draft model are theirs. Eight streams together reached 516 to 565 tok/s in total without a drafter. Not done: no complete
+kernel-contract run and no comparison against Linux on this card. Our driver translation library is not released yet.
 First evening: [docs/measurements-2026-11-26-rtx5090-egpu.md](docs/measurements-2026-11-26-rtx5090-egpu.md).
 Second day, all tables: [docs/measurements-2026-11-27-rtx5090-egpu-tensorfold.md](docs/measurements-2026-11-27-rtx5090-egpu-tensorfold.md).
 

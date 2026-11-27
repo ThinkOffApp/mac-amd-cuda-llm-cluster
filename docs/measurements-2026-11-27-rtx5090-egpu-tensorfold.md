@@ -169,20 +169,24 @@ looks complete and then stops the card.
 
 ## G. Several streams
 
-On this Mac route, more streams did not add throughput.
+All streams through one server, Mia's 16-bit settings on the rebuilt kernels, 200 tokens per stream, three rounds
+each. The server log shows the requests running together (queue times 0.00 to 0.04 s).
 
-| Streams | Configuration | Total (tok/s) | One stream, same configuration (tok/s) |
-|---|---|---|---|
-| 11 | 16-bit, no drafter | 118 | 121 |
-| 20 | 8-bit cache and attention, no drafter | 124 | not recorded here |
-| 8 | DFlash2 | 170 | 209 at that time |
+| Streams | Drafter | Total (tok/s) |
+|---|---|---|
+| 1 | none | 115 to 122 |
+| 8 | none | 516 to 565 |
+| 8 | DFlash2 | 523 to 619 |
 
-64 streams do not fit in 32 GB. A stream took about 0.9 GiB at 16-bit with the smallest window, 3,072 tokens,
-and about 0.5 GiB at 8-bit.
+Eight streams gave about 4.6 times one stream. These runs had TensorFold's host memory-pressure governor switched
+off (`TENSORFOLD_MEMORY_PRESSURE=0`). That governor reads macOS's own memory pressure, not the card's memory, and on
+our busy MacBook it reported pressure and let only one stream run at a time. An earlier version of this page took
+those queued runs (118 to 170 tok/s total for 8 to 20 streams) for a limit of the Mac driver route; that was wrong.
+More than 8 streams were not tried. 64 streams do not fit in 32 GB at the smallest window (about 0.9 GiB per stream
+at 16-bit, 0.5 GiB at 8-bit).
 
-On Linux the same patched build does batch across streams. On an NVIDIA GB10, which is not a 5090, one stream
-ran at 30.1 tok/s and eight streams at 198.5 tok/s in total. So the flat result above points to the Mac
-driver route, not to the patches. It has not been measured on a 5090 under Linux.
+For comparison, on Linux on an NVIDIA GB10 (not a 5090), the same patched build ran one stream at 30.1 tok/s and
+eight at 198.5 tok/s in total.
 
 ## H. Exactness, as far as tested
 
@@ -232,7 +236,7 @@ a Mac driver route she did not target.
   the Mac route produces the tokens Linux produces.
 - No measurement of ingine by us.
 - Sleep, and unplugging and reconnecting the dock, are untested.
-- Several streams on a 5090 under Linux are untested.
+- Several streams on a 5090 under Linux are untested, and more than 8 streams were not tried on this route.
 - Only Inkling 2 Mini has run end to end through TensorFold on this route. Qwen3.5-2B fails on a cluster
   launch.
 - The translation library is not published.
