@@ -66,12 +66,11 @@ between TensorFold and macuda's driver, described next.
 - **Host:** MacBook Pro, Apple M5 Max, 128 GB, macOS 27.0.1.
 - **Card:** GeForce RTX 5090, 32 GB, in a Minisforum DEG2 dock on Thunderbolt 5. The link reported 80 Gb/s.
 - **Driver:** macuda `e797e31`.
-- **Translation library (ours, not released yet):** a single C file that exports the 77 CUDA driver API
+- **Translation library (ours, MIT, in [`tfcuda/`](../tfcuda/) via [PR #21](https://github.com/ThinkOffApp/mac-amd-cuda-llm-cluster/pull/21)):** a single C file that exports the 77 CUDA driver API
   functions TensorFold resolves, built as a Mach-O library under the file name `libcuda.so.1` on top of
   macuda's `libtinynv`. 73 of the 77 do real work, including CUDA graphs, which it handles by recording the
   graph and replaying it. 4 refuse by name: host memory register, host memory unregister, host memory device
-  pointer, and event elapsed time. On 26 November the count was 58 working and 19 refusing. It is not
-  published. Until it is, nobody else can repeat the Mac side of this page.
+  pointer, and event elapsed time. On 26 November the count was 58 working and 19 refusing. The source is public in PR #21 of this repository, which adds the `tfcuda/` folder; until that PR is merged, the link above shows it only from the PR.
 - **TensorFold on macOS:** the CUDA server builds for macOS with a one-line change, the operating system gate
   for `-Dgpu` in `zig/build/product.zig`. Build: `zig build -Dgpu=sm_120 -Dfatbins=DIR` with Zig 0.17.0. Run
   with `TENSORFOLD_DEVICE_CHECK=0`.
@@ -274,5 +273,5 @@ a Mac driver route she did not target.
 - Several streams on a 5090 under Linux are untested.
 - Only Inkling 2 Mini has run end to end through TensorFold on this route. Qwen3.5-2B fails on a cluster
   launch.
-- The translation library is not published.
+- The translation library is in PR #21 of this repository, not yet merged into main.
 - One day, one card, one cable. Nothing has been repeated on another day.
