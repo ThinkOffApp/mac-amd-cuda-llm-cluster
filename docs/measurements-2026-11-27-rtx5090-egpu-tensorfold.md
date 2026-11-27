@@ -10,8 +10,8 @@ The list of what is not done is at the end.
 
 Most of what makes the numbers below possible is not ours.
 
-- **Ash Hart: [TensorFold](https://github.com/ashhart/TensorFold)**, the inference engine. We asked about a
-  macOS CUDA target in [RFC #4186](https://github.com/ashhart/TensorFold/issues/4186). The maintainer said yes
+- **Ash Hart: [TensorFold](https://github.com/ashhart/TensorFold)**, the inference engine. We reported a first
+  result on his [RFC #4186](https://github.com/ashhart/TensorFold/issues/4186). The maintainer said yes
   in principle to a macOS CUDA target behind an explicit option, off by default, and wants the kernel contract
   and a comparison of token hashes against Linux first. Neither exists yet (see [Not done](#not-done)).
 - **Mia (MiaAI-Lab):
@@ -46,7 +46,7 @@ between TensorFold and macuda's driver, described next.
   the `nvidia/cuda:13.3.1-devel` image. Each section says which.
 - **Local workaround, cluster launch:** the Mac driver has no thread-block cluster launch. One line in
   `zig/src/cuda/qmmf.zig` forces the path used before sm_90 (`.clusters = capability_major >= 1000`). This is
-  a local workaround, not an upstream change.
+  a local workaround, not an upstream change. Sections C, D and E ran with it. Section B did not need it.
 - **With a drafter**, `TENSORFOLD_MEMORY_RESERVE_GIB=3` was needed.
 
 ## How the runs were made
@@ -124,6 +124,8 @@ builds them (see [section F](#f-a-build-trap-our-mistake)). Then rebuilt her way
 | DFlash2 | code | 345.6 to 346.1 | 352.3 to 352.6 |
 | DFlash2 | document reproduction | 380.7 to 381.1 | 386.6 to 387.7 |
 
+DSpark is the drafting head that ships inside the model checkpoint. DFlash2 is incoai's separate draft model.
+
 Time to first token on the rebuilt kernels: 0.03 to 0.06 s. The drafted text was identical to the undrafted
 text in every case.
 
@@ -178,8 +180,8 @@ On this Mac route, more streams did not add throughput.
 and about 0.5 GiB at 8-bit.
 
 On Linux the same patched build does batch across streams. On an NVIDIA GB10, which is not a 5090, one stream
-ran at 30.1 tok/s and eight streams at 198.5 tok/s in total. So the flat result above is a property of the Mac
-driver route, not of the patches. It has not been measured on a 5090 under Linux.
+ran at 30.1 tok/s and eight streams at 198.5 tok/s in total. So the flat result above points to the Mac
+driver route, not to the patches. It has not been measured on a 5090 under Linux.
 
 ## H. Exactness, as far as tested (preliminary)
 
