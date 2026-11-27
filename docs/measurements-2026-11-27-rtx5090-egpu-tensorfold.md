@@ -6,6 +6,39 @@ TensorFold kernel ran on the card. On this day TensorFold's CUDA server ran a wh
 and we measured it with and without other people's speed work. Everything here is one day, one card, one cable.
 The list of what is not done is at the end.
 
+## What runs where
+
+| On the MacBook (Apple M5 Max, macOS) | On the RTX 5090 (in the Thunderbolt 5 dock) |
+|---|---|
+| TensorFold's server process: HTTP, tokenizer, scheduling, sampling, the drafter's control logic | Every model kernel: all layers of Inkling 2 Mini, the DFlash2 draft model, attention, experts, logits |
+| Our translation library (`libcuda.so.1`) turning TensorFold's CUDA driver calls into macuda calls | The model weights and the KV cache, in the card's 32 GB |
+| macuda's user-space driver, which builds the command buffers and submits them over Thunderbolt | |
+
+Nothing of the model runs on the Mac's GPU or CPU. The Mac only drives the card; every token is computed on the 5090.
+
+## Repeat the one-stream run
+
+Same prompt for both settings, as a chat request with greedy decoding (`temperature 0`), 200 tokens:
+
+`Explain in plain words what a Thunderbolt eGPU dock does and name two limits of using one.`
+
+Server, from the TensorFold build described in [Setup](#setup), with incoai's DFlash2 draft model downloaded to a
+folder `DFlash2`:
+
+```
+DYLD_LIBRARY_PATH=<folder with libcuda.so.1> TENSORFOLD_DEVICE_CHECK=0 TENSORFOLD_MEMORY_RESERVE_GIB=3 \
+  tensorfold-native serve thinkingmachines/Inkling-2-Mini --context 8192 --drafter DFlash2
+```
+
+| Setting | How | Generation on this prompt (tok/s) |
+|---|---|---|
+| 16-bit, Mia's exact settings | as above (bf16 KV cache; `TF_INKLING2_ATTN_FP8`, `TF_INKLING2_PREFILL_TC`, `TF_INKLING2_ATTN_FP8_TC` unset) | 211.7 to 214.7 |
+| 8-bit, Mia's fast defaults | add `--kv-cache fp8` and `TF_INKLING2_ATTN_FP8=1 TF_INKLING2_PREFILL_TC=1 TF_INKLING2_ATTN_FP8_TC=1` | 199.5 to 206.7 |
+
+Both are the rebuilt kernels (nvcc 13.3.73, `-Dnative-fp-decode=true`). The 227 tok/s quoted elsewhere was the 16-bit
+setting on a different, conversational prompt typed into a chat page; speed with a drafter depends on the text, so
+this fixed prompt is the one to compare against.
+
 ## Whose work this is
 
 Most of what makes the numbers below possible is not ours.
