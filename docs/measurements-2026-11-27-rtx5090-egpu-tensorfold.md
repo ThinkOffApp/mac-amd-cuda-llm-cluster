@@ -146,8 +146,8 @@ For generating, 8-bit was slower than 16-bit on this route, by a wide margin on 
 not know the cause. We have not measured it on Linux, so we cannot say whether it belongs to the recipe, to the
 Mac driver route, or to something we did.
 
-Prompt reading is where the 8-bit settings were faster. A fresh prompt on each run, so nothing is served from
-cache. The figure is prompt tokens divided by time to first token.
+Prompt reading is where the 8-bit settings were faster. A fresh prompt on each run. The server log shows 14 cached
+tokens on later runs, the fixed start of the chat template that every prompt shares; the rest of the prompt is read anew. The figure is prompt tokens divided by time to first token.
 
 | Prompt length (tokens) | Settings | Prompt reading (tok/s) | Time to first token |
 |---|---|---|---|
@@ -159,7 +159,8 @@ cache. The figure is prompt tokens divided by time to first token.
 
 ## F. A build trap, our mistake
 
-With kernels built by nvcc 13.0 and without `-Dnative-fp-decode`, the `fp8_experts` kernel is a trap stub.
+With kernels built by nvcc 13.0 and without `-Dnative-fp-decode`, one helper in the `fp8_experts` image, the MXFP8 tensor-core multiply, is built as a trap; the
+other kernels in that image are real.
 Setting `TF_INKLING2_PREFILL_TC=1` on that build stops the card, and the firmware reports an SM error. Built
 with nvcc 13.2 or later and with the option, it runs.
 
