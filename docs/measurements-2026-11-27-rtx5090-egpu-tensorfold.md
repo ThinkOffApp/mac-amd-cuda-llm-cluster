@@ -159,7 +159,8 @@ builds them (see [section F](#f-a-build-trap-our-mistake)). Then rebuilt her way
 DSpark is the drafting head that ships inside the model checkpoint. DFlash2 is incoai's separate draft model.
 
 Time to first token on the rebuilt kernels: 0.03 to 0.06 s. The drafted text was identical to the undrafted
-text in every case.
+text in every case. How far that comparison went, and what it does not cover, is in
+[exactness-2026-11-27-rtx5090-drafters.md](exactness-2026-11-27-rtx5090-drafters.md).
 
 These are 16-bit figures. Her default is the 8-bit configuration in the next section.
 
@@ -238,8 +239,10 @@ So on the prompts tested the 28 patches do not change the output of the branch t
 is not token-identical to upstream main on long prompts. Three prompts is a small sample, the 8-bit settings were
 not part of it, and none of it was run on the 5090.
 
-On the 5090 itself, the only exactness statements are the ones in sections B to E: text from one run compared
-with text from another run on the same card.
+On the 5090 itself, the exactness statements are the ones in sections B to E: text from one run compared
+with text from another run on the same card. The counted basis for the drafter rows, and the gaps in it
+(no 8-bit plain run, no Linux comparison), are in
+[exactness-2026-11-27-rtx5090-drafters.md](exactness-2026-11-27-rtx5090-drafters.md).
 
 ## I. Other people's figures, not measured by us
 
