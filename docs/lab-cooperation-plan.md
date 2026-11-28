@@ -39,7 +39,7 @@ under Linux.
 
 4. **The RTX 5090 as the fast single-user engine.** On the M5 under Linux it serves the interactive assistant with the
    lowest delay, and gives the same-card comparison between the Mac route and Linux: the token ids of one fixed prompt
-   set, which must be bit-identical (see [linux-compare](../linux-compare/) once merged). Its speed behind the M5 is
+   set, which must be bit-identical (the comparison kit is on the [linux-compare branch](https://github.com/ThinkOffApp/mac-amd-cuda-llm-cluster/tree/linux-compare/linux-compare)). Its speed behind the M5 is
    not measured yet.
 
 5. **Shared storage and memory.** Model weights live once on the NAS, are copied to each machine and checked by
