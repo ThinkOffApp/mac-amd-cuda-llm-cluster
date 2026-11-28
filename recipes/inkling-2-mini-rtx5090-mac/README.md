@@ -3,6 +3,8 @@
 Run Thinking Machines' Inkling 2 Mini on an NVIDIA RTX 5090 in a Thunderbolt 5 dock, served by TensorFold from
 macOS, with Mia's speed patches and incoai's DFlash2 draft model. Measured on 27 November 2026.
 
+![Inkling 2 Mini on an RTX 5090 driven from a MacBook: 362 tok/s one stream on a coding prompt, 900 tok/s with 20 streams, 14.2k tok/s prompt reading](images/inkling-5090-mac.jpg)
+
 ## What runs where
 
 | On the Mac | On the RTX 5090 |
