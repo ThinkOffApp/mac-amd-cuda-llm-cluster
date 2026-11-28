@@ -71,17 +71,30 @@ def run(args):
 
 def compare(a_path, b_path):
     a, b = (json.loads(Path(p).read_text()) for p in (a_path, b_path))
-    print(f"{a['label']} ({a['gpu']}) vs {b['label']} ({b['gpu']}), {a['tokens']} tokens each")
+    print(f"{a['label']} ({a['gpu']}) vs {b['label']} ({b['gpu']})")
+    problems = []
+    if a["tokens"] != b["tokens"]:
+        problems.append(f"token budgets differ: {a['tokens']} vs {b['tokens']}")
+    names_a, names_b = [r["name"] for r in a["prompts"]], [r["name"] for r in b["prompts"]]
+    if names_a != names_b:
+        problems.append(f"prompt lists differ ({len(names_a)} vs {len(names_b)} prompts, or another order)")
+    for side in (a, b):
+        bad = [r["name"] for r in side["prompts"] if not r["repeat_identical"]]
+        if bad or not side.get("all_repeat_identical", False):
+            problems.append(f"{side['label']}: repeats not identical on {', '.join(bad) or 'some prompt'}")
+    for p in problems:
+        print("  NOT COMPARABLE: " + p)
+    if problems:
+        return False
     same_n = 0
     for ra, rb in zip(a["prompts"], b["prompts"]):
-        same = ra["sha256"] == rb["sha256"]
+        same = ra["sha256"] == rb["sha256"] and ra["tokens"] == rb["tokens"]
         same_n += same
         note = "" if same else next((f" first difference at token {i}" for i, (x, y) in enumerate(zip(ra["first_ids"], rb["first_ids"])) if x != y), " (beyond the first 12 tokens)")
         print(f"  {ra['name']:28s} {'IDENTICAL' if same else 'DIFFERS' + note}")
-    print(f"\n{same_n} of {len(a['prompts'])} prompts bit-identical; all-prompt hash "
+    print(f"\n{same_n} of {len(a['prompts'])} prompts bit-identical at {a['tokens']} tokens; all-prompt hash "
           f"{'IDENTICAL' if a['all_sha256'] == b['all_sha256'] else 'DIFFERS'}")
-    return same_n == len(a["prompts"])
-
+    return same_n == len(a["prompts"]) and a["all_sha256"] == b["all_sha256"]
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
