@@ -141,6 +141,11 @@ EXPORT CUresult cuDeviceGetAttribute(int *v, int attr, CUdevice d) {
     case 97: *v = optin_smem(); return CU_OK;      // the opt-in ceiling, macuda's rule: per-SM shared memory less 1 KiB
     case 102: *v = 0; return CU_OK;               // no virtual memory management API here
     case 110: *v = 0; return CU_OK;               // no GPUDirect RDMA here
+#ifdef TFCUDA_HAVE_CLUSTER
+    case 120: *v = 1; return CU_OK;               // cluster launch: this libtinynv has tinynv_launch_cluster
+#else
+    case 120: *v = 0; return CU_OK;               // no cluster launch: callers take their non-cluster path
+#endif
     default: return refuse("cuDeviceGetAttribute", "attribute %d is not read from the card by libtinynv", attr);
   }
 }
