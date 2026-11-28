@@ -287,6 +287,12 @@ kernel-contract run and no comparison against Linux on this card. Our driver tra
 First evening: [docs/measurements-2026-11-26-rtx5090-egpu.md](docs/measurements-2026-11-26-rtx5090-egpu.md).
 Second day, all tables: [docs/measurements-2026-11-27-rtx5090-egpu-tensorfold.md](docs/measurements-2026-11-27-rtx5090-egpu-tensorfold.md).
 
+## Plan: how the lab's machines work together (28 November 2026)
+
+The next step after single-machine results: four GB10s, a Strix Halo box with the RTX 5090, a Mac mini and a NAS on
+one network and one fast switch, with one router in front so any request reaches a machine that serves that model,
+and big models split across GB10s. A plan, not yet built: [docs/lab-cooperation-plan.md](docs/lab-cooperation-plan.md).
+
 ## Measurements added 23-24 September 2026: prefill on the GX10, decode on the Mac, over RDMA
 
 Splitting by **phase** over our Helios + ConnectX-5 RDMA link works. The GX10 prefills, the KV cache
