@@ -13,20 +13,21 @@ macOS, with Mia's speed patches and incoai's DFlash2 draft model. Measured on 27
 
 Nothing of the model runs on the Mac's own GPU or CPU. The Mac drives the card; every token is computed on the 5090.
 
-## One stream: exact and fast mode on three prompts
+## One stream: exact and memory-saving modes on three prompts
 
 All with the DFlash2 drafter, one stream, greedy, 200 tokens, three timed runs after one warm-up. Kernels rebuilt
 with nvcc 13.3.73 and `-Dnative-fp-decode=true`. The prompts are in [`ask.py`](ask.py). Prose and code
 rows include a second, clean-room build made from a fresh clone by following the steps below (27 Nov 2026).
 
-| Prompt | Exact (16-bit) tok/s | Fast (8-bit) tok/s |
+| Prompt | Exact (16-bit) tok/s | Memory-saving (8-bit) tok/s |
 |---|---|---|
 | prose (the eGPU question) | 211.7 to 214.7 | 199.3 to 207.4 |
 | code (parse_csv with tests) | 352.3 to 361.6 | 293.5 to 297.5 |
 | document reproduction (repeat a given text) | 386.6 to 387.7 | 164.3 to 169.5 |
 
 - Exact: Mia's 16-bit settings: bf16 KV cache, the three `TF_INKLING2_*` switches below unset.
-- Fast: Mia's 8-bit defaults: `--kv-cache fp8`, `TF_INKLING2_ATTN_FP8=1 TF_INKLING2_PREFILL_TC=1 TF_INKLING2_ATTN_FP8_TC=1`.
+- Memory-saving: Mia's 8-bit defaults: `--kv-cache fp8`, `TF_INKLING2_ATTN_FP8=1 TF_INKLING2_PREFILL_TC=1 TF_INKLING2_ATTN_FP8_TC=1`.
+- Naming: Mia calls these defaults "fast"; this recipe uses "memory-saving" because the smaller cache fits more streams, while single-stream generation with the drafter can be slower.
 - What is counted: Inkling 2 Mini thinks before it answers, and in these 200-token runs all 200 tokens are still
   thinking (the final answer field is empty). So tok/s here is the speed of the model's reasoning text on each prompt.
   "Code" means a coding prompt, not a finished code answer; the reasoning on it is more predictable, which is why the
@@ -35,7 +36,7 @@ rows include a second, clean-room build made from a fresh clone by following the
 Speed with a drafter depends strongly on how predictable the text is: code and copying go fastest. Without a drafter
 the exact mode does 122 tok/s on the prose prompt.
 
-Why the fast mode generates slower with the drafter: the 8-bit settings shift the big model's numbers slightly, so it
+Why the memory-saving mode generates slower with the drafter: the 8-bit settings shift the big model's numbers slightly, so it
 rejects more of the draft model's guesses. Drafted tokens accepted, one request each, same prompts, DFlash2:
 
 | Prompt | 16-bit | 8-bit |
@@ -47,12 +48,12 @@ rejects more of the draft model's guesses. Drafted tokens accepted, one request 
 Without a drafter on the prose prompt: 16-bit 121 tok/s, 8-bit attention alone 132, 8-bit cache alone 116. Mia's
 own notes state about +22% for 8-bit attention at one stream on her card; we measured about +9% here.
 
-So the 8-bit "fast" settings save memory (20 streams fit instead of 11) and read long prompts faster; for one stream
+So the memory-saving (8-bit) settings save memory (20 streams fit instead of 11) and read long prompts faster; for one stream
 with the drafter, the 16-bit settings generate faster on this setup.
 
 Prompt reading (prefill), tok/s:
 
-| Prompt length | Exact (16-bit) | Fast (8-bit) |
+| Prompt length | Exact (16-bit) | Memory-saving (8-bit) |
 |---|---|---|
 | 5,246 tokens | 10,660 to 10,687 | 13,673 to 13,734 |
 | 20,046 tokens | | 14,205 to 14,237 |
@@ -143,7 +144,7 @@ throughput test we set `TENSORFOLD_MEMORY_PRESSURE=0`.
    first: otherwise Docker creates it owned by root and the build, running as you, cannot write into it.
    The images land in `out-fatbins/fatbin/`: 140 `.fatbin` files, about 47 MB. Copy that folder's `.fatbin` files
    to the Mac. nvcc 13.2 or later is required: with an older nvcc or without
-   `-Dnative-fp-decode=true`, the fast mode's prefill switch stops the card.
+   `-Dnative-fp-decode=true`, the 8-bit prefill switch stops the card.
 
 5. **Build the server on the Mac**, in the patched tree:
    ```
@@ -168,7 +169,7 @@ DYLD_LIBRARY_PATH=<tfcuda>/out TENSORFOLD_DEVICE_CHECK=0 TENSORFOLD_MEMORY_RESER
   zig-out/native/bin/tensorfold-native serve thinkingmachines/Inkling-2-Mini \
   --host 127.0.0.1 --port 8766 --name inkling-2-mini --context 8192 --drafter DFlash2
 ```
-Fast mode: the same command with `--kv-cache fp8` added, and `TF_INKLING2_ATTN_FP8=1 TF_INKLING2_PREFILL_TC=1
+Memory-saving mode: the same command with `--kv-cache fp8` added, and `TF_INKLING2_ATTN_FP8=1 TF_INKLING2_PREFILL_TC=1
 TF_INKLING2_ATTN_FP8_TC=1` in front of it.
 
 - `TENSORFOLD_DEVICE_CHECK=0`: TensorFold's device check looks at the Mac's own GPU, not the card.
