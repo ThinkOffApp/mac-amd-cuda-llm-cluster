@@ -33,7 +33,7 @@ DYLD_LIBRARY_PATH=<folder with libcuda.so.1> TENSORFOLD_DEVICE_CHECK=0 TENSORFOL
 | Setting | How | Generation on this prompt (tok/s) |
 |---|---|---|
 | 16-bit, Mia's exact settings | as above (bf16 KV cache; `TF_INKLING2_ATTN_FP8`, `TF_INKLING2_PREFILL_TC`, `TF_INKLING2_ATTN_FP8_TC` unset) | 211.7 to 214.7 |
-| 8-bit, Mia's fast defaults | add `--kv-cache fp8` and `TF_INKLING2_ATTN_FP8=1 TF_INKLING2_PREFILL_TC=1 TF_INKLING2_ATTN_FP8_TC=1` | 199.5 to 206.7 |
+| 8-bit, memory-saving settings | add `--kv-cache fp8` and `TF_INKLING2_ATTN_FP8=1 TF_INKLING2_PREFILL_TC=1 TF_INKLING2_ATTN_FP8_TC=1` | 199.5 to 206.7 |
 
 Both are the rebuilt kernels (nvcc 13.3.73, `-Dnative-fp-decode=true`). The 227 tok/s quoted elsewhere was the 16-bit
 setting on a different, conversational prompt typed into a chat page; speed with a drafter depends on the text, so
